@@ -1,0 +1,33 @@
+{
+  "name": "fungap-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "prettify": "prettier --write .js **/.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fungap/fungap-back.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fungap/fungap-back/issues"
+  },
+  "homepage": "https://github.com/fungap/fungap-back#readme",
+  "devDependencies": {
+    "jest": "^27.3.1",
+    "prettier": "^2.4.1"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.3.2",
+    "sequelize": "^6.8.0",
+    "sequelize-cli": "^6.2.0"
+  }
+}
