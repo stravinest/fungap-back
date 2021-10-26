@@ -30,7 +30,7 @@ module.exports = class Like extends Sequelize.Model {
     );
   }
   static associate(db) {
-    db.Like.hasMany(db.User, {
+    db.Like.belongsTo(db.User, {
       foreignKey: 'user_id',
       sourceKey: 'user_id',
     });

@@ -26,8 +26,8 @@ module.exports = class Celebrity extends Sequelize.Model {
       {
         sequelize,
         timestamps: true,
-        modelName: 'Board',
-        tableName: 'boards',
+        modelName: 'Celebrity',
+        tableName: 'celebrities',
         charset: 'utf8',
         collate: 'utf8_general_ci',
       }

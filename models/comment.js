@@ -4,7 +4,7 @@ module.exports = class Comment extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        commet_id: {
+        comment_id: {
           allowNull: false,
           autoIncrement: true,
           primaryKey: true,
