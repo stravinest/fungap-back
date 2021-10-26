@@ -21,7 +21,7 @@ module.exports = class User extends Sequelize.Model {
         },
         user_image: {
           type: Sequelize.STRING,
-          allowNull: false,
+          allowNull: true,
         },
         user_mbti: {
           type: Sequelize.STRING,
