@@ -21,7 +21,7 @@ module.exports = class User extends Sequelize.Model {
         },
         user_image: {
           type: Sequelize.STRING,
-          allowNull: false,
+          allowNull: true,
         },
         user_mbti: {
           type: Sequelize.STRING,
@@ -35,6 +35,9 @@ module.exports = class User extends Sequelize.Model {
           type: Sequelize.INTEGER,
           allowNull: false,
           defaultValue: 0,
+        },
+        refresh_token: {
+          type: Sequelize.STRING,
         },
       },
       {
