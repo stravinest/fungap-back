@@ -28,7 +28,7 @@ const signupSchema = Joi.object({
     .required()
     .label('Confirm password')
     .messages({
-      'any.only': '{{#label}} does not match',
+      'any.only': '비밀번호가 일치하지 않습니다.',
       'string.empty': `"a" cannot be an empty field`,
       'any.required': `"a" is a required field`,
       'string.base': `"a" should be a type of 'text'`,

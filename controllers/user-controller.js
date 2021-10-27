@@ -20,35 +20,36 @@ const isNotLoggedIn = (req, res, next) => {
   }
 };
 
-//salt 값 지정
-const saltAppointed = function (pw, salt) {
-  console.log('salt넣습니다.');
-  pw = crypto
-    .createHash('sha512')
-    .update(pw + salt)
-    .digest('hex');
-  return pw;
-};
-
-const updateUserRefreshToken = async (refresh_token, user_id) => {
-  await User.update({ refresh_token }, { where: { user_id } });
-  return true;
-};
-
-const signIn = async (req, res, next) => {
+//로그인
+const signin = async (req, res, next) => {
   try {
     const user = req.user;
+    console.log('유저는', req.user);
+    console.log('유저아이디는', user.user_id);
+    const user_id = user.user_id;
     const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,
     });
     const refresh_token = jwt.sign({}, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_REFRESH_EXPIRE,
     });
-    await authService.updateUserRefreshToken(refresh_token, user.user_id);
+
+    await User.update({ refresh_token }, { where: { user_id } });
     res.status(200).send({ message: 'success', token: token });
   } catch (err) {
     res.status(400).send({ message: err + ' : login failed' });
   }
+};
+
+//카카오콜백
+const kakaoCallback = async (req, res) => {
+  console.log('여기안오지?');
+  const user = req.user;
+  const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET);
+  res.status(200).send({
+    message: 'kakao login succeed',
+    token: token,
+  });
 };
 
 //회원가입
@@ -139,10 +140,11 @@ const nickname_check = async (req, res) => {
   }
 };
 module.exports = {
-  signIn,
+  signin,
   signup,
   email_check,
   nickname_check,
   isLoggedIn,
   isNotLoggedIn,
+  kakaoCallback,
 };

@@ -1,42 +1,61 @@
-const jwt = require('jsonwebtoken');
-const { User } = require('../models');
-const bcrypt = require('bcrypt');
+// const jwt = require('jsonwebtoken');
+// const { User } = require('../models');
+// const bcrypt = require('bcrypt');
 // const crypto = require('crypto');
+const express = require('express');
+const router = express.Router();
+const nodemailer = require('nodemailer');
+const ejs = require('ejs');
+const path = require('path');
+const { info } = require('console');
+var appDir = path.dirname(require.main.filename);
 
 //이메일 발송
-const email = async (req, res) => {
-  try {
-    const { school_email } = req.body;
-    const school_domain = school_email.split('@')[1];
-    const isExist = await authService.findUnivByEmail(school_domain);
-    if (!isExist) {
-      res.status(403).send({ ok: false, message: 'not supported university' });
-      return;
+const sendEmail = async (req, res) => {
+  const { email } = req.body;
+  let authNum = Math.random().toString().substr(2, 6);
+  let emailTemplete;
+  ejs.renderFile(
+    appDir + '/template/authMail.ejs',
+    { authCode: authNum },
+    function (err, data) {
+      if (err) {
+        console.log(err);
+      }
+      emailTemplete = data;
     }
+  );
 
-    const isExistUser = await authService.findUser({ school_email });
-    if (isExistUser) {
-      res.status(403).send({ ok: false, message: 'already existing email' });
-      return;
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.NODEMAILER_USER,
+      pass: process.env.NODEMAILER_PASS,
+    },
+  });
+
+  await transporter.sendMail(
+    {
+      from: 'FUNGAP',
+      to: email,
+      subject: '회원가입을 위한 인증번호를 입력해주세요.',
+      html: emailTemplete,
+    },
+    (error, info) => {
+      if (error) {
+        console.log(error);
+      }
+      res.status(202).send({ auth_code: authNum });
+      transporter.close();
     }
-    const authCode = Math.random().toString().substr(2, 6);
-    const mailSender = new MailSender();
-    const listener = new Listener(mailSender);
-    listener.listen({
-      targetEmail: school_email,
-      type: 'auth',
-      authCode,
-    });
-    res.status(200).send({ authCode });
-  } catch (err) {
-    res.status(400).send({
-      ok: false,
-      message: err + ' : email 전송 실패!',
-    });
-  }
+  );
 };
+
 //이메일체크
-const emailCheck = async (req, res) => {
+const callEmail = async (req, res) => {
   const { school_email, user_id } = req.body;
   const school_domain = school_email.split('@')[1];
   const isExist = await authService.findUnivByEmail(school_domain);
@@ -56,6 +75,6 @@ const emailCheck = async (req, res) => {
   res.status(403).send({ result: 'not supported university' });
 };
 module.exports = {
-  email,
-  emailCheck,
+  sendEmail,
+  callEmail,
 };
