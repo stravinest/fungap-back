@@ -6,7 +6,6 @@ const { userController } = require('../controllers');
 const { getKakaoUser } = require('../middlewares/getKakaoUser');
 const { getGoogleUser } = require('../middlewares/getGoogleUser');
 const { getNaverUser } = require('../middlewares/getNaverUser');
-const app = express();
 
 var client_id = process.env.NAVER_CLIENT_ID;
 var client_secret = process.env.NAVER_CLIENT_SECRET;

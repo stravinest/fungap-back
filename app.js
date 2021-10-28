@@ -1,7 +1,10 @@
 const express = require('express'); // express를 쓴다
 const session = require('express-session');
 const passport = require('passport');
-
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
+const env = process.env.NODE_ENV;
 const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
@@ -11,16 +14,17 @@ const passportConfig = require('./passport');
 const port = process.env.EXPRESS_PORT;
 const cors = require('cors');
 
-const options = {
+let colsOptions = {
   origin: '*', // 접근 권한을 부여하는 도메인
   credentials: true, // 응답 헤더에 Access-Control-Allow-Credentials 추가
   optionsSuccessStatus: 200, // 응답 상태 200으로 설정
 };
-app.use(cors(options));
+app.use(cors(colsOptions));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(express.static('public'));
 // html을 대체하는 ejs 엔진을 설정 test용
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -49,6 +53,15 @@ Router.get('/', (request, res) => {
   res.render('index');
 });
 
+// const options = {
+//   ca: fs.readFileSync(process.env.HTTPS_CA),
+//   key: fs.readFileSync(process.env.HTTPS_KEY),
+//   cert: fs.readFileSync(process.env.HTTPS_CERT),
+// };
+// http.createServer(app).listen(3000);
+// https.createServer(options, app).listen(443);
+
 app.listen(port, () => {
   console.log(`listening at http://localhost:${port}`);
 });
+module.exports = app;
