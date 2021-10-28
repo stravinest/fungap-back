@@ -3,7 +3,9 @@ const Validator = require('../middlewares/validator');
 const router = express.Router();
 const { userController } = require('../controllers');
 const { getKakaoUser } = require('../middlewares/getKakaoUser');
-const { auth } = require('../controllers/auth');
+const { getNaverUser } = require('../middlewares/getNaverUser');
+const { kakaoAuth } = require('../controllers/kakaoAuth');
+const { naverAuth } = require('../controllers/naverAuth');
 
 //회원가입
 router.post('/signup', Validator('signup'), userController.signup);
@@ -20,6 +22,8 @@ router.post(
 
 // router.post('/signin');
 
-router.post('/signin/kakao', getKakaoUser, auth);
+router.post('/signin/kakao', getKakaoUser, kakaoAuth);
+
+router.post('/signin/naver', getNaverUser, naverAuth);
 
 module.exports = router;
