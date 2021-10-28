@@ -11,36 +11,8 @@ const signIn = async (req, res, next) => {
 };
 
 //회원가입
-const signUp = async (req, res) => {
+const signup = async (req, res) => {
   try {
-    //   const signUpSchema = Joi.object({
-    //     email: Joi.string()
-    //       .email()
-    //       .required()
-    //       .error(new Error('이메일 형식에 맞춰 주세요.')),
-    //     password: Joi.string()
-    //       .pattern(new RegExp(/^[a-zA-Z0-9]+[a-z0-9~!@#$%^&*()_+<>?:{}]{5,20}$/))
-    //       .required()
-    //       .error(
-    //         new Error(
-    //           '비밀번호는 영문과 숫자를 포함해야하며 5~20자만 가능합니다.'
-    //         )
-    //       ),
-    //     confirm_password: Joi.equal(Joi.ref('password')).error(
-    //       new Error('비밀번호와 비밀번호 확인란이 일치하지 않습니다.')
-    //     ),
-    //     nickname: Joi.string()
-    //       .pattern(new RegExp(/^[a-zA-Z가-힣]+[a-zA-z가-힣0-9]{2,8}$/))
-    //       .error(
-    //         new Error(
-    //           '닉네임은 한글, 영어로 시작하는 숫자를 이용한 2~8자여야만 합니다.'
-    //         )
-    //       ),
-    //   });
-
-    //   const { email, password, confirm_password, nickname} =
-    //     await signUpSchema.validateAsync(req.body);
-
     const { nickname, email, user_mbti, password, confirm_password } = req.body;
     const isExistEmail = await User.findOne({ where: { email } });
 
@@ -126,9 +98,31 @@ const checkNickname = async (req, res) => {
   }
 };
 
+//로그인
+const signin = async (req, res, next) => {
+  try {
+    const user = req.user;
+    console.log('유저는', req.user);
+    console.log('유저아이디는', user.user_id);
+    const user_id = user.user_id;
+    const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_ACCESS_EXPIRE,
+    });
+    const refresh_token = jwt.sign({}, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_REFRESH_EXPIRE,
+    });
+
+    await User.update({ refresh_token }, { where: { user_id } });
+    res.status(200).send({ message: 'success', token: token });
+  } catch (err) {
+    res.status(400).send({ message: err + ' : login failed' });
+  }
+};
+
 module.exports = {
   signIn,
-  signUp,
+  signup,
   checkEmail,
   checkNickname,
+  signin,
 };

@@ -12,7 +12,7 @@ module.exports = class User extends Sequelize.Model {
         },
         email: {
           type: Sequelize.STRING(40),
-          allowNull: false,
+          allowNull: true,
           unique: true,
         },
         nickname: {
@@ -25,16 +25,28 @@ module.exports = class User extends Sequelize.Model {
         },
         user_mbti: {
           type: Sequelize.STRING,
-          allowNull: false,
+          allowNull: true,
         },
         password: {
           type: Sequelize.STRING,
-          allowNull: false,
+          allowNull: true,
         },
         user_delete_code: {
           type: Sequelize.INTEGER,
           allowNull: false,
           defaultValue: 0,
+        },
+        refresh_token: {
+          type: Sequelize.STRING,
+        },
+        provider: {
+          type: Sequelize.STRING,
+          allowNul: false,
+          defaultValue: 'local',
+        },
+        sns_id: {
+          type: Sequelize.STRING,
+          allowNull: true,
         },
       },
       {

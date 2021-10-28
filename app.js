@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const Router = require('./routers');
-app.use('/', [Router]);
+app.use([Router]);
 
 sequelize
   .sync({ force: true })
