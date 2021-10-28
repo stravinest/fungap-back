@@ -37,11 +37,7 @@ exports.jwtCreate = async (profile) => {
         }
       );
     } else {
-<<<<<<< HEAD
-      const user = await User.create({
-=======
       await User.create({
->>>>>>> be019c35792193b53db4144522a341a90ebecba6
         ...basicInfo,
         sns_id: snsId,
         provider: 'kakao',
@@ -57,8 +53,6 @@ exports.jwtCreate = async (profile) => {
     console.error(error);
   }
 };
-<<<<<<< HEAD
-=======
 
 exports.jwtGoogleCreate = async (profile) => {
   const basicInfo = {
@@ -158,4 +152,3 @@ exports.jwtNaverCreate = async (profile) => {
     console.error(error);
   }
 };
->>>>>>> be019c35792193b53db4144522a341a90ebecba6

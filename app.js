@@ -47,7 +47,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-const Router = require('./routers');
 app.use([Router]);
 // app.use('/', renders); //테스트용 지우기
 Router.get('/', (request, res) => {
