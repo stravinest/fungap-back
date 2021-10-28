@@ -1,7 +1,7 @@
 const passport = require('passport');
 const local = require('./local');
 const kakao = require('./kakao');
-// const google = require('./google');
+const google = require('./google');
 const { User } = require('../models');
 
 module.exports = () => {
@@ -10,9 +10,9 @@ module.exports = () => {
     done(null, user.user_id);
   });
 
-  passport.deserializeUser((id, done) => {
+  passport.deserializeUser(async function (id, done) {
     console.log('deserializeUser id ', id);
-    User.findOne({
+    await User.findOne({
       where: { user_id: id },
     })
       .then((user) => done(null, user))
@@ -20,6 +20,6 @@ module.exports = () => {
   });
 
   local();
-  // google();
+  google();
   kakao();
 };

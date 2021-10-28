@@ -14,6 +14,8 @@ router.get('/fail', async (req, res, next) => {
   res.status(400).send({ message: '로그인 실패' });
 }); //로그인 실패시에
 
+router.post('/signin/kakao', getKakaoUser, auth);
+
 //로컬로그인
 router.post(
   '/signin',
@@ -26,10 +28,11 @@ router.post(
 );
 
 //카카오 로그인
+//localhost:3000/user/singin/kakao
 router.get(
-  '/signin/kakao',
+  // '/signin/kakao',
   passport.authenticate('kakao', {
-    session: false,
+    session: false, //우리는 세션지원이 필요하지 않음
     failureRedirect: '/user/fail',
   })
 );
@@ -37,25 +40,26 @@ router.get(
 router.get(
   '/signin/kakao/callback',
   passport.authenticate('kakao'),
+  // (req, res) => {
+  //   res.redirect('/');
+  // },
   userController.kakaoCallback
 );
-//카카오로그인
-// router.post(
-//   '/signin/kakao',
-//   passport.authenticate('local', {
-//     session: false,
-//     failureRedirect: '/user/fail',
-//   }),
-//   userController.
-// );
-// //구글로그인
-// router.post(
-//   '/signin/google',
-//   passport.authenticate('local', {
-//     session: false,
-//     failureRedirect: '/auth/fail',
-//   }),
-//   authController.logIn
-// );
+
+//구글 로그인
+router.get(
+  '/signin/google',
+  passport.authenticate('google', {
+    session: false,
+    failureRedirect: '/auth/fail',
+    scope: ['profile', 'email'], //google을 통한 인증에는 추가 scope매개변수가 필요범위 매개 변수는 openid 값으로 시작하고 profile 값, email 값 또는 둘 다를 포함해야합니다.
+  })
+);
+
+router.get(
+  '/signin/google/callback',
+  passport.authenticate('google'),
+  userController.googleCallback
+);
 
 module.exports = router;

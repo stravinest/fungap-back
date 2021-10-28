@@ -9,8 +9,8 @@ module.exports = () => {
       {
         usernameField: 'email',
         passwordField: 'password',
-        session: true,
-        passReqToCallback: false,
+        // session: true,
+        // passReqToCallback: false,
       },
       async function (email, password, done) {
         console.log(email, password);

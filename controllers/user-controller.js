@@ -1,24 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const bcrypt = require('bcrypt');
-// const crypto = require('crypto');
-
-const isLoggedIn = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    res.status(403).send('로그인필요');
-  }
-};
-
-const isNotLoggedIn = (req, res, next) => {
-  if (!req.isAuthenticated()) {
-    next();
-  } else {
-    const message = encodeURIComponent('로그인한 상태입니다.');
-    res.redirect(`/?error=${message}`);
-  }
-};
 
 //로그인
 const signin = async (req, res, next) => {
@@ -41,13 +23,33 @@ const signin = async (req, res, next) => {
   }
 };
 
-//카카오콜백
-const kakaoCallback = async (req, res) => {
-  console.log('여기안오지?');
+//카카오 로그인 front
+const kakaoLogin = async (req, res) => {
   const user = req.user;
   const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET);
   res.status(200).send({
     message: 'kakao login succeed',
+    token: token,
+  });
+};
+
+//카카오콜백
+const kakaoCallback = async (req, res) => {
+  const user = req.user;
+  const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET);
+  res.status(200).send({
+    message: 'kakao login succeed',
+    token: token,
+  });
+};
+
+//구글콜백
+const googleCallback = async (req, res) => {
+  const user = req.user;
+  const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET);
+  res.redirect('/');
+  res.status(200).send({
+    message: 'google login succeed',
     token: token,
   });
 };
@@ -144,7 +146,8 @@ module.exports = {
   signup,
   email_check,
   nickname_check,
-  isLoggedIn,
-  isNotLoggedIn,
+  // isLoggedIn,
+  // isNotLoggedIn,
   kakaoCallback,
+  googleCallback,
 };
