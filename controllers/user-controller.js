@@ -1,6 +1,40 @@
+const { jwtCreate, jwtGoogleCreate } = require('../utils/jwt');
+// const { jwtGoogleCreate } = require('../utils/googleJwt');
+const { loginUser } = require('../utils/setLoginUser');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const bcrypt = require('bcrypt');
+
+const auth = async (req, res, next) => {
+  try {
+    const profile = req.kakao;
+    const [accessToken, refreshToken] = await jwtCreate(profile);
+    const token = loginUser(accessToken, refreshToken);
+    res.json({
+      ok: true,
+      token,
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+const authGoogle = async (req, res, next) => {
+  try {
+    console.log(req.google);
+    const profile = req.google;
+    const [accessToken, refreshToken] = await jwtGoogleCreate(profile);
+    const token = loginUser(accessToken, refreshToken);
+    res.json({
+      message: 'google login succeed',
+      token,
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
 
 //로그인
 const signin = async (req, res, next) => {
@@ -142,6 +176,8 @@ const nickname_check = async (req, res) => {
   }
 };
 module.exports = {
+  authGoogle,
+  auth,
   signin,
   signup,
   email_check,

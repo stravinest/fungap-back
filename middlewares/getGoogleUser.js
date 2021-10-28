@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-exports.getKakaoUser = async (req, res, next) => {
+exports.getGoogleUser = async (req, res, next) => {
   const { access_token } = req.body;
   console.log(access_token);
 
@@ -8,13 +8,15 @@ exports.getKakaoUser = async (req, res, next) => {
     const Authorization = `Bearer ${access_token}`;
     const profile = await axios({
       method: 'get',
-      url: 'https://kapi.kakao.com/v2/user/me?secure_resource=true',
+      url: `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`,
       headers: {
         'content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
         Authorization,
       },
     });
-    req.kakao = profile;
+
+    req.google = profile.data;
+    //console.log(profile.data);
     next();
   } catch (error) {
     console.error(error);

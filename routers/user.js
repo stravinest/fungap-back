@@ -3,6 +3,8 @@ const Validator = require('../middlewares/validator');
 const router = express.Router(); // 라우터라고 선언한다.
 const passport = require('passport');
 const { userController } = require('../controllers');
+const { getKakaoUser } = require('../middlewares/getKakaoUser');
+const { getGoogleUser } = require('../middlewares/getGoogleUser');
 //회원가입
 router.post('/signup', Validator('signup'), userController.signup);
 //이메일 중복확인
@@ -14,7 +16,21 @@ router.get('/fail', async (req, res, next) => {
   res.status(400).send({ message: '로그인 실패' });
 }); //로그인 실패시에
 
-router.post('/signin/kakao', getKakaoUser, auth);
+//access토큰 받아오기 카카오 로그인
+router.post('/signin/kakao', getKakaoUser, userController.auth);
+//구글 토큰 받아오기 구글 로그인
+router.post('/signin/google', getGoogleUser, userController.authGoogle);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 //로컬로그인
 router.post(
@@ -30,7 +46,7 @@ router.post(
 //카카오 로그인
 //localhost:3000/user/singin/kakao
 router.get(
-  // '/signin/kakao',
+  '/signin/kakao/access',
   passport.authenticate('kakao', {
     session: false, //우리는 세션지원이 필요하지 않음
     failureRedirect: '/user/fail',
@@ -48,7 +64,7 @@ router.get(
 
 //구글 로그인
 router.get(
-  '/signin/google',
+  '/signin/google/access',
   passport.authenticate('google', {
     session: false,
     failureRedirect: '/auth/fail',

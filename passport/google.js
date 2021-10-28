@@ -11,7 +11,7 @@ module.exports = () => {
         callbackURL: 'http://localhost:3000/user/signin/google/callback',
       },
       async function (accessToken, refreshToken, profile, done) {
-        console.log('google profile', profile);
+        // console.log('google profile', profile);
         console.log('access', accessToken);
         console.log('refresh', refreshToken);
         const email = profile.emails[0].value;
