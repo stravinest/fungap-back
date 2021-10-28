@@ -22,23 +22,22 @@
     "prettier": "^2.4.1"
   },
   "dependencies": {
-<<<<<<< HEAD
-=======
     "axios": "^0.24.0",
->>>>>>> c0d0d21752ffb9467630a6d33d0336401ed33104
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
+    "ejs": "^3.1.6",
     "express": "^4.17.1",
+    "express-session": "^1.17.2",
     "joi": "^17.4.2",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.2",
-<<<<<<< HEAD
     "nodemailer": "^6.7.0",
-=======
     "passport": "^0.5.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-kakao": "^1.0.1",
->>>>>>> c0d0d21752ffb9467630a6d33d0336401ed33104
+    "passport-local": "^1.0.0",
+    "request": "^2.88.2",
     "sequelize": "^6.8.0",
     "sequelize-cli": "^6.2.0"
   }
