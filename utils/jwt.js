@@ -37,7 +37,7 @@ exports.jwtCreate = async (profile) => {
         }
       );
     } else {
-      const user = await User.create({
+      await User.create({
         ...basicInfo,
         sns_id: snsId,
         provider: 'kakao',
@@ -74,7 +74,7 @@ exports.jwtGoogleCreate = async (profile) => {
     });
 
     if (exUser) {
-      //카카오톡 사용자의 정보를 로그인 시마다 DB에 update
+      //구글사용자의 정보를 로그인 시마다 DB에 update
       await User.update(
         {
           ...basicInfo,
@@ -85,9 +85,61 @@ exports.jwtGoogleCreate = async (profile) => {
         }
       );
     } else {
-      const user = await User.create({
+      await User.create({
         ...basicInfo,
         sns_id: profile.sub,
+        refresh_token: refreshToken,
+      });
+    }
+    //access token 발급
+    const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_ACCESS_EXPIRE,
+    });
+    return [accessToken, refreshToken];
+  } catch (error) {
+    console.error(error);
+  }
+};
+//네이버
+exports.jwtNaverCreate = async (profile) => {
+  console.log(profile);
+  console.log(profile.response);
+  console.log(profile['response']);
+
+  const basicInfo = {
+    email: profile.response?.email,
+    nickname: profile.response?.nickname,
+    user_image: profile.response?.profile_image,
+  };
+
+  const snsId = profile.response?.id;
+
+  //refresh token 발급
+  const refreshToken = jwt.sign({}, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_REFRESH_EXPIRE,
+  });
+
+  try {
+    const exUser = await User.findOne({
+      where: { [Op.and]: [{ sns_id: snsId }, { provider: 'naver' }] },
+    });
+
+    if (exUser) {
+      //네이버 사용자의 정보를 로그인 시마다 DB에 update
+      await User.update(
+        {
+          ...basicInfo,
+          refresh_token: refreshToken,
+        },
+        {
+          where: { sns_id: snsId },
+        }
+      );
+    } else {
+      await User.create({
+        ...basicInfo,
+        sns_id: snsId,
+        provider: 'naver',
         refresh_token: refreshToken,
       });
     }

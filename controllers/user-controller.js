@@ -1,4 +1,4 @@
-const { jwtCreate, jwtGoogleCreate } = require('../utils/jwt');
+const { jwtCreate, jwtGoogleCreate, jwtNaverCreate } = require('../utils/jwt');
 // const { jwtGoogleCreate } = require('../utils/googleJwt');
 const { loginUser } = require('../utils/setLoginUser');
 const jwt = require('jsonwebtoken');
@@ -11,7 +11,7 @@ const auth = async (req, res, next) => {
     const [accessToken, refreshToken] = await jwtCreate(profile);
     const token = loginUser(accessToken, refreshToken);
     res.json({
-      ok: true,
+      result: 'success',
       token,
     });
   } catch (error) {
@@ -27,7 +27,7 @@ const authGoogle = async (req, res, next) => {
     const [accessToken, refreshToken] = await jwtGoogleCreate(profile);
     const token = loginUser(accessToken, refreshToken);
     res.json({
-      message: 'google login succeed',
+      result: 'success',
       token,
     });
   } catch (error) {
@@ -36,6 +36,34 @@ const authGoogle = async (req, res, next) => {
   }
 };
 
+const authNaver = async (req, res, next) => {
+  try {
+    const profile = req.naver;
+    console.log(profile);
+
+    const [accessToken, refreshToken] = await jwtNaverCreate(profile);
+    const token = loginUser(accessToken, refreshToken);
+    res.json({
+      result: 'success',
+      token,
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //로그인
 const signin = async (req, res, next) => {
   try {
@@ -176,6 +204,7 @@ const nickname_check = async (req, res) => {
   }
 };
 module.exports = {
+  authNaver,
   authGoogle,
   auth,
   signin,
