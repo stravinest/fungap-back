@@ -1,9 +1,7 @@
+const login = require('./login_validator');
 const signup = require('./signup_validator');
-const checkEmail = require('./check_email_validator');
-const checkNickname = require('./check_nickname_validator');
 
 module.exports = {
+  login,
   signup,
-  checkEmail,
-  checkNickname,
 };

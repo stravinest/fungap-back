@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-exports.getNaverUser = async (req, res, next) => {
+exports.getGoogleUser = async (req, res, next) => {
   const { access_token } = req.body;
   console.log(access_token);
 
@@ -8,13 +8,15 @@ exports.getNaverUser = async (req, res, next) => {
     const Authorization = `Bearer ${access_token}`;
     const profile = await axios({
       method: 'get',
-      url: 'https://openapi.naver.com/v1/nid/me',
+      url: `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`,
       headers: {
         'content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
         Authorization,
       },
     });
-    req.naver = profile.data;
+
+    req.google = profile.data;
+    //console.log(profile.data);
     next();
   } catch (error) {
     console.error(error);
