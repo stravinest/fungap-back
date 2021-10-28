@@ -12,9 +12,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const Router = require('./routers');
+<<<<<<< HEAD
 const UserRouter = require('./routers/user');
 app.use('/', [Router]);
 app.use('/api', [UserRouter]);
+=======
+app.use([Router]);
+>>>>>>> c0d0d21752ffb9467630a6d33d0336401ed33104
 
 sequelize
   .sync({ force: true })
