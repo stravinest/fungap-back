@@ -1,10 +1,10 @@
 const { jwtCreate, jwtGoogleCreate, jwtNaverCreate } = require('../utils/jwt');
-// const { jwtGoogleCreate } = require('../utils/googleJwt');
 const { loginUser } = require('../utils/setLoginUser');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const bcrypt = require('bcrypt');
 
+//카카오
 const auth = async (req, res, next) => {
   try {
     const profile = req.kakao;
@@ -19,7 +19,7 @@ const auth = async (req, res, next) => {
     next(error);
   }
 };
-
+//구글
 const authGoogle = async (req, res, next) => {
   try {
     console.log(req.google);
@@ -35,7 +35,7 @@ const authGoogle = async (req, res, next) => {
     next(error);
   }
 };
-
+//네이버
 const authNaver = async (req, res, next) => {
   try {
     const profile = req.naver;
@@ -55,66 +55,6 @@ const authNaver = async (req, res, next) => {
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//로그인
-const signin = async (req, res, next) => {
-  try {
-    const user = req.user;
-    console.log('유저는', req.user);
-    console.log('유저아이디는', user.user_id);
-    const user_id = user.user_id;
-    const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_ACCESS_EXPIRE,
-    });
-    const refresh_token = jwt.sign({}, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_REFRESH_EXPIRE,
-    });
-
-    await User.update({ refresh_token }, { where: { user_id } });
-    res.status(200).send({ message: 'success', token: token });
-  } catch (err) {
-    res.status(400).send({ message: err + ' : login failed' });
-  }
-};
-
-//카카오 로그인 front
-const kakaoLogin = async (req, res) => {
-  const user = req.user;
-  const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET);
-  res.status(200).send({
-    message: 'kakao login succeed',
-    token: token,
-  });
-};
-
-//카카오콜백
-const kakaoCallback = async (req, res) => {
-  const user = req.user;
-  const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET);
-  res.status(200).send({
-    message: 'kakao login succeed',
-    token: token,
-  });
-};
-
-//구글콜백
-const googleCallback = async (req, res) => {
-  const user = req.user;
-  const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET);
-  res.redirect('/');
-  res.status(200).send({
-    message: 'google login succeed',
-    token: token,
-  });
-};
 
 //회원가입
 const signup = async (req, res) => {
@@ -207,12 +147,7 @@ module.exports = {
   authNaver,
   authGoogle,
   auth,
-  signin,
   signup,
   email_check,
   nickname_check,
-  // isLoggedIn,
-  // isNotLoggedIn,
-  kakaoCallback,
-  googleCallback,
 };

@@ -1,19 +1,15 @@
 const express = require('express'); // express를 쓴다
-const session = require('express-session');
-const passport = require('passport');
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
-const env = process.env.NODE_ENV;
+// const env = process.env.NODE_ENV;
 const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
 const { sequelize } = require('./models');
-const passportConfig = require('./passport');
 
 const port = process.env.EXPRESS_PORT;
 const cors = require('cors');
-
 let colsOptions = {
   origin: '*', // 접근 권한을 부여하는 도메인
   credentials: true, // 응답 헤더에 Access-Control-Allow-Credentials 추가
@@ -25,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(express.static('public'));
+
 // html을 대체하는 ejs 엔진을 설정 test용
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -38,13 +35,6 @@ sequelize
   .catch((err) => {
     console.error(err);
   });
-
-passportConfig(); //패스포트 설정
-app.use(
-  session({ secret: 'secret key', resave: false, saveUninitialized: false })
-);
-app.use(passport.initialize());
-app.use(passport.session());
 
 const Router = require('./routers');
 app.use([Router]);

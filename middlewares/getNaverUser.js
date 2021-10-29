@@ -2,6 +2,8 @@ const axios = require('axios');
 
 exports.getNaverUser = async (req, res, next) => {
   const { access_token } = req.body;
+
+  console.log(req.body);
   console.log(access_token);
 
   try {
