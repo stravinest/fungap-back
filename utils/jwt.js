@@ -56,13 +56,11 @@ exports.jwtCreate = async (profile) => {
 
 exports.jwtGoogleCreate = async (profile) => {
   const basicInfo = {
-    email: profile.email,
-    nickname: profile.name,
-    user_image: profile.picture,
+    email: profile?.email,
+    nickname: profile?.name,
+    user_image: profile?.picture,
     provider: 'google',
   };
-  console.log(basicInfo);
-  console.log(profile.sub);
   //refresh token 발급
   const refreshToken = jwt.sign({}, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_REFRESH_EXPIRE,
@@ -70,7 +68,7 @@ exports.jwtGoogleCreate = async (profile) => {
 
   try {
     const exUser = await User.findOne({
-      where: { [Op.and]: [{ sns_id: profile.sub }, { provider: 'google' }] },
+      where: { [Op.and]: [{ sns_id: profile?.sub }, { provider: 'google' }] },
     });
 
     if (exUser) {
@@ -81,13 +79,13 @@ exports.jwtGoogleCreate = async (profile) => {
           refresh_token: refreshToken,
         },
         {
-          where: { sns_id: profile.sub },
+          where: { sns_id: profile?.sub },
         }
       );
     } else {
       await User.create({
         ...basicInfo,
-        sns_id: profile.sub,
+        sns_id: profile?.sub,
         refresh_token: refreshToken,
       });
     }
@@ -102,17 +100,13 @@ exports.jwtGoogleCreate = async (profile) => {
 };
 //네이버
 exports.jwtNaverCreate = async (profile) => {
-  console.log(profile);
-  console.log(profile.response);
-  console.log(profile['response']);
-
   const basicInfo = {
-    email: profile.response?.email,
-    nickname: profile.response?.nickname,
-    user_image: profile.response?.profile_image,
+    email: profile?.response?.email,
+    nickname: profile?.response?.nickname,
+    user_image: profile?.response?.profile_image,
   };
 
-  const snsId = profile.response?.id;
+  const snsId = profile?.response?.id;
 
   //refresh token 발급
   const refreshToken = jwt.sign({}, process.env.JWT_SECRET, {
