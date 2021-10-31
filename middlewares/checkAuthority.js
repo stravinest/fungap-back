@@ -10,7 +10,8 @@ exports.checkAuthority = async (req, res, next) => {
         .status(403)
         .json({ result: 'fail', message: '접근 권한이 없습니다.' });
     }
-    console.log('?????')
     next();
-  } catch (err) {}
+  } catch (err) {
+    next(err)
+  }
 };

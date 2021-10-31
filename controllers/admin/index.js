@@ -4,7 +4,6 @@ const editBoard = require('./editBoard');
 const deleteBoard = require('./deleteBoard');
 const detailBoard = require('./detailBoard');
 
-console.log(getBoard)
 module.exports = {
   getBoard,
   writeBoard,
