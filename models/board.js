@@ -10,6 +10,10 @@ module.exports = class Board extends Sequelize.Model {
           primaryKey: true,
           type: Sequelize.INTEGER,
         },
+        user_id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+        },        
         board_title: {
           type: Sequelize.STRING(40),
           allowNull: false,

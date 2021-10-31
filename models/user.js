@@ -31,6 +31,11 @@ module.exports = class User extends Sequelize.Model {
           type: Sequelize.STRING,
           allowNull: true,
         },
+        user_authority: {
+          type: Sequelize.STRING,
+          allowNull: false,
+          defaultValue: 'public',
+        },
         user_delete_code: {
           type: Sequelize.INTEGER,
           allowNull: false,
