@@ -1,30 +1,32 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const { User } = require('../models');
 
 exports.getNewAuth = async function (refreshToken) {
+  
   const info = await User.findOne({
-    attributes: ['id', 'email', 'nickname', 'img', 'communityNickname'],
+    attributes: ['user_id', 'email', 'nickname', 'img', 'communityNickname'],
     where: { refreshToken },
   });
 
   if (info) {
     const basicInfo = {
-      id: info.id,
+      userId: info.user_id,
       email: info.email,
       nickname: info.nickname,
       img: info.img,
-      communityNickname: info.communityNickname,
+      provider: info.provider
     };
-
+    console.log(basicInfo)
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,
     });
     return {
       accessToken,
-      id: info.id,
+      userId: info.user_id,
       nickname: info.nickname,
       img: info.img,
-      communityNickname: info.communityNickname,
+      provider: info.provider,
+      refreshToken: refreshToken
     };
   }
   return null;

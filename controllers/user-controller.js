@@ -52,8 +52,7 @@ const authNaver = async (req, res, next) => {
     next(error);
   }
 };
-//
-//
+
 //
 
 //회원가입
