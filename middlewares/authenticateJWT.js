@@ -40,9 +40,10 @@ exports.authenticateJWT = async (req, res, next) => {
         req.userId = newAuth.userId;
         req.userInfo = {
           userId: newAuth.userId,
+          email: newAuth.email,
           nickname: newAuth.nickname,
-          img: newAuth.img,
-          communityNickname: newAuth.communityNickname,
+          user_image: newAuth.user_image,
+          provider: 'naver',
         };
         next();
       } else {
@@ -54,13 +55,16 @@ exports.authenticateJWT = async (req, res, next) => {
       }
     } else {
       console.log('아아하하하하하')
+      console.log(iAccessToken)
+      console.log('아아하하하하하')
       req.loginUser = loginUser(accessToken, refreshToken);
-      req.userId = iAccessToken.userId;
+      req.userId = iAccessToken.user_id;
       req.userInfo = {
-        userId: iAccessToken.userId,
+        userId: iAccessToken.user_id,
+        email: iAccessToken.email,
         nickname: iAccessToken.nickname,
-        img: iAccessToken.img,
-        communityNickname: iAccessToken.communityNickname,
+        user_image: iAccessToken.user_image,
+        provider: 'naver',
       };
       next();
     }

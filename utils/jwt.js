@@ -102,7 +102,7 @@ exports.jwtGoogleCreate = async (profile) => {
 exports.jwtNaverCreate = async (profile) => {
   const userId = await User.findOne({ where: { [Op.or]: [{ email: profile?.response?.email }, { nickname: profile?.response?.nickname }] } })
   const basicInfo = {
-    userId: userId.user_id,
+    user_id: userId?.user_id,
     email: profile?.response?.email,
     nickname: profile?.response?.nickname,
     user_image: profile?.response?.profile_image,
@@ -140,7 +140,12 @@ exports.jwtNaverCreate = async (profile) => {
         provider: 'naver',
         refresh_token: refreshToken,
       });
+      const user = await User.findOne({ where: { [Op.or]: [{ email: profile?.response?.email }, { nickname: profile?.response?.nickname }] } })
+      const user_id = user.user_id
+      basicInfo.user_id = user_id
     }
+    console.log(basicInfo)
+    console.log('---------------------------------')
     //access token 발급
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,

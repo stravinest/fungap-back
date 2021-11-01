@@ -39,9 +39,7 @@ const authGoogle = async (req, res, next) => {
 const authNaver = async (req, res, next) => {
   try {
     const profile = req.naver;
-    console.log('너니?');
-    console.log(profile);
-
+    
     const [accessToken, refreshToken] = await jwtNaverCreate(profile);
     const token = loginUser(accessToken, refreshToken);
     res.json({
