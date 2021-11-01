@@ -22,6 +22,10 @@ module.exports = class Board extends Sequelize.Model {
           type: Sequelize.STRING,
           allowNull: false,
         },
+        board_desc: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
         board_content: {
           type: Sequelize.STRING,
           allowNull: false,
@@ -32,6 +36,16 @@ module.exports = class Board extends Sequelize.Model {
           defaultValue: 0,
         },
         like_count: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          defaultValue: 0,
+        },
+        like_state: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          defaultValue: 0,
+        },
+        comment_count: {
           type: Sequelize.INTEGER,
           allowNull: false,
           defaultValue: 0,
@@ -49,6 +63,10 @@ module.exports = class Board extends Sequelize.Model {
   }
   static associate(db) {
     db.Board.hasMany(db.Comment, {
+      foreignKey: 'board_id',
+      sourceKey: 'board_id',
+    });
+    db.Board.hasOne(db.Like, {
       foreignKey: 'board_id',
       sourceKey: 'board_id',
     });
