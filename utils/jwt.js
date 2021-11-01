@@ -100,12 +100,15 @@ exports.jwtGoogleCreate = async (profile) => {
 };
 //네이버
 exports.jwtNaverCreate = async (profile) => {
+  const userId = await User.findOne({ where: { [Op.or]: [{ email: profile?.response?.email }, { nickname: profile?.response?.nickname }] } })
   const basicInfo = {
+    userId: userId.user_id,
     email: profile?.response?.email,
     nickname: profile?.response?.nickname,
     user_image: profile?.response?.profile_image,
   };
-
+  console.log(basicInfo)
+  
   const snsId = profile?.response?.id;
 
   //refresh token 발급

@@ -29,10 +29,12 @@ module.exports = class Board extends Sequelize.Model {
         view_count: {
           type: Sequelize.INTEGER,
           allowNull: false,
+          defaultValue: 0,
         },
         like_count: {
           type: Sequelize.INTEGER,
           allowNull: false,
+          defaultValue: 0,
         },
       },
       {

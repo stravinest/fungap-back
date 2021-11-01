@@ -6,9 +6,9 @@ const writeBoardFunc = async (req, res) => {
   try {
     const userId = req.userId;
     const { board_id } = req.params;
-
-    await Board.destroy({ board_id })
     
+    await Board.destroy({ where: {board_id} })
+    console.log('와라 좀')
     res.json({ result: 'success' });
   } catch (err) {
     res.status(400).send({
