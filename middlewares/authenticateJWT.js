@@ -36,10 +36,10 @@ exports.authenticateJWT = async (req, res, next) => {
         if (!newAuth)
           return res.status(403).json({ ok: false, message: 'invalid token' });
 
-        req.loginUser = loginUser(newAuth.accessToken, newAuth.refreshToken);
-        req.userId = newAuth.id;
+        req.loginUser = loginUser(newAuth.accessToken, refreshToken);
+        req.userId = newAuth.userId;
         req.userInfo = {
-          id: newAuth.id,
+          userId: newAuth.userId,
           nickname: newAuth.nickname,
           img: newAuth.img,
           communityNickname: newAuth.communityNickname,

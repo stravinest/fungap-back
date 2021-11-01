@@ -106,6 +106,7 @@ exports.jwtNaverCreate = async (profile) => {
     email: profile?.response?.email,
     nickname: profile?.response?.nickname,
     user_image: profile?.response?.profile_image,
+    provider: 'naver',
   };
   console.log(basicInfo)
   

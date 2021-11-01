@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
-exports.getNewAuth = async function (refreshToken) {
+exports.getNewAuth = async function (refresh_token) {
   const info = await User.findOne({
     attributes: ['user_id', 'email', 'nickname', 'img', 'communityNickname'],
-    where: { refreshToken },
+    where: { refresh_token },
   });
 
   if (info) {
