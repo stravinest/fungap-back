@@ -146,3 +146,27 @@ exports.jwtNaverCreate = async (profile) => {
     console.error(error);
   }
 };
+
+//로컬로그인
+exports.jwtLocalCreate = async (profile) => {
+  const basicInfo = {
+    email: profile?.dataValues?.email,
+    nickname: profile?.dataValues?.nickname,
+    user_image: profile?.dataValues?.profile_image,
+    user_mbti: profile?.dataValues?.user_mbti,
+  };
+  //refresh token 발급
+  const refreshToken = jwt.sign({}, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_REFRESH_EXPIRE,
+  });
+
+  try {
+    //access token 발급
+    const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_ACCESS_EXPIRE,
+    });
+    return [accessToken, refreshToken];
+  } catch (error) {
+    console.error(error);
+  }
+};

@@ -12,7 +12,8 @@ router.post('/signup', Validator('signup'), userController.signup);
 router.post('/email_check', userController.email_check);
 //닉네임 중복확인
 router.post('/nickname_check', userController.nickname_check);
-
+//로컬 로그인
+router.post('/signin', Validator('login'), userController.login);
 //카카오 로그인
 router.post('/signin/kakao', getKakaoUser, userController.auth);
 //구글 로그인
