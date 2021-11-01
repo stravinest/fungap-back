@@ -30,6 +30,11 @@ module.exports = class Board extends Sequelize.Model {
           type: Sequelize.STRING,
           allowNull: false,
         },
+        board_delete_code: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          defaultValue: 0,
+        },
         view_count: {
           type: Sequelize.INTEGER,
           allowNull: false,

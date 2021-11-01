@@ -19,6 +19,7 @@ const sequelize = new Sequelize(
   config
 );
 
+db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.Board = Board;
 db.Celebrity = Celebrity;
