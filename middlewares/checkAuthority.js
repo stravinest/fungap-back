@@ -3,10 +3,10 @@ const { User } = require('../models');
 exports.checkAuthority = async (req, res, next) => {
   try {
     const userId = req.userId;
-    console.log(req.userId)
+    console.log(req.userId);
     const userInfo = await User.findOne({ where: userId });
-    console.log(userInfo.user_authority)
-    console.log('dkdkdkdkdkdkdkdk')
+    console.log(userInfo.user_authority);
+    console.log('dkdkdkdkdkdkdkdk');
     if (userInfo.user_authority == 'public') {
       return res
         .status(403)
@@ -14,6 +14,6 @@ exports.checkAuthority = async (req, res, next) => {
     }
     next();
   } catch (err) {
-    next(err)
+    next(err);
   }
 };

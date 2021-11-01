@@ -1,13 +1,13 @@
 const { User } = require('../../models');
 const { Board } = require('../../models');
-const { Op } = require("sequelize");
+const { Op } = require('sequelize');
 
 const writeBoardFunc = async (req, res) => {
   try {
     const userId = req.userId;
     const { board_id } = req.params;
 
-    const board = await Board.findOne({ board_id })
+    const board = await Board.findOne({ board_id });
 
     res.json({ result: 'success', board });
   } catch (err) {

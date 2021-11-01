@@ -5,9 +5,15 @@ const writeBoardFunc = async (req, res) => {
   try {
     const userId = req.userId;
     const { board_title, board_image, board_desc, board_content } = req.body;
-    
-    await Board.create({ user_id: userId, board_title, board_image, board_desc, board_content})
-    
+
+    await Board.create({
+      user_id: userId,
+      board_title,
+      board_image,
+      board_desc,
+      board_content,
+    });
+
     res.json({ result: 'success' });
   } catch (err) {
     res.status(400).send({

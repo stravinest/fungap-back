@@ -56,7 +56,7 @@ router.get('/naver/callback', function (req, res) {
     code +
     '&state=' +
     state;
-  
+
   var options = {
     url: api_url,
     headers: {

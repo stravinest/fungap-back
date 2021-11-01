@@ -15,7 +15,7 @@ exports.getNewAuth = async function (refresh_token) {
       user_image: info.user_image,
       provider: 'naver',
     };
-    console.log(basicInfo)
+    console.log(basicInfo);
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,
     });

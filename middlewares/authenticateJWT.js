@@ -4,12 +4,11 @@ const { loginUser } = require('../utils/setLoginUser');
 
 exports.authenticateJWT = async (req, res, next) => {
   try {
-    
     const [accessToken, refreshToken] = req.headers['authorization'].split(',');
 
     const iAccessToken = verifyToken(accessToken.split(' ')[1]);
     const irefreshToken = verifyToken(refreshToken);
-    console.log(iAccessToken)
+    console.log(iAccessToken);
     //유효하지 않는 토큰:signature가 맞지 않음
     if (
       iAccessToken === 'invalid signature' ||
@@ -54,9 +53,9 @@ exports.authenticateJWT = async (req, res, next) => {
         });
       }
     } else {
-      console.log('아아하하하하하')
-      console.log(iAccessToken)
-      console.log('아아하하하하하')
+      console.log('아아하하하하하');
+      console.log(iAccessToken);
+      console.log('아아하하하하하');
       req.loginUser = loginUser(accessToken, refreshToken);
       req.userId = iAccessToken.user_id;
       req.userInfo = {
@@ -76,8 +75,8 @@ exports.authenticateJWT = async (req, res, next) => {
 
 function verifyToken(token) {
   try {
-    console.log('아놔좀 나와')
-    console.log(token)
+    console.log('아놔좀 나와');
+    console.log(token);
     console.log(jwt.verify(token, process.env.JWT_SECRET));
     return jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {

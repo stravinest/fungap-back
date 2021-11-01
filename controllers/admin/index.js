@@ -3,7 +3,7 @@ const writeBoard = require('./writeBoard');
 const editBoard = require('./editBoard');
 const deleteBoard = require('./deleteBoard');
 const detailBoard = require('./detailBoard');
-const getUser = require('./getUser')
+const getUser = require('./getUser');
 
 module.exports = {
   getBoard,

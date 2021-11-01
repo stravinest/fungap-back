@@ -6,7 +6,7 @@ const getUserFunc = async (req, res) => {
     const userId = req.userId;
     const users = await User.findAll({});
     const userCount = await User.count({});
-    
+
     res.json({ result: 'success', users, userCount });
   } catch (err) {
     res.status(400).send({

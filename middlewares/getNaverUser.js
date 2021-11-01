@@ -2,7 +2,7 @@ const axios = require('axios');
 
 exports.getNaverUser = async (req, res, next) => {
   const { access_token } = req.body;
-  
+
   try {
     const Authorization = `Bearer ${access_token}`;
     const profile = await axios({

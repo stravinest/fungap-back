@@ -100,7 +100,14 @@ exports.jwtGoogleCreate = async (profile) => {
 };
 //네이버
 exports.jwtNaverCreate = async (profile) => {
-  const userId = await User.findOne({ where: { [Op.or]: [{ email: profile?.response?.email }, { nickname: profile?.response?.nickname }] } })
+  const userId = await User.findOne({
+    where: {
+      [Op.or]: [
+        { email: profile?.response?.email },
+        { nickname: profile?.response?.nickname },
+      ],
+    },
+  });
   const basicInfo = {
     user_id: userId?.user_id,
     email: profile?.response?.email,
@@ -108,8 +115,8 @@ exports.jwtNaverCreate = async (profile) => {
     user_image: profile?.response?.profile_image,
     provider: 'naver',
   };
-  console.log(basicInfo)
-  
+  console.log(basicInfo);
+
   const snsId = profile?.response?.id;
 
   //refresh token 발급
@@ -140,12 +147,19 @@ exports.jwtNaverCreate = async (profile) => {
         provider: 'naver',
         refresh_token: refreshToken,
       });
-      const user = await User.findOne({ where: { [Op.or]: [{ email: profile?.response?.email }, { nickname: profile?.response?.nickname }] } })
-      const user_id = user.user_id
-      basicInfo.user_id = user_id
+      const user = await User.findOne({
+        where: {
+          [Op.or]: [
+            { email: profile?.response?.email },
+            { nickname: profile?.response?.nickname },
+          ],
+        },
+      });
+      const user_id = user.user_id;
+      basicInfo.user_id = user_id;
     }
-    console.log(basicInfo)
-    console.log('---------------------------------')
+    console.log(basicInfo);
+    console.log('---------------------------------');
     //access token 발급
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,
