@@ -93,13 +93,13 @@ const likedBoardList = async (req, res) => {
     console.log(req.userInfo);
     const nickname = req.userInfo.nickname;
     const provider = req.userInfo.provider;
+    const userId = req.userInfo.userId;
+    // const userInfo = await User.findOne({
+    //   where: { nickname: nickname, provider: provider },
+    // });
+    // console.log(userInfo);
 
-    const userInfo = await User.findOne({
-      where: { nickname: nickname, provider: provider },
-    });
-    console.log(userInfo);
-
-    const userId = userInfo.dataValues.user_id;
+    // const userId = userInfo.dataValues.user_id;
     console.log(userId);
 
     const query = `SELECT b.board_id, b.board_title,b.board_content,b.view_count,b.board_image, count(l.board_id) as likeCnt,count(c.board_id) as commentCnt,
