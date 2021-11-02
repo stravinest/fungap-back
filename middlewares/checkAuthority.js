@@ -4,7 +4,7 @@ exports.checkAuthority = async (req, res, next) => {
   try {
     const userId = req.userId;
     const userInfo = await User.findOne({ where: { user_id: userId } });
-
+    
     if (userInfo.user_authority == 'public') {
       return res
         .status(403)

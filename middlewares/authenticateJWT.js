@@ -15,17 +15,17 @@ exports.authenticateJWT = async (req, res, next) => {
       iAccessToken === 'invalid signature' ||
       irefreshToken === 'invalid signature'
     ) {
-      return res.status(403).json({ ok: false, message: 'invalid token' });
+      return res.status(403).json({ result: 'fail', error: 'invalid token' });
     }
 
     //잘못된 형식의 토큰
     if (iAccessToken === 'jwt malformed' || irefreshToken === 'jwt malformed') {
-      return res.status(403).json({ ok: false, message: 'malformed token' });
+      return res.status(403).json({ result: 'fail', error: 'malformed token' });
     }
 
-    //두토큰다 유효기간이 끝난 겨우
+    //두토큰다 유효기간이 끝난 경우
     if (iAccessToken === 'jwt expired' && irefreshToken === 'jwt expired') {
-      return res.status(403).json({ ok: false, message: 'invalid token' });
+      return res.status(403).json({ result: 'fail', error: 'invalid token' });
     }
 
     //액세스토큰 만료 리플레쉬 살아있음
@@ -37,7 +37,7 @@ exports.authenticateJWT = async (req, res, next) => {
         const newAuth = await getNewAuth(refreshToken);
 
         if (!newAuth)
-          return res.status(403).json({ ok: false, message: 'invalid token' });
+          return res.status(403).json({ result: 'fail', error: 'invalid token' });
 
         req.loginUser = loginUser(newAuth.accessToken, refreshToken);
         req.userId = newAuth.userId;
@@ -51,15 +51,12 @@ exports.authenticateJWT = async (req, res, next) => {
         next();
       } else {
         res.json({
-          ok: false,
+          result: 'fail',
           needsLogin: true,
           message: '로그인이 필요합니다.',
         });
       }
     } else {
-      console.log('아아하하하하하');
-      console.log(iAccessToken);
-      console.log('아아하하하하하');
       req.loginUser = loginUser(accessToken, refreshToken);
       req.userId = iAccessToken.user_id;
       req.userInfo = {
@@ -78,10 +75,7 @@ exports.authenticateJWT = async (req, res, next) => {
 };
 
 function verifyToken(token) {
-  try {
-    // console.log('아놔좀 나와');
-    // console.log(token);
-    // console.log(jwt.verify(token, process.env.JWT_SECRET));
+  try {    
     return jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
     console.error(error);

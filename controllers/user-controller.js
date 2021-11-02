@@ -1,9 +1,4 @@
-const {
-  jwtCreate,
-  jwtGoogleCreate,
-  jwtNaverCreate,
-  jwtLocalCreate,
-} = require('../utils/jwt');
+const { jwtKakaoCreate, jwtGoogleCreate, jwtNaverCreate, jwtLocalCreate } = require('../utils/createJWT');
 const { loginUser } = require('../utils/setLoginUser');
 const jwt = require('jsonwebtoken');
 const {
@@ -20,7 +15,7 @@ const bcrypt = require('bcrypt');
 const auth = async (req, res, next) => {
   try {
     const profile = req.kakao;
-    const [accessToken, refreshToken] = await jwtCreate(profile);
+    const [accessToken, refreshToken] = await jwtKakaoCreate(profile);
     const token = loginUser(accessToken, refreshToken);
     res.json({
       result: 'success',
