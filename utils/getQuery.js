@@ -1,11 +1,4 @@
-const {
-  Board,
-  User,
-  Like,
-  Comment,
-  sequelize,
-  Sequelize,
-} = require('../models');
+const { sequelize, Sequelize } = require('../models');
 
 //홈화면 조회 신규 순 로그인
 exports.NewBoardHomeLogin = async function (user_id) {
