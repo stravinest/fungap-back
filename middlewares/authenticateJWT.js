@@ -30,6 +30,7 @@ exports.authenticateJWT = async (req, res, next) => {
     if (iAccessToken === 'jwt expired') {
       console.log('accessToken Expired!!!');
       if (irefreshToken) {
+        
         const newAuth = await getNewAuth(refreshToken);
 
         if (!newAuth)
@@ -42,7 +43,7 @@ exports.authenticateJWT = async (req, res, next) => {
           email: newAuth.email,
           nickname: newAuth.nickname,
           user_image: newAuth.user_image,
-          provider: 'naver',
+          provider: newAuth.provider,
         };
         next();
       } else {
@@ -63,7 +64,7 @@ exports.authenticateJWT = async (req, res, next) => {
         email: iAccessToken.email,
         nickname: iAccessToken.nickname,
         user_image: iAccessToken.user_image,
-        provider: 'naver',
+        provider: iAccessToken.provider,
       };
       next();
     }

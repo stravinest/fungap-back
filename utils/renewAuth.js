@@ -3,7 +3,7 @@ const { User } = require('../models');
 
 exports.getNewAuth = async function (refresh_token) {
   const info = await User.findOne({
-    attributes: ['user_id', 'email', 'nickname', 'user_image'],
+    attributes: ['user_id', 'email', 'nickname', 'user_image', 'provider'],
     where: { refresh_token },
   });
 
@@ -13,7 +13,7 @@ exports.getNewAuth = async function (refresh_token) {
       email: info.email,
       nickname: info.nickname,
       user_image: info.user_image,
-      provider: 'naver',
+      provider: info.provider,
     };
     console.log(basicInfo);
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
@@ -25,7 +25,7 @@ exports.getNewAuth = async function (refresh_token) {
       email: info.email,
       nickname: info.nickname,
       user_image: info.user_image,
-      provider: 'naver',
+      provider: info.provider,
     };
   }
   return null;
