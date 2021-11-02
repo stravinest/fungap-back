@@ -19,7 +19,10 @@ const sequelize = new Sequelize(
   config
 );
 
+//시퀄라이즈 쿼리 쓸 때 있어야함
+db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+
 db.Board = Board;
 db.Celebrity = Celebrity;
 db.Comment = Comment;

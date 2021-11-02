@@ -3,8 +3,8 @@ const { User } = require('../models');
 exports.checkAuthority = async (req, res, next) => {
   try {
     const userId = req.userId;
-    const userInfo = await User.findOne({ where: userId });
-        
+    const userInfo = await User.findOne({ where: { user_id: userId } });
+
     if (userInfo.user_authority == 'public') {
       return res
         .status(403)
@@ -12,6 +12,6 @@ exports.checkAuthority = async (req, res, next) => {
     }
     next();
   } catch (err) {
-    next(err)
+    next(err);
   }
 };

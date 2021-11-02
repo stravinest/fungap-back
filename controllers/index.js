@@ -1,6 +1,6 @@
 const authController = require('./auth-controller');
-// const electionController = require('./election-controller');
-// const issueController = require('./issue-controller');
+const boardController = require('./board-controller');
+const commentController = require('./comment-controller');
 const userController = require('./user-controller');
 const mypageController = require('./mypage-controller');
 // const freeBoardController = require('./free-board-controller');
@@ -9,8 +9,8 @@ const mypageController = require('./mypage-controller');
 
 module.exports = {
   authController,
-  // electionController,
-  // issueController,
+  boardController,
+  commentController,
   userController,
   mypageController,
 

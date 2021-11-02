@@ -100,15 +100,22 @@ exports.jwtGoogleCreate = async (profile) => {
 };
 //네이버
 exports.jwtNaverCreate = async (profile) => {
-  const userId = await User.findOne({ where: { [Op.or]: [{ email: profile?.response?.email }, { nickname: profile?.response?.nickname }] } })
+  const userId = await User.findOne({
+    where: {
+      [Op.or]: [
+        { email: profile?.response?.email },
+        { nickname: profile?.response?.nickname },
+      ],
+    },
+  });
   const basicInfo = {
     userId: userId.user_id,
     email: profile?.response?.email,
     nickname: profile?.response?.nickname,
     user_image: profile?.response?.profile_image,
   };
-  console.log(basicInfo)
-  
+  console.log(basicInfo);
+
   const snsId = profile?.response?.id;
 
   //refresh token 발급
@@ -140,6 +147,31 @@ exports.jwtNaverCreate = async (profile) => {
         refresh_token: refreshToken,
       });
     }
+    //access token 발급
+    const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_ACCESS_EXPIRE,
+    });
+    return [accessToken, refreshToken];
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+//로컬로그인
+exports.jwtLocalCreate = async (profile) => {
+  const basicInfo = {
+    email: profile?.dataValues?.email,
+    nickname: profile?.dataValues?.nickname,
+    user_image: profile?.dataValues?.profile_image,
+    user_mbti: profile?.dataValues?.user_mbti,
+    provider: 'local',
+  };
+  //refresh token 발급
+  const refreshToken = jwt.sign({}, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_REFRESH_EXPIRE,
+  });
+
+  try {
     //access token 발급
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,

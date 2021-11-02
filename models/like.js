@@ -34,5 +34,9 @@ module.exports = class Like extends Sequelize.Model {
       foreignKey: 'user_id',
       sourceKey: 'user_id',
     });
+    db.Like.belongsTo(db.Board, {
+      foreignKey: 'board_id',
+      sourceKey: 'board_id',
+    });
   }
 };
