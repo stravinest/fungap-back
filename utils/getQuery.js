@@ -40,7 +40,7 @@ exports.PopBoardHomeLogin = async function (user_id) {
   ON b.board_id = u.board_id AND u.user_id=${user_id}
   WHERE b.board_delete_code = 0
   GROUP BY b.board_id
-  ORDER BY b.like_count DESC`;
+  ORDER BY like_count DESC`;
   return await sequelize.query(queryPop, {
     type: Sequelize.QueryTypes.SELECT,
   });

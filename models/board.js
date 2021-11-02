@@ -13,7 +13,7 @@ module.exports = class Board extends Sequelize.Model {
         user_id: {
           type: Sequelize.INTEGER,
           allowNull: false,
-        },       
+        },
         board_title: {
           type: Sequelize.STRING(40),
           allowNull: false,
@@ -36,21 +36,6 @@ module.exports = class Board extends Sequelize.Model {
           defaultValue: 0,
         },
         view_count: {
-          type: Sequelize.INTEGER,
-          allowNull: false,
-          defaultValue: 0,
-        },
-        like_count: {
-          type: Sequelize.INTEGER,
-          allowNull: false,
-          defaultValue: 0,
-        },
-        like_state: {
-          type: Sequelize.INTEGER,
-          allowNull: false,
-          defaultValue: 0,
-        },
-        comment_count: {
           type: Sequelize.INTEGER,
           allowNull: false,
           defaultValue: 0,
