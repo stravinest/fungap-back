@@ -7,7 +7,7 @@ const writeBoardFunc = async (req, res) => {
     const userId = req.userId;
     const { board_id } = req.params;
 
-    const board = await Board.findOne({ board_id });
+    const board = await Board.findOne({ where: {board_id} });
 
     res.json({ result: 'success', board });
   } catch (err) {
