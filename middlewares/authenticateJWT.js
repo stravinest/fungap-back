@@ -9,6 +9,7 @@ exports.authenticateJWT = async (req, res, next) => {
     const iAccessToken = verifyToken(accessToken.split(' ')[1]);
     const irefreshToken = verifyToken(refreshToken);
     console.log(iAccessToken);
+    console.log(irefreshToken);
     //유효하지 않는 토큰:signature가 맞지 않음
     if (
       iAccessToken === 'invalid signature' ||
@@ -27,10 +28,12 @@ exports.authenticateJWT = async (req, res, next) => {
       return res.status(403).json({ ok: false, message: 'invalid token' });
     }
 
+    //액세스토큰 만료 리플레쉬 살아있음
     if (iAccessToken === 'jwt expired') {
       console.log('accessToken Expired!!!');
       if (irefreshToken) {
-        
+        console.log(refreshToken);
+        console.log(irefreshToken);
         const newAuth = await getNewAuth(refreshToken);
 
         if (!newAuth)
@@ -76,9 +79,9 @@ exports.authenticateJWT = async (req, res, next) => {
 
 function verifyToken(token) {
   try {
-    console.log('아놔좀 나와');
-    console.log(token);
-    console.log(jwt.verify(token, process.env.JWT_SECRET));
+    // console.log('아놔좀 나와');
+    // console.log(token);
+    // console.log(jwt.verify(token, process.env.JWT_SECRET));
     return jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
     console.error(error);

@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { Op } = require('sequelize');
+const { cloneNode } = require('@babel/types');
 
 exports.jwtCreate = async (profile) => {
   const basicInfo = {
@@ -11,7 +12,7 @@ exports.jwtCreate = async (profile) => {
     user_image:
       profile.data?.kakao_account?.profile.profile_image_url ||
       profile.data?.properties?.profile_image,
-    provider : 'kakao',
+    provider: 'kakao',
   };
 
   const snsId = profile.data?.id || profile.id;
@@ -197,23 +198,25 @@ exports.jwtLocalCreate = async (profile) => {
     nickname: profile?.dataValues?.nickname,
     user_image: profile?.dataValues?.profile_image,
     user_mbti: profile?.dataValues?.user_mbti,
-    provider : 'local'
+    user_authority: profile?.dataValues?.user_authority,
+    provider: profile?.dataValues?.provider,
   };
-  //refresh token 발급
+
   const refreshToken = jwt.sign({}, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_REFRESH_EXPIRE,
   });
 
   try {
-    const user = await User.findOne({
-      where: {
-        [Op.or]: [
-          { email: profile?.response?.email },
-          { nickname: profile?.response?.nickname },
-        ],
+    await User.update(
+      {
+        refresh_token: refreshToken,
       },
-    });
-    const user_id = user.user_id;
+      {
+        where: { email: profile?.dataValues?.email, provider: 'local' },
+      }
+    );
+
+    const user_id = profile?.dataValues?.user_id;
     basicInfo.user_id = user_id;
     //access token 발급
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {

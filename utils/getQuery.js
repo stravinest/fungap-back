@@ -46,7 +46,7 @@ exports.PopBoardHomeLogin = async function (user_id) {
   });
 };
 //홈화면 조회 신규순 비로그인
-exports.PopBoardHome = async function () {
+exports.NewBoardHome = async function () {
   const query = `
   SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count,count(c.board_id) as comment_count,
   CASE l.board_id 
@@ -81,7 +81,7 @@ exports.PopBoardHome = async function () {
   ON b.board_id = l.board_id
   WHERE b.board_delete_code = 0
   GROUP BY b.board_id
-  ORDER BY b.createdAt DESC`;
+  ORDER BY like_count DESC`;
 
   return await sequelize.query(query, {
     type: Sequelize.QueryTypes.SELECT,

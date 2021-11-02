@@ -13,7 +13,9 @@ const {
 //홈화면 조회
 const getBoardHome = async (req, res) => {
   try {
-    const user_id = 1; //임의로 설정
+    const user_id = req.userId;
+    // const user_id = 1; //임의로 설정
+    console.log('유저로그인', user_id);
 
     if (user_id) {
       const new_board_list = await NewBoardHomeLogin(user_id);

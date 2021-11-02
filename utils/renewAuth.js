@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
 exports.getNewAuth = async function (refresh_token) {
+  console.log('새로 accesstoken 발급');
   const info = await User.findOne({
     attributes: ['user_id', 'email', 'nickname', 'user_image', 'provider'],
     where: { refresh_token },

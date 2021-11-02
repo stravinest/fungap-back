@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router(); // 라우터라고 선언한다.
 const { boardController } = require('../controllers');
+const { authenticateJWT } = require('../middlewares/authenticateJWT');
 ///board/;
 //홈화면
 router.get('/home', boardController.getBoardHome);
