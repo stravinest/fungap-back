@@ -35,6 +35,14 @@ const getComment = async (req, res) => {
       ],
       order: [['createdAt', 'DESC']],
     });
+    if (!result[0]) {
+      console.log('왜여기안걸려?');
+      res
+        .status(200)
+        .json({ result: 'fail', errormessage: '댓글이 없습니다.' });
+      return;
+    }
+    console.log('resutl는', result);
     console.log(result[0].dataValues);
 
     res.status(200).json({ result: 'success', result });

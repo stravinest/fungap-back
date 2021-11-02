@@ -9,13 +9,14 @@ exports.jwtNaverCreate = async (profile) => {
     user_image: profile?.response?.profile_image,
     provider: 'naver',
   };
-  
+
   const snsId = profile?.response?.id;
 
   //refresh token 발급
   const refreshToken = jwt.sign({}, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_REFRESH_EXPIRE,
   });
+  console.log(profile?.response?.email);
 
   try {
     const exUser = await User.findOne({
@@ -54,7 +55,7 @@ exports.jwtNaverCreate = async (profile) => {
       const user_id = user.user_id;
       basicInfo.user_id = user_id;
     }
-    console.log(basicInfo)
+    console.log(basicInfo);
     //access token 발급
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,

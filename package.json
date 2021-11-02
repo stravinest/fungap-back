@@ -19,7 +19,8 @@
   "homepage": "https://github.com/fungap/fungap-back#readme",
   "devDependencies": {
     "jest": "^27.3.1",
-    "prettier": "^2.4.1"
+    "prettier": "^2.4.1",
+    "supertest": "^6.1.6"
   },
   "dependencies": {
     "axios": "^0.24.0",
