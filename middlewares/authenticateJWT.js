@@ -4,12 +4,12 @@ const { loginUser } = require('../utils/setLoginUser');
 
 exports.authenticateJWT = async (req, res, next) => {
   try {
-    
     const [accessToken, refreshToken] = req.headers['authorization'].split(',');
 
     const iAccessToken = verifyToken(accessToken.split(' ')[1]);
     const irefreshToken = verifyToken(refreshToken);
-    console.log(iAccessToken)
+    console.log(iAccessToken);
+    console.log(irefreshToken);
     //유효하지 않는 토큰:signature가 맞지 않음
     if (
       iAccessToken === 'invalid signature' ||
@@ -28,21 +28,25 @@ exports.authenticateJWT = async (req, res, next) => {
       return res.status(403).json({ ok: false, message: 'invalid token' });
     }
 
+    //액세스토큰 만료 리플레쉬 살아있음
     if (iAccessToken === 'jwt expired') {
       console.log('accessToken Expired!!!');
       if (irefreshToken) {
+        console.log(refreshToken);
+        console.log(irefreshToken);
         const newAuth = await getNewAuth(refreshToken);
 
         if (!newAuth)
           return res.status(403).json({ ok: false, message: 'invalid token' });
 
-        req.loginUser = loginUser(newAuth.accessToken, newAuth.refreshToken);
+        req.loginUser = loginUser(newAuth.accessToken, refreshToken);
         req.userId = newAuth.userId;
         req.userInfo = {
-          id: newAuth.userId,
+          userId: newAuth.userId,
+          email: newAuth.email,
           nickname: newAuth.nickname,
-          img: newAuth.img,
-          provider: newAuth.provider
+          user_image: newAuth.user_image,
+          provider: newAuth.provider,
         };
         next();
       } else {
@@ -53,14 +57,17 @@ exports.authenticateJWT = async (req, res, next) => {
         });
       }
     } else {
-      console.log('아아하하하하하')
+      console.log('아아하하하하하');
+      console.log(iAccessToken);
+      console.log('아아하하하하하');
       req.loginUser = loginUser(accessToken, refreshToken);
-      req.userId = iAccessToken.userId;
+      req.userId = iAccessToken.user_id;
       req.userInfo = {
-        userId: iAccessToken.userId,
+        userId: iAccessToken.user_id,
+        email: iAccessToken.email,
         nickname: iAccessToken.nickname,
-        img: iAccessToken.img,
-        provider: iAccessToken.provider
+        user_image: iAccessToken.user_image,
+        provider: iAccessToken.provider,
       };
       next();
     }
@@ -72,9 +79,9 @@ exports.authenticateJWT = async (req, res, next) => {
 
 function verifyToken(token) {
   try {
-    console.log('아놔좀 나와')
-    console.log(token)
-    console.log(jwt.verify(token, process.env.JWT_SECRET));
+    // console.log('아놔좀 나와');
+    // console.log(token);
+    // console.log(jwt.verify(token, process.env.JWT_SECRET));
     return jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
     console.error(error);

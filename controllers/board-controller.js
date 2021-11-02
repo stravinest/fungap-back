@@ -1,58 +1,93 @@
-const {
-  Board,
-  User,
-  Like,
-  Comment,
-  sequelize,
-  Sequelize,
-} = require('../models');
+const { Board, Like, sequelize, Sequelize } = require('../models');
 const { Op } = require('sequelize');
-// const { getUserIP } = require('../utils/getUserIp');
+const {
+  situationBoardLogin, //로그인시
+  situationBoard, //비로그인
+  detailCommentsAll, //로그인비로그인시 댓글
+  detailBoard, //비로그인 상세 게시글
+  detailBoardLogin, //로그인 상세 게시글
+  PopBoardHome,
+  NewBoardHome,
+  NewBoardHomeLogin,
+  PopBoardHomeLogin,
+} = require('../utils/getQuery');
 //홈화면 조회
 const getBoardHome = async (req, res) => {
   try {
-    const newBoard = await Board.findAll({
-      limit: 4,
-      order: [['createdAt', 'DESC']],
+    const user_id = req.userId;
+    console.log('유저로그인', user_id);
+
+    if (user_id) {
+      const new_board_list = await NewBoardHomeLogin(user_id);
+      const popularity_board_list = await PopBoardHomeLogin(user_id);
+      res
+        .status(200)
+        .json({ result: 'success', new_board_list, popularity_board_list });
+    } else {
+      const new_board_list = await NewBoardHome();
+      const popularity_board_list = await PopBoardHome();
+      res
+        .status(200)
+        .json({ result: 'success', new_board_list, popularity_board_list });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(400).json(() => {
+      msg: '게시글 목록을 불러오는데 실패하였습니다.';
     });
+  }
+};
 
-    const popularityBoard = await Board.findAll({
-      limit: 4,
-      order: [['like_count', 'DESC']],
+//상황별 페이지 게시글 전체 조회
+const getSituationBoard = async (req, res) => {
+  try {
+    const user_id = req.userId;
+    console.log('유저로그인', user_id);
+
+    if (user_id) {
+      const board_list = await situationBoardLogin(user_id);
+
+      res.status(200).json({ result: 'success', board_list });
+    } else {
+      const board_list = await situationBoard();
+
+      res.status(200).json({ result: 'success', board_list });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(400).json(() => {
+      msg: '게시글 목록을 불러오는데 실패하였습니다.';
     });
+  }
+};
 
-    const addLike = [];
+// 게시글 디테일페이지 조회
+const getDetailBoard = async (req, res) => {
+  try {
+    const user_id = req.userId;
+    console.log('유저로그인', user_id);
 
-    const postQuery = `
-    SELECT b.board_id,  b.board_content, count(l.board_id) as likeCnt
-    FROM database_final_project.boards AS b
-    LEFT OUTER JOIN database_final_project.likes AS l
-    ON b.board_id = l.board_id
-    GROUP BY b.board_id
-    ORDER BY b.createdAt DESC`;
+    const { board_id } = req.params;
 
-    const posts = await sequelize.query(postQuery, {
-      type: Sequelize.QueryTypes.SELECT,
-    });
-    console.log(posts);
-
-    const poplike = [];
-    for (let i = 0; i < popularityBoard.length; i++) {
-      console.log(popularityBoard[i]['dataValues'].board_id);
-      const islike = await Like.findOne({
-        where: { board_id: popularityBoard[i]['board_id'] },
+    if (req.cookies['f' + board_id] == undefined) {
+      res.cookie('f' + board_id, getUserIP(req), {
+        maxAge: 720000, //12분
+        // maxAge: 1200000,
       });
-      poplike.push(popularityBoard[i]['dataValues']);
-      console.log(i);
-      if (islike) {
-        poplike[i].like_state = true;
-      } else {
-        poplike[i].like_state = false;
-      }
+      await Board.increment({ view_count: +1 }, { where: { board_id } });
     }
 
-    // console.log(addLike);
-    res.status(200).json({ result: 'success', newBoard, popularityBoard });
+    if (user_id) {
+      const result = await detailBoardLogin(user_id, board_id);
+      const comments = await detailCommentsAll(board_id);
+      const board = result[0];
+      res.status(200).json({ result: 'success', board, comments });
+    } else {
+      const result = await detailBoard(board_id);
+      const comments = await detailCommentsAll(board_id);
+      const board = result[0];
+      res.status(200).json({ result: 'success', board, comments });
+    }
   } catch (error) {
     console.error(error);
     res.status(400).json(() => {
@@ -66,144 +101,35 @@ function getUserIP(req) {
   return addr;
 }
 
-// 게시글 디테일페이지 조회
-const getDetailBoard = async (req, res) => {
-  try {
-    const user_id = 1; //임의로 설정
-    const { board_id } = req.params;
-
-    if (req.cookies['f' + board_id] == undefined) {
-      res.cookie('f' + board_id, getUserIP(req), {
-        maxAge: 720000, //12분
-        // maxAge: 1200000,
-      });
-      await Board.increment({ view_count: +1 }, { where: { board_id } });
-    }
-
-    //query로
-    const queryBoard = `
-    SELECT b.board_title,b.board_image,b.board_content,b.view_count,count(l.board_id) as like_count,
-    CASE u.board_id
-    WHEN b.board_id THEN 'true'
-    ELSE 'false'
-    END AS like_state
-    FROM boards AS b
-    left OUTER JOIN comments AS c
-    ON (b.board_id = c.board_id AND c.comment_delete_code = 0)
-    left OUTER JOIN likes AS l
-    ON b.board_id = l.board_id
-    left OUTER JOIN likes AS u
-    ON b.board_id = u.board_id AND u.user_id=${user_id}
-    WHERE (b.board_delete_code = 0 AND b.board_id=${board_id})
-    `;
-    const result = await sequelize.query(queryBoard, {
-      type: Sequelize.QueryTypes.SELECT,
-    });
-
-    const queryComment = `
-    SELECT u.user_image,u.user_id,c.board_id,u.user_mbti,u.nickname,c.comment,c.comment_id
-    FROM comments AS c
-    left OUTER JOIN users AS u
-    ON c.user_id = u.user_id
-    WHERE (c.comment_delete_code = 0 ANd c.board_id=${board_id})
-    ORDER BY c.createdAt DESC`;
-
-    const comments = await sequelize.query(queryComment, {
-      type: Sequelize.QueryTypes.SELECT,
-    });
-    const board = result[0];
-    res.status(200).json({ result: 'success', board, comments });
-  } catch (error) {
-    console.error(error);
-    res.status(400).json(() => {
-      msg: '게시글 목록을 불러오는데 실패하였습니다.';
-    });
-  }
-};
-
-//상황별 페이지 게시글 전체 조회
-const getSituationBoard = async (req, res) => {
-  try {
-    const user_id = null; //임의로 설정
-
-    if (user_id) {
-      //query로
-      const query = `
-    SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count,count(c.board_id) as comment_count,
-    CASE u.board_id 
-    WHEN b.board_id THEN 'true'
-    ELSE 'false'
-    END AS like_state
-    FROM boards AS b
-    left OUTER JOIN comments AS c
-    ON (b.board_id = c.board_id AND c.comment_delete_code = 0)
-    left OUTER JOIN likes AS l
-    ON b.board_id = l.board_id
-    left OUTER JOIN likes AS u
-    ON b.board_id = u.board_id AND u.user_id=${user_id}
-    WHERE b.board_delete_code = 0
-    GROUP BY b.board_id
-    ORDER BY b.createdAt DESC`;
-
-      const board_list = await sequelize.query(query, {
-        type: Sequelize.QueryTypes.SELECT,
-      });
-
-      res.status(200).json({ result: 'success', board_list });
-    } else {
-      const query = `
-      SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count,count(c.board_id) as comment_count,
-      CASE l.board_id 
-      WHEN '말이안되는값' THEN 'true'
-      ELSE 'false'
-      END AS like_state
-      FROM boards AS b
-      left OUTER JOIN comments AS c
-      ON (b.board_id = c.board_id AND c.comment_delete_code = 0)
-      left OUTER JOIN likes AS l
-      ON b.board_id = l.board_id
-      WHERE b.board_delete_code = 0
-      GROUP BY b.board_id
-      ORDER BY b.createdAt DESC`;
-
-      const board_list = await sequelize.query(query, {
-        type: Sequelize.QueryTypes.SELECT,
-      });
-
-      res.status(200).json({ result: 'success', board_list });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(400).json(() => {
-      msg: '게시글 목록을 불러오는데 실패하였습니다.';
-    });
-  }
-};
 //좋아요 /좋아요 취소
 const changeLike = async (req, res) => {
   try {
-    const user_id = 1;
+    const user_id = req.userId;
     const { board_id } = req.params;
-    console.log(board_id);
-    const isLike = await Like.findOne({
-      where: {
-        [Op.and]: { board_id: board_id, user_id: user_id },
-      },
-    });
-    //isLike 가 있으면 delete 없으면 create
-    if (isLike) {
-      await Like.destroy({
+    console.log('유저로그인', user_id);
+    if (user_id) {
+      const isLike = await Like.findOne({
         where: {
           [Op.and]: { board_id: board_id, user_id: user_id },
         },
       });
-      res.status(200).json({ result: 'success', like_state: false });
+      //isLike 가 있으면 delete 없으면 create
+      if (isLike) {
+        await Like.destroy({
+          where: {
+            [Op.and]: { board_id: board_id, user_id: user_id },
+          },
+        });
+        res.status(200).json({ result: 'success', like_state: false });
+      } else {
+        await Like.create({
+          user_id: user_id,
+          board_id: board_id,
+        });
+        res.status(200).json({ result: 'success', like_state: true });
+      }
     } else {
-      await Like.create({
-        user_id: user_id,
-        board_id: board_id,
-      });
-      res.status(200).json({ result: 'success', like_state: true });
+      res.status(400).json({ result: 'fail', msg: '로그인이 필요합니다.' });
     }
   } catch (error) {
     console.error(error);

@@ -29,40 +29,6 @@ const getComment = async (req, res) => {
     });
     console.log(result[0].dataValues);
 
-    // const result = await Comment.findAll({
-    //   where: {
-    //     [Op.and]: { userId, isCompleted },
-    //   },
-    //   include: {
-    //     model: Challenge,
-    //     as: 'Challenge',
-    //     attributes: [
-    //       'challengeName',
-    //       'challengeIntroduce',
-    //       'challengeDateTime',
-    //       'communityNickname',
-    //       'progressStatus',
-    //     ],
-    //     where,
-    //   },
-    //   order: [[Challenge, 'challengeDateTime', 'ASC']],
-    // });
-    // console.log(result);
-    //
-    // //query로
-    // const query = `
-    // SELECT u.user_image,u.user_id,c.board_id,u.user_mbti,u.nickname,c.comment,c.comment_id
-    // FROM comments AS c
-    // INNER JOIN users AS u
-    // ON c.user_id = u.user_id
-    // WHERE c.board_id = ${board_id}
-    // ORDER BY c.createdAt DESC`;
-
-    // const comments = await sequelize.query(query, {
-    //   type: Sequelize.QueryTypes.SELECT,
-    // });
-    // console.log(comments);
-
     res.status(200).json({ result: 'success', result });
   } catch (error) {
     console.error(error);
@@ -74,11 +40,15 @@ const getComment = async (req, res) => {
 //댓글등록
 const postComment = async (req, res) => {
   try {
-    const user_id = 1; //임의로 user_id 1이 로그인 하였음
+    const user_id = req.userId; //임의로 user_id 1이 로그인 하였음
     const { board_id } = req.params;
     const { comment } = req.body;
-    console.log(board_id);
-    console.log(comment);
+
+    if (!comment) {
+      console.log('커멘트 없음');
+      res.status(400).json({ result: 'fail', errormessage: '내용입력하세요' });
+      return;
+    }
 
     await Comment.create({
       user_id: user_id,
@@ -96,21 +66,43 @@ const postComment = async (req, res) => {
 //댓글삭제
 const deleteComment = async (req, res) => {
   try {
-    const user_id = 1; //임의로 user_id 1이 로그인 하였음
+    const user_id = req.userId;
     const { board_id, comment_id } = req.params;
-
-    console.log(board_id, comment_id);
-
-    await Comment.update(
-      //del code 숫자 수정
-      {
-        comment_delete_code: 1,
-      },
-      {
-        where: { board_id: board_id, comment_id: comment_id, user_id: user_id },
+    const isComment = await Comment.findOne({
+      //내가 쓴 comment 인지 확인
+      where: { board_id: board_id, comment_id: comment_id, user_id: user_id },
+    });
+    if (isComment) {
+      console.log(isComment);
+      if (isComment.comment_delete_code !== 1) {
+        //삭제 된게 아니면
+        // //내가 쓴 comment 이면 수정가능
+        await Comment.update(
+          //del code 숫자 수정
+          {
+            comment_delete_code: 1,
+          },
+          {
+            where: {
+              board_id: board_id,
+              comment_id: comment_id,
+              user_id: user_id,
+            },
+          }
+        );
+        res.status(200).json({ result: 'success' });
+      } else {
+        res
+          .status(401)
+          .json({ result: 'fail', errormessage: '이미 삭제되었습니다.' });
       }
-    );
-    res.status(200).json({ result: 'success' });
+    } else {
+      //내가쓴게 아니므로
+      res.status(401).json({
+        result: 'false',
+        errormessage: '삭제할수 없는 comment입니다.',
+      });
+    }
   } catch (error) {
     console.error(error);
     res.status(401).json(() => {
@@ -121,20 +113,44 @@ const deleteComment = async (req, res) => {
 //댓글수정
 const patchComment = async (req, res) => {
   try {
-    const user_id = 1; //임의로 user_id 1이 로그인 하였음
+    const user_id = req.userId; //임의로 user_id 1이 로그인 하였음
     const { board_id, comment_id } = req.params;
     const { comment } = req.body;
     console.log(board_id, comment_id);
+    const isComment = await Comment.findOne({
+      //내가 쓴 comment 인지 확인
+      where: { board_id: board_id, comment_id: comment_id, user_id: user_id },
+    });
+    if (isComment) {
+      //내가 쓴게 맞으면
+      console.log(isComment);
+      if (isComment.comment_delete_code !== 1) {
+        //삭제 된게 아니면
 
-    await Comment.update(
-      {
-        comment: comment,
-      },
-      {
-        where: { board_id: board_id, comment_id: comment_id, user_id: user_id },
+        await Comment.update(
+          {
+            comment: comment,
+          },
+          {
+            where: {
+              board_id: board_id,
+              comment_id: comment_id,
+              user_id: user_id,
+            },
+          }
+        );
+        res.status(200).json({ result: 'success' });
+      } else {
+        res
+          .status(401)
+          .json({ result: 'fail', errormessage: '이미삭제되었습니다.' });
       }
-    );
-    res.status(200).json({ result: 'success' });
+    } else {
+      //내가 쓴게 아니면
+      res
+        .status(401)
+        .json({ result: 'fail', errormessage: '수정할수없는 comment입니다.' });
+    }
   } catch (error) {
     console.error(error);
     res.status(401).json(() => {

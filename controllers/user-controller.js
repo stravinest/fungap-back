@@ -53,7 +53,6 @@ const authGoogle = async (req, res, next) => {
 const authNaver = async (req, res, next) => {
   try {
     const profile = req.naver;
-    console.log(profile);
 
     const [accessToken, refreshToken] = await jwtNaverCreate(profile);
     const token = loginUser(accessToken, refreshToken);
@@ -119,11 +118,11 @@ const login = async (req, res) => {
       });
       return;
     }
-    //console.log(userCheck);
 
     const authenticate = await bcrypt.compare(password, userCheck.password);
 
     if (authenticate === true) {
+      console.log('비밀번호 맞으면 실행');
       const [accessToken, refreshToken] = await jwtLocalCreate(userCheck);
       const token = loginUser(accessToken, refreshToken);
       res.json({
