@@ -13,6 +13,14 @@ const getComment = async (req, res) => {
   try {
     const { board_id } = req.params;
     console.log(board_id);
+    const isBoard = await Board.findOne({ where: { board_id: board_id } });
+    if (!isBoard) {
+      res.status(401).json({
+        result: 'fail',
+        errormessage: '게시글이 없습니다.',
+      });
+      return;
+    }
     const result = await Comment.findAll({
       attributes: ['comment', 'board_id', 'comment_id'],
       where: {
@@ -97,7 +105,8 @@ const deleteComment = async (req, res) => {
           .json({ result: 'fail', errormessage: '이미 삭제되었습니다.' });
       }
     } else {
-      //내가쓴게 아니므로
+      //내가쓴게 아니므로//내가 쓴게 아니거나 커멘트가 없거나
+
       res.status(401).json({
         result: 'false',
         errormessage: '삭제할수 없는 comment입니다.',

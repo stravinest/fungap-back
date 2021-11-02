@@ -122,6 +122,19 @@ const changeLike = async (req, res) => {
         });
         res.status(200).json({ result: 'success', like_state: false });
       } else {
+        const isBoard = await Board.findOne({
+          //찍고자하는 게시물이 있는지 검사
+          where: {
+            board_id: board_id,
+          },
+        });
+
+        if (isBoard === null) {
+          res
+            .status(200)
+            .json({ result: 'fail', lerrormessage: '게시글이 없습니다.' });
+          return;
+        }
         await Like.create({
           user_id: user_id,
           board_id: board_id,

@@ -170,7 +170,7 @@ exports.detailCommentsAll = async function (board_id) {
 };
 
 //게시글 디테일 페이지 조회(board) (비로그인)
-exports.detailBoard = async function (user_id, board_id) {
+exports.detailBoard = async function (board_id) {
   const queryBoard = `
   SELECT b.board_title,b.board_image,b.board_content,b.view_count,count(l.board_id) as like_count,
   CASE l.board_id
