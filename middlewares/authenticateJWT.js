@@ -37,7 +37,9 @@ exports.authenticateJWT = async (req, res, next) => {
         const newAuth = await getNewAuth(refreshToken);
 
         if (!newAuth)
-          return res.status(403).json({ result: 'fail', error: 'invalid token' });
+          return res
+            .status(403)
+            .json({ result: 'fail', error: 'invalid token' });
 
         req.loginUser = loginUser(newAuth.accessToken, refreshToken);
         req.userId = newAuth.userId;
@@ -57,6 +59,7 @@ exports.authenticateJWT = async (req, res, next) => {
         });
       }
     } else {
+      console.log('둘다 만료되지 않은 토큰입니다.굳굳');
       req.loginUser = loginUser(accessToken, refreshToken);
       req.userId = iAccessToken.user_id;
       req.userInfo = {
@@ -79,7 +82,7 @@ exports.authenticateJWT = async (req, res, next) => {
 };
 
 function verifyToken(token) {
-  try {    
+  try {
     return jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
     console.error(error);
