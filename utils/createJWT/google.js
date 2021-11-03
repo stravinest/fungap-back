@@ -41,10 +41,7 @@ exports.jwtGoogleCreate = async (profile) => {
     }
     const user = await User.findOne({
       where: {
-        [Op.or]: [
-          { email: profile?.response?.email },
-          { nickname: profile?.response?.nickname },
-        ],
+        [Op.or]: [{ email: profile?.email }, { nickname: profile?.name }],
       },
     });
     const user_id = user.user_id;

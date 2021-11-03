@@ -27,13 +27,14 @@ const getBoardHome = async (req, res) => {
       const new_board_list = await NewBoardHome();
       const popularity_board_list = await PopBoardHome();
       res
-        .status(200)
+        .status(201)
         .json({ result: 'success', new_board_list, popularity_board_list });
     }
   } catch (error) {
     console.error(error);
     res.status(400).json(() => {
-      msg: '게시글 목록을 불러오는데 실패하였습니다.';
+      result: 'fail';
+      errormesssage: '게시글 목록을 불러오는데 실패하였습니다.';
     });
   }
 };
@@ -51,12 +52,13 @@ const getSituationBoard = async (req, res) => {
     } else {
       const board_list = await situationBoard();
 
-      res.status(200).json({ result: 'success', board_list });
+      res.status(201).json({ result: 'success', board_list });
     }
   } catch (error) {
     console.error(error);
     res.status(400).json(() => {
-      msg: '게시글 목록을 불러오는데 실패하였습니다.';
+      result: 'fail';
+      errormesssage: '게시글 목록을 불러오는데 실패하였습니다.';
     });
   }
 };
@@ -66,9 +68,8 @@ const getDetailBoard = async (req, res) => {
   try {
     const user_id = req.userId;
     console.log('유저로그인', user_id);
-
     const { board_id } = req.params;
-
+    console.log(req.cookies);
     if (req.cookies['f' + board_id] == undefined) {
       res.cookie('f' + board_id, getUserIP(req), {
         maxAge: 720000, //12분
@@ -83,20 +84,23 @@ const getDetailBoard = async (req, res) => {
       const board = result[0];
       res.status(200).json({ result: 'success', board, comments });
     } else {
+      console.log('여기일텐데??');
       const result = await detailBoard(board_id);
       const comments = await detailCommentsAll(board_id);
       const board = result[0];
-      res.status(200).json({ result: 'success', board, comments });
+      res.status(201).json({ result: 'success', board, comments });
     }
   } catch (error) {
     console.error(error);
     res.status(400).json(() => {
-      msg: '게시글 목록을 불러오는데 실패하였습니다.';
+      result: 'fail';
+      errormesssage: '게시글 목록을 불러오는데 실패하였습니다.';
     });
   }
 };
 
 function getUserIP(req) {
+  console.log(req.headers);
   const addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   return addr;
 }
@@ -131,8 +135,8 @@ const changeLike = async (req, res) => {
 
         if (isBoard === null) {
           res
-            .status(200)
-            .json({ result: 'fail', lerrormessage: '게시글이 없습니다.' });
+            .status(400)
+            .json({ result: 'fail', errormessage: '게시글이 없습니다.' });
           return;
         }
         await Like.create({
@@ -142,12 +146,14 @@ const changeLike = async (req, res) => {
         res.status(200).json({ result: 'success', like_state: true });
       }
     } else {
-      res.status(400).json({ result: 'fail', msg: '로그인이 필요합니다.' });
+      console.log('여기로 안들어와?');
+      res.status(402).json({ result: 'fail', msg: '로그인이 필요합니다.' });
     }
   } catch (error) {
     console.error(error);
     res.status(400).json(() => {
-      msg: '좋아요 변경 실패';
+      result: 'fail';
+      errormessage: '좋아요 변경 실패';
     });
   }
 };
