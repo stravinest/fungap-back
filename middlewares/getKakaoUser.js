@@ -14,6 +14,7 @@ exports.getKakaoUser = async (req, res, next) => {
         Authorization,
       },
     });
+    console.log(profile);
     req.kakao = profile;
     next();
   } catch (error) {

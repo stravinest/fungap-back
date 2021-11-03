@@ -4,7 +4,10 @@ const { Op } = require('sequelize');
 
 exports.jwtKakaoCreate = async (profile) => {
   const basicInfo = {
-    email: profile.data?.kakao_account?.email || profile.data?.properties.email,
+    email:
+      profile.data?.kakao_account?.email ||
+      profile.data?.properties.email ||
+      '',
     nickname:
       profile.data?.kakao_account?.profile.nickname ||
       profile.data?.properties.nickname,
@@ -52,20 +55,7 @@ exports.jwtKakaoCreate = async (profile) => {
       });
     }
     const user = await User.findOne({
-      where: {
-        [Op.or]: [
-          {
-            email:
-              profile.data?.kakao_account?.email ||
-              profile.data?.properties.email,
-          },
-          {
-            nickname:
-              profile.data?.kakao_account?.profile.nickname ||
-              profile.data?.properties.nickname,
-          },
-        ],
-      },
+      where: { [Op.and]: [{ sns_id: snsId }, { provider: 'kakao' }] },
     });
     const user_id = user.user_id;
     const user_mbti = user.user_mbti;

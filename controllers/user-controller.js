@@ -23,7 +23,9 @@ const auth = async (req, res, next) => {
     const [accessToken, refreshToken, basicInfo] = await jwtKakaoCreate(
       profile
     );
+
     const token = loginUser(accessToken, refreshToken);
+    console.log(token);
     const user = {
       user_image: basicInfo.user_image,
       nickname: basicInfo.nickname,

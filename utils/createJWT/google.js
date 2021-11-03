@@ -4,9 +4,9 @@ const { Op } = require('sequelize');
 
 exports.jwtGoogleCreate = async (profile) => {
   const basicInfo = {
-    email: profile?.email,
-    nickname: profile?.name,
-    user_image: profile?.picture,
+    email: profile?.email || '',
+    nickname: profile?.name || '',
+    user_image: profile?.picture || '',
     provider: 'google',
   };
   //refresh token 발급
@@ -42,9 +42,7 @@ exports.jwtGoogleCreate = async (profile) => {
       });
     }
     const user = await User.findOne({
-      where: {
-        [Op.or]: [{ email: profile?.email }, { nickname: profile?.name }],
-      },
+      where: { [Op.and]: [{ sns_id: profile?.sub }, { provider: 'google' }] },
     });
     const user_id = user.user_id;
     const user_mbti = user.user_mbti;
