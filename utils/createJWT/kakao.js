@@ -11,6 +11,9 @@ exports.jwtKakaoCreate = async (profile) => {
     user_image:
       profile.data?.kakao_account?.profile.profile_image_url ||
       profile.data?.properties?.profile_image,
+    user_mbti:
+      profile.data?.kakao_account?.profile.user_mbti ||
+      profile.data?.properties.user_mbti,
     provider: 'kakao',
   };
 
@@ -63,12 +66,14 @@ exports.jwtKakaoCreate = async (profile) => {
       },
     });
     const user_id = user.user_id;
+    const user_mbti = user.user_mbti;
     basicInfo.user_id = user_id;
+    basicInfo.user_mbti = user_mbti;
     //access token 발급
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,
     });
-    return [accessToken, refreshToken];
+    return [accessToken, refreshToken, basicInfo];
   } catch (error) {
     console.error(error);
   }

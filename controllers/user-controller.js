@@ -1,4 +1,9 @@
-const { jwtKakaoCreate, jwtGoogleCreate, jwtNaverCreate, jwtLocalCreate } = require('../utils/createJWT');
+const {
+  jwtKakaoCreate,
+  jwtGoogleCreate,
+  jwtNaverCreate,
+  jwtLocalCreate,
+} = require('../utils/createJWT');
 const { loginUser } = require('../utils/setLoginUser');
 const jwt = require('jsonwebtoken');
 const {
@@ -15,11 +20,20 @@ const bcrypt = require('bcrypt');
 const auth = async (req, res, next) => {
   try {
     const profile = req.kakao;
-    const [accessToken, refreshToken] = await jwtKakaoCreate(profile);
+    const [accessToken, refreshToken, basicInfo] = await jwtKakaoCreate(
+      profile
+    );
     const token = loginUser(accessToken, refreshToken);
+    const user = {
+      user_image: basicInfo.user_image,
+      nickname: basicInfo.nickname,
+      user_mbti: basicInfo.user_mbti,
+      user_id: basicInfo.user_id,
+    };
     res.json({
       result: 'success',
       token,
+      user,
     });
   } catch (error) {
     console.error(error);
@@ -32,11 +46,20 @@ const authGoogle = async (req, res, next) => {
   try {
     console.log(req.google);
     const profile = req.google;
-    const [accessToken, refreshToken] = await jwtGoogleCreate(profile);
+    const [accessToken, refreshToken, basicInfo] = await jwtGoogleCreate(
+      profile
+    );
     const token = loginUser(accessToken, refreshToken);
+    const user = {
+      user_image: basicInfo.user_image,
+      nickname: basicInfo.nickname,
+      user_mbti: basicInfo.user_mbti,
+      user_id: basicInfo.user_id,
+    };
     res.json({
       result: 'success',
       token,
+      user,
     });
   } catch (error) {
     console.error(error);
@@ -49,11 +72,20 @@ const authNaver = async (req, res, next) => {
   try {
     const profile = req.naver;
 
-    const [accessToken, refreshToken] = await jwtNaverCreate(profile);
+    const [accessToken, refreshToken, basicInfo] = await jwtNaverCreate(
+      profile
+    );
     const token = loginUser(accessToken, refreshToken);
+    const user = {
+      user_image: basicInfo.user_image,
+      nickname: basicInfo.nickname,
+      user_mbti: basicInfo.user_mbti,
+      user_id: basicInfo.user_id,
+    };
     res.json({
       result: 'success',
       token,
+      user,
     });
   } catch (error) {
     console.error(error);
@@ -120,9 +152,17 @@ const login = async (req, res) => {
       console.log('비밀번호 맞으면 실행');
       const [accessToken, refreshToken] = await jwtLocalCreate(userCheck);
       const token = loginUser(accessToken, refreshToken);
+      console.log(userCheck);
+      const user = {
+        user_image: userCheck?.dataValues?.user_image,
+        nickname: userCheck?.dataValues?.nickname,
+        user_mbti: userCheck?.dataValues?.user_mbti,
+        user_id: userCheck?.dataValues?.user_id,
+      };
       res.json({
         result: 'success',
         token,
+        user,
       });
     } else {
       res.status(400).send({

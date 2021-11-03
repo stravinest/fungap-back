@@ -45,12 +45,14 @@ exports.jwtGoogleCreate = async (profile) => {
       },
     });
     const user_id = user.user_id;
+    const user_mbti = user.user_mbti;
     basicInfo.user_id = user_id;
+    basicInfo.user_mbti = user_mbti;
     //access token 발급
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,
     });
-    return [accessToken, refreshToken];
+    return [accessToken, refreshToken, basicInfo];
   } catch (error) {
     console.error(error);
   }
