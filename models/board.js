@@ -27,7 +27,7 @@ module.exports = class Board extends Sequelize.Model {
           allowNull: false,
         },
         board_content: {
-          type: Sequelize.STRING,
+          type: Sequelize.JSON,
           allowNull: false,
         },
         board_delete_code: {
