@@ -30,8 +30,13 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 sequelize
+<<<<<<< HEAD
   .sync({ force: false })
   // .sync({ force: false })
+=======
+  // .sync({ force: true })
+  .sync({ force: false })
+>>>>>>> 1c618ba02abac32de291482a0c3e0f9d74cd3c5c
   .then(() => {
     console.log('데이터베이스 연결 성공');
   })
