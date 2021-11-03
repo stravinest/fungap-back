@@ -32,24 +32,13 @@ exports.jwtKakaoCreate = async (profile) => {
     if (exUser) {
       //카카오톡 사용자의 정보를 로그인 시마다 DB에 update
       const user_id = exUser.user_id;
+      const user_mbti = exUser.user_mbti;
       basicInfo.user_id = user_id;
+      basicInfo.user_mbti = user_mbti;
       await User.update(
         {
           ...basicInfo,
           refresh_token: refreshToken,
-<<<<<<< HEAD
-        });
-      }
-      const user = await User.findOne({
-        where: {
-          [Op.or]: [
-            { email: profile.data?.kakao_account?.email || profile.data?.properties.email, },
-            { nickname:
-              profile.data?.kakao_account?.profile.nickname ||
-              profile.data?.properties.nickname, },
-          ],
-=======
->>>>>>> 1c618ba02abac32de291482a0c3e0f9d74cd3c5c
         },
         {
           where: { sns_id: snsId },

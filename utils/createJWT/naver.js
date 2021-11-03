@@ -26,7 +26,9 @@ exports.jwtNaverCreate = async (profile) => {
     if (exUser) {
       //네이버 사용자의 정보를 로그인 시마다 DB에 update
       const user_id = exUser.user_id;
+      const user_mbti = exUser.user_mbti;
       basicInfo.user_id = user_id;
+      basicInfo.user_mbti = user_mbti;
       await User.update(
         {
           ...basicInfo,
