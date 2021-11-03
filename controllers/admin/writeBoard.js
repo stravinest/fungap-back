@@ -16,6 +16,7 @@ const writeBoardFunc = async (req, res) => {
 
     res.json({ result: 'success' });
   } catch (err) {
+    console.log(err)
     res.status(400).send({
       msg: '게시글 작성에 실패했습니다.',
     });
