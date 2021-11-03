@@ -45,11 +45,11 @@ const patchUserInfo = async (req, res) => {
     const userInfo = await User.findOne({
       where: { user_id: userId, provider: provider },
     });
-    await userInfo.update({
+    await User.update({
       nickname: resNickname,
       user_image: resUserImage,
       user_mbti: resUserMbti,
-    });
+    }, {where: { user_id: userId }});
 
 
     res.status(200).json({
