@@ -4,6 +4,7 @@ const editBoard = require('./editBoard');
 const deleteBoard = require('./deleteBoard');
 const detailBoard = require('./detailBoard');
 const getUser = require('./getUser');
+const getComment = require('./getComment');
 
 module.exports = {
   getBoard,
@@ -12,4 +13,5 @@ module.exports = {
   deleteBoard,
   detailBoard,
   getUser,
+  getComment,
 };

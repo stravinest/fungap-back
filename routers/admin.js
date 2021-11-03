@@ -10,6 +10,7 @@ const {
   deleteBoard,
   detailBoard,
   getUser,
+  getComment
 } = require('../controllers/admin');
 
 router.get('/board', authenticateJWT, checkAuthority, getBoard);
@@ -33,5 +34,6 @@ router.get(
   detailBoard
 );
 router.get('/user', authenticateJWT, checkAuthority, getUser);
+router.post('/user/:user_id/comment', authenticateJWT, checkAuthority, getComment);
 
 module.exports = router;

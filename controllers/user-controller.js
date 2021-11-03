@@ -49,11 +49,18 @@ const authNaver = async (req, res, next) => {
   try {
     const profile = req.naver;
 
-    const [accessToken, refreshToken] = await jwtNaverCreate(profile);
+    const [accessToken, refreshToken, basicInfo] = await jwtNaverCreate(profile);
     const token = loginUser(accessToken, refreshToken);
+    const user = {
+      user_image: basicInfo.user_image,
+      nickname: basicInfo.nickname,
+      user_mbti: basicInfo.user_mbti,
+      user_id: basicInfo.user_id,
+    }
     res.json({
       result: 'success',
       token,
+      user,
     });
   } catch (error) {
     console.error(error);

@@ -49,8 +49,10 @@ exports.jwtKakaoCreate = async (profile) => {
       const user = await User.findOne({
         where: {
           [Op.or]: [
-            { email: profile?.response?.email },
-            { nickname: profile?.response?.nickname },
+            { email: profile.data?.kakao_account?.email || profile.data?.properties.email, },
+            { nickname:
+              profile.data?.kakao_account?.profile.nickname ||
+              profile.data?.properties.nickname, },
           ],
         },
       });
