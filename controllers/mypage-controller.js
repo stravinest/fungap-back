@@ -35,7 +35,7 @@ const getUserInfo = async (req, res) => {
 //유저 정보 수정
 const patchUserInfo = async (req, res) => {
   try {
-    const nickname = req.userInfo.nickname;
+    const userId = req.userInfo.userId;
     const provider = req.userInfo.provider;
 
     const resNickname = req.body.nickname;
@@ -43,19 +43,21 @@ const patchUserInfo = async (req, res) => {
     const resUserMbti = req.body.user_mbti;
 
     const userInfo = await User.findOne({
-      where: { nickname: nickname, provider: provider },
+      where: { user_id: userId, provider: provider },
     });
     await userInfo.update({
       nickname: resNickname,
       user_image: resUserImage,
       user_mbti: resUserMbti,
     });
+
+
     res.status(200).json({
       result: 'success',
       user: {
-        nickname: userInfo.nickname,
-        user_image: userInfo.user_image,
-        user_mbti: userInfo.user_mbti,
+        nickname: resNickname,
+        user_image: resUserImage,
+        user_mbti: resUserMbti,
       },
     });
   } catch (err) {
@@ -79,7 +81,7 @@ const deleteUserInfo = async (req, res) => {
     res.status(200).json({
       result: 'success',
     });
-  } catch (error) {
+  } catch (err) {
     console.log(error);
     res.status(400).json({
       errorMessage: '알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.',
