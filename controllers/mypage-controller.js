@@ -24,8 +24,8 @@ const getUserInfo = async (req, res) => {
         user_mbti: userInfo.user_mbti,
       },
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     res.status(400).json({
       errorMessage: '알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.',
     });
@@ -82,7 +82,7 @@ const deleteUserInfo = async (req, res) => {
       result: 'success',
     });
   } catch (err) {
-    console.log(error);
+    console.log(err);
     res.status(400).json({
       errorMessage: '알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.',
     });
