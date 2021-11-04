@@ -10,11 +10,11 @@ const {
 //유저 정보 조회
 const getUserInfo = async (req, res) => {
   try {
-    const nickname = req.userInfo.nickname;
+    const userId = req.userInfo.userId;
     const provider = req.userInfo.provider;
 
     const userInfo = await User.findOne({
-      where: { nickname: nickname, provider: provider },
+      where: { user_id: userId, provider: provider },
     });
     res.status(200).json({
       result: 'success',
@@ -45,12 +45,14 @@ const patchUserInfo = async (req, res) => {
     const userInfo = await User.findOne({
       where: { user_id: userId, provider: provider },
     });
-    await User.update({
-      nickname: resNickname,
-      user_image: resUserImage,
-      user_mbti: resUserMbti,
-    }, {where: { user_id: userId }});
-
+    await User.update(
+      {
+        nickname: resNickname,
+        user_image: resUserImage,
+        user_mbti: resUserMbti,
+      },
+      { where: { user_id: userId } }
+    );
 
     res.status(200).json({
       result: 'success',
@@ -71,11 +73,11 @@ const patchUserInfo = async (req, res) => {
 //유저 탈퇴
 const deleteUserInfo = async (req, res) => {
   try {
-    const nickname = req.userInfo.nickname;
+    const userId = req.userInfo.userId;
     const provider = req.userInfo.provider;
 
     const userInfo = await User.findOne({
-      where: { nickname: nickname, provider: provider },
+      where: { user_id: userId, provider: provider },
     });
     await userInfo.update({ user_delete_code: 1 });
     res.status(200).json({
