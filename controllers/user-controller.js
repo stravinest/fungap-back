@@ -14,6 +14,7 @@ const {
   sequelize,
   Sequelize,
 } = require('../models');
+const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 
 //카카오
@@ -138,7 +139,11 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
   let { email, password } = req.body;
   try {
-    const userCheck = await User.findOne({ where: { email } }); //users로 받으면 안되네??
+    const userCheck = await User.findOne({
+      where: {
+        [Op.and]: { user_delete_code: 0, email: email },
+      },
+    }); //users로 받으면 안되네??
 
     if (!userCheck) {
       res.status(400).send({
