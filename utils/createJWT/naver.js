@@ -25,13 +25,8 @@ exports.jwtNaverCreate = async (profile) => {
 
     if (exUser) {
       //네이버 사용자의 정보를 로그인 시마다 DB에 update
-      const user_id = exUser.user_id;
-      const user_mbti = exUser.user_mbti;
-      basicInfo.user_id = user_id;
-      basicInfo.user_mbti = user_mbti;
       await User.update(
         {
-          ...basicInfo,
           refresh_token: refreshToken,
         },
         {
@@ -45,25 +40,26 @@ exports.jwtNaverCreate = async (profile) => {
         provider: 'naver',
         refresh_token: refreshToken,
       });
-      const user = await User.findOne({
-        where: {
-          [Op.or]: [
-            { email: profile?.response?.email },
-            { nickname: profile?.response?.nickname },
-          ],
-        },
-      });
-
-      const user_id = user.user_id;
-      const user_mbti = user.user_mbti;
-      basicInfo.user_id = user_id;
-      basicInfo.user_mbti = user_mbti;
     }
+    const user = await User.findOne({
+      where: {
+        [Op.and]: [
+          { sns_id: snsId }, { provider: 'naver' }
+        ],
+      },
+    });
+
+    basicInfo.email = user.email;
+    basicInfo.nickname = user.nickname
+    basicInfo.user_id = user.user_id;
+    basicInfo.user_mbti = user.user_mbti;
     console.log(basicInfo);
+    
     //access token 발급
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,
     });
+
     return [accessToken, refreshToken, basicInfo];
   } catch (error) {
     console.error(error);
