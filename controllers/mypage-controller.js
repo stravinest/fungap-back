@@ -80,9 +80,39 @@ const deleteUserInfo = async (req, res) => {
       where: { user_id: userId, provider: provider },
     });
     await userInfo.update({ user_delete_code: 1 });
+    
+    // 유저 delete_code 1
+    const deleteUserQuery = `UPDATE users As u 
+        SET u.user_delete_code = 1
+      WHERE u.user_id = ${userId}`
+
+    await sequelize.query(deleteUserQuery, {
+      type: Sequelize.QueryTypes.UPDATE
+    })
+    // 유저가 쓴 코멘트 delete_code 1
+    const deleteCommentQuery = `UPDATE comments AS c
+      LEFT OUTER JOIN users AS u ON c.user_id = u.user_id
+        SET c.comment_delete_code = 1 
+      WHERE (c.user_id = ${userId})`
+
+    await sequelize.query(deleteCommentQuery, {
+      type: Sequelize.QueryTypes.UPDATE,
+    });
+
+    // 유저가 한 좋아요 삭제
+    const deleteLikeQuery = `DELETE l
+      FROM likes AS l
+      LEFT OUTER JOIN users AS u ON l.user_id = u.user_id
+      WHERE u.user_id = 3`
+
+      await sequelize.query(deleteLikeQuery, {
+        type: Sequelize.QueryTypes.DELETE,
+      });
+
     res.status(200).json({
       result: 'success',
     });
+
   } catch (err) {
     console.log(err);
     res.status(400).json({
