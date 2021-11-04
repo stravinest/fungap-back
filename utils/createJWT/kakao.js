@@ -32,7 +32,7 @@ exports.jwtKakaoCreate = async (profile) => {
       where: { [Op.and]: [{ sns_id: snsId }, { provider: 'kakao' }] },
     });
 
-    if (exUser) {
+    if (exUser?.user_delete_code==0) {
       //카카오톡 사용자의 정보를 로그인 시마다 DB에 update
       await User.update(
         {
@@ -42,6 +42,14 @@ exports.jwtKakaoCreate = async (profile) => {
           where: { sns_id: snsId },
         }
       );
+    } else if(exUser?.user_delete_code==1) {
+      await User.update({
+        ...basicInfo,
+        sns_id: snsId,
+        provider: 'naver',
+        user_delete_code:0,
+        refresh_token: refreshToken,
+      });
     } else {
       await User.create({
         ...basicInfo,

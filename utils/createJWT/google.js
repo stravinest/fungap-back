@@ -19,7 +19,7 @@ exports.jwtGoogleCreate = async (profile) => {
       where: { [Op.and]: [{ sns_id: profile?.sub }, { provider: 'google' }] },
     });
 
-    if (exUser) {
+    if (exUser?.user_delete_code==1) {
       //구글사용자의 정보를 로그인 시마다 DB에 update
       await User.update(
         {
@@ -29,6 +29,14 @@ exports.jwtGoogleCreate = async (profile) => {
           where: { sns_id: profile?.sub },
         }
       );
+    } else if(exUser?.user_delete_code==1) {
+      await User.update({
+        ...basicInfo,
+        sns_id: snsId,
+        provider: 'naver',
+        user_delete_code:0,
+        refresh_token: refreshToken,
+      });
     } else {
       await User.create({
         ...basicInfo,
