@@ -46,7 +46,7 @@ exports.jwtKakaoCreate = async (profile) => {
       await User.update({
         ...basicInfo,
         sns_id: snsId,
-        provider: 'naver',
+        provider: 'kakao',
         user_delete_code:0,
         refresh_token: refreshToken,
       });
