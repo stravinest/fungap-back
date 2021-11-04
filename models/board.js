@@ -56,7 +56,7 @@ module.exports = class Board extends Sequelize.Model {
       foreignKey: 'board_id',
       sourceKey: 'board_id',
     });
-    db.Board.hasOne(db.Like, {
+    db.Board.hasMany(db.Like, {
       foreignKey: 'board_id',
       sourceKey: 'board_id',
     });
