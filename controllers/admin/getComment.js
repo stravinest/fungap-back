@@ -1,16 +1,24 @@
 const { User } = require('../../models');
-const { Comment } = require('../../models');
+const { Comment, Like } = require('../../models');
+const { Op } = require('sequelize');
 
 const getCommentFunc = async (req, res) => {
   try {
     const user_id = req.userId;
-    console.log(user_id);
+    // const user_id = req.params;
     const users = await User.findOne({
       where: user_id,
-      include: [{ model: Comment}],
+      include: [{model: Comment},{ model: Like }],
+      
     });
-    console.log(users.Comments);
-    console.log(users.countComments());
+    console.log('-----------------------------------------------------------------------------')
+    console.log(users)
+    console.log('-----------------------------------------------------------------------------')
+    // console.log(users.dataValues)
+    console.log(await users.getLikes({where: { like_id:1 } }));
+    console.log('-----------------------------------------------------------------------------')
+    // console.log(await users.getLikes({ where: { [Op.in]: user_id } }));
+    console.log(await users.countComments(), '요기다 욘석아!');
     const userCount = await User.count({});
 
     res.json({ result: 'success', users, userCount });
