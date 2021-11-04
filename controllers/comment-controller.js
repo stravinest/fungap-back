@@ -21,7 +21,7 @@ const getComment = async (req, res) => {
       });
       return;
     }
-    const result = await Comment.findAll({
+    const comments = await Comment.findAll({
       attributes: ['comment', 'board_id', 'comment_id'],
       where: {
         [Op.and]: { comment_delete_code: 0, board_id: board_id },
@@ -45,7 +45,7 @@ const getComment = async (req, res) => {
     console.log('resutl는', result);
     console.log(result[0].dataValues);
 
-    res.status(200).json({ result: 'success', result });
+    res.status(200).json({ result: 'success', comments });
   } catch (error) {
     console.error(error);
     res.status(400).json(() => {
