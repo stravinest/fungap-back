@@ -100,7 +100,11 @@ const authNaver = async (req, res, next) => {
 const signup = async (req, res) => {
   try {
     const { nickname, email, user_mbti, password, confirm_password } = req.body;
-    const existUserId = await User.findOne({ where: { email } });
+    const existUserId = await User.findOne({
+      where: {
+        [Op.and]: { user_delete_code: 0, email: email },
+      },
+    });
 
     if (existUserId) {
       res.status(400).send({
