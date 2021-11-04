@@ -88,7 +88,8 @@ exports.PopBoardHome = async function () {
   });
 };
 
-//상황별 페이지 게시글 전체 조회 로그인시
+//상황별 페이지 시작
+//상황별 페이지 게시글 전체 조회 로그인시(최신순)
 exports.situationBoardLogin = async function (user_id) {
   const query = `
   SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count,count(c.board_id) as comment_count,
@@ -111,7 +112,7 @@ exports.situationBoardLogin = async function (user_id) {
     type: Sequelize.QueryTypes.SELECT,
   });
 };
-//상황별 페이지 게시글 전체 조회 비로그인
+//상황별 페이지 게시글 전체 조회 비로그인(최신순)
 exports.situationBoard = async function () {
   const query = `
       SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count,count(c.board_id) as comment_count,
@@ -132,6 +133,95 @@ exports.situationBoard = async function () {
     type: Sequelize.QueryTypes.SELECT,
   });
 };
+//상황별 페이지 게시글 전체 조회 로그인시(인기순)
+exports.situationBoardPopLogin = async function (user_id) {
+  const query = `
+  SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count,count(c.board_id) as comment_count,
+  CASE u.board_id 
+  WHEN b.board_id THEN 'true'
+  ELSE 'false'
+  END AS like_state
+  FROM boards AS b
+  left OUTER JOIN comments AS c
+  ON (b.board_id = c.board_id AND c.comment_delete_code = 0)
+  left OUTER JOIN likes AS l
+  ON b.board_id = l.board_id
+  left OUTER JOIN likes AS u
+  ON b.board_id = u.board_id AND u.user_id=${user_id}
+  WHERE b.board_delete_code = 0
+  GROUP BY b.board_id
+  ORDER BY like_count DESC`;
+
+  return await sequelize.query(query, {
+    type: Sequelize.QueryTypes.SELECT,
+  });
+};
+//상황별 페이지 게시글 전체 조회 비로그인(인기순)
+exports.situationBoardPop = async function () {
+  const query = `
+      SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count,count(c.board_id) as comment_count,
+      CASE l.board_id 
+      WHEN '말이안되는값' THEN 'true'
+      ELSE 'false'
+      END AS like_state
+      FROM boards AS b
+      left OUTER JOIN comments AS c
+      ON (b.board_id = c.board_id AND c.comment_delete_code = 0)
+      left OUTER JOIN likes AS l
+      ON b.board_id = l.board_id
+      WHERE b.board_delete_code = 0
+      GROUP BY b.board_id
+      ORDER BY like_count DESC`;
+
+  return await sequelize.query(query, {
+    type: Sequelize.QueryTypes.SELECT,
+  });
+};
+//상황별 페이지 게시글 전체 조회 로그인시(조회수순)
+exports.situationBoardViewLogin = async function (user_id) {
+  const query = `
+  SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count,count(c.board_id) as comment_count,
+  CASE u.board_id 
+  WHEN b.board_id THEN 'true'
+  ELSE 'false'
+  END AS like_state
+  FROM boards AS b
+  left OUTER JOIN comments AS c
+  ON (b.board_id = c.board_id AND c.comment_delete_code = 0)
+  left OUTER JOIN likes AS l
+  ON b.board_id = l.board_id
+  left OUTER JOIN likes AS u
+  ON b.board_id = u.board_id AND u.user_id=${user_id}
+  WHERE b.board_delete_code = 0
+  GROUP BY b.board_id
+  ORDER BY b.view_count DESC`;
+
+  return await sequelize.query(query, {
+    type: Sequelize.QueryTypes.SELECT,
+  });
+};
+//상황별 페이지 게시글 전체 조회 비로그인(조회수순)
+exports.situationBoardView = async function () {
+  const query = `
+      SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count,count(c.board_id) as comment_count,
+      CASE l.board_id 
+      WHEN '말이안되는값' THEN 'true'
+      ELSE 'false'
+      END AS like_state
+      FROM boards AS b
+      left OUTER JOIN comments AS c
+      ON (b.board_id = c.board_id AND c.comment_delete_code = 0)
+      left OUTER JOIN likes AS l
+      ON b.board_id = l.board_id
+      WHERE b.board_delete_code = 0
+      GROUP BY b.board_id
+      ORDER BY b.view_count DESC`;
+
+  return await sequelize.query(query, {
+    type: Sequelize.QueryTypes.SELECT,
+  });
+};
+//상황별페이지 끝
 
 //게시글 디테일 페이지 조회(board) (로그인)
 exports.detailBoardLogin = async function (user_id, board_id) {

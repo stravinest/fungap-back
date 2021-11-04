@@ -6,8 +6,16 @@ const { authenticateJWTall } = require('../middlewares/authenticateJWTall');
 //홈화면
 router.get('/home', authenticateJWTall, boardController.getBoardHome);
 
-//상황별 페이지 게시글 전체 조회
+//상황별 페이지 게시글 전체 조회(최신순)
 router.get('/', authenticateJWTall, boardController.getSituationBoard);
+//상황별 페이지 게시글 전체 조회(인기순)
+router.get(
+  '/popularity',
+  authenticateJWTall,
+  boardController.getSituationBoardPop
+);
+//상황별 페이지 게시글 전체 조회(조회순)
+router.get('/view', authenticateJWTall, boardController.getSituationBoardView);
 
 //상황별 게시글
 router.get('/:board_id', authenticateJWTall, boardController.getDetailBoard);

@@ -1,15 +1,21 @@
 const { Board, Like, sequelize, Sequelize } = require('../models');
 const { Op } = require('sequelize');
 const {
-  situationBoardLogin, //로그인시
-  situationBoard, //비로그인
-  detailCommentsAll, //로그인비로그인시 댓글
-  detailBoard, //비로그인 상세 게시글
-  detailBoardLogin, //로그인 상세 게시글
   PopBoardHome,
   NewBoardHome,
   NewBoardHomeLogin,
   PopBoardHomeLogin,
+
+  situationBoardLogin, //최신순로그인시
+  situationBoard, //최신순비로그인
+  situationBoardPopLogin, //인기순 로그인
+  situationBoardPop, //인기순 비로그인
+  situationBoardViewLogin, //조회순 로그인
+  situationBoardView, //조회순 비로그인
+
+  detailCommentsAll, //로그인비로그인시 댓글
+  detailBoard, //비로그인 상세 게시글
+  detailBoardLogin, //로그인 상세 게시글
 } = require('../utils/getQuery');
 //홈화면 조회
 const getBoardHome = async (req, res) => {
@@ -39,18 +45,68 @@ const getBoardHome = async (req, res) => {
   }
 };
 
-//상황별 페이지 게시글 전체 조회
+//상황별 페이지 게시글 전체 조회(최신순)
 const getSituationBoard = async (req, res) => {
   try {
     const user_id = req.userId;
     console.log('유저로그인', user_id);
 
     if (user_id) {
+      //로그인시
       const board_list = await situationBoardLogin(user_id);
 
       res.status(200).json({ result: 'success', board_list });
     } else {
+      //비로그인시
       const board_list = await situationBoard();
+
+      res.status(201).json({ result: 'success', board_list });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(400).json(() => {
+      result: 'fail';
+      errormesssage: '게시글 목록을 불러오는데 실패하였습니다.';
+    });
+  }
+};
+//상황별 페이지 게시글 전체 조회(인기순)
+const getSituationBoardPop = async (req, res) => {
+  try {
+    const user_id = req.userId;
+    console.log('유저로그인', user_id);
+
+    if (user_id) {
+      //로그인시
+      const board_list = await situationBoardPopLogin(user_id);
+
+      res.status(200).json({ result: 'success', board_list });
+    } else {
+      //비로그인시
+      const board_list = await situationBoardPop();
+
+      res.status(201).json({ result: 'success', board_list });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(400).json(() => {
+      result: 'fail';
+      errormesssage: '게시글 목록을 불러오는데 실패하였습니다.';
+    });
+  }
+};
+//상황별 페이지 게시글 전체 조회(조회순)
+const getSituationBoardView = async (req, res) => {
+  try {
+    const user_id = req.userId;
+    console.log('유저로그인', user_id);
+
+    if (user_id) {
+      const board_list = await situationBoardViewLogin(user_id);
+
+      res.status(200).json({ result: 'success', board_list });
+    } else {
+      const board_list = await situationBoardView();
 
       res.status(201).json({ result: 'success', board_list });
     }
@@ -160,6 +216,8 @@ const changeLike = async (req, res) => {
 module.exports = {
   getDetailBoard,
   getBoardHome,
+  getSituationBoardView,
+  getSituationBoardPop,
   getSituationBoard,
   changeLike,
 };
