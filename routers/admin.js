@@ -21,7 +21,7 @@ router.patch(
   checkAuthority,
   editBoard
 );
-router.delete(
+router.patch(
   '/board/:board_id/delete',
   authenticateJWT,
   checkAuthority,

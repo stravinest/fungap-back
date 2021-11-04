@@ -7,7 +7,7 @@ const writeBoardFunc = async (req, res) => {
     const userId = req.userId;
     const { board_id } = req.params;
 
-    await Board.destroy({ where: { board_id } });
+    await Board.update({board_delete_code:1}, { where: { board_id } });
 
     res.json({ result: 'success' });
   } catch (err) {
