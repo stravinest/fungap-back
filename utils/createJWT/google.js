@@ -51,6 +51,7 @@ exports.jwtGoogleCreate = async (profile) => {
     basicInfo.nickname = user.nickname;
     basicInfo.user_id = user.user_id;
     basicInfo.user_mbti = user.user_mbti;
+    basicInfo.user_authority = user.user_authority;
 
     //access token 발급
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
