@@ -5,7 +5,7 @@ const { Op } = require('sequelize');
 const getCommentFunc = async (req, res) => {
   try {
     const user_id = req.userId;
-    // const user_id = req.params;
+    
     const users = await User.findOne({
       where: user_id,
       include: [{model: Comment},{ model: Like }],
