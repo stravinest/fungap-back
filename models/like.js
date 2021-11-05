@@ -33,10 +33,12 @@ module.exports = class Like extends Sequelize.Model {
     db.Like.belongsTo(db.User, {
       foreignKey: 'user_id',
       sourceKey: 'user_id',
+      onDelete: "CASCADE",
     });
     db.Like.belongsTo(db.Board, {
       foreignKey: 'board_id',
       sourceKey: 'board_id',
+      onDelete: "CASCADE",
     });
   }
 };

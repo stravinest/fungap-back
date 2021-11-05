@@ -19,7 +19,7 @@ exports.jwtGoogleCreate = async (profile) => {
       where: { [Op.and]: [{ sns_id: profile?.sub }, { provider: 'google' }] },
     });
 
-    if (exUser?.user_delete_code==1) {
+    if (exUser?.user_delete_code==0) {
       //구글사용자의 정보를 로그인 시마다 DB에 update
       await User.update(
         {
