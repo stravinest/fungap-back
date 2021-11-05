@@ -17,6 +17,7 @@ const {
   detailBoard, //비로그인 상세 게시글
   detailBoardLogin, //로그인 상세 게시글
 } = require('../utils/getQuery');
+
 //홈화면 조회
 const getBoardHome = async (req, res) => {
   try {
@@ -35,6 +36,58 @@ const getBoardHome = async (req, res) => {
       res
         .status(201)
         .json({ result: 'success', new_board_list, popularity_board_list });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(400).json(() => {
+      result: 'fail';
+      errormesssage: '게시글 목록을 불러오는데 실패하였습니다.';
+    });
+  }
+};
+//상황별 페이지 게시글 전체 조회(최신순)(test)
+const getSituationBoardTest = async (req, res) => {
+  try {
+    //1,2,3,4,5,6,7 page 1일때
+    const { page } = req.query;
+    console.log(page);
+    const perPage = 3;
+    const allPage = page * perPage;
+    const pageNum = parseInt(page, 10);
+    console.log(pageNum);
+    let start_num = 0;
+    let last_num = 0;
+    if (pageNum === 1) {
+      start_num = 0;
+      last_num = 3;
+    } else {
+      (start_num = (pageNum - 1) * perPage), //3
+        (last_num = pageNum * perPage);
+    }
+
+    const user_id = req.userId;
+    console.log('유저로그인', user_id);
+
+    if (user_id) {
+      //로그인시
+
+      const allboard_list = await situationBoardLogin(user_id);
+      console.log(allboard_list.length);
+
+      if (allboard_list.length < allPage) {
+        last_num = allboard_list.length;
+      }
+      const board_list = [];
+      for (let i = start_num; i < last_num; i++) {
+        board_list.push(allboard_list[i]);
+      }
+
+      res.status(200).json({ result: 'success', board_list });
+    } else {
+      //비로그인시
+      const board_list = await situationBoard();
+
+      res.status(201).json({ result: 'success', board_list });
     }
   } catch (error) {
     console.error(error);
@@ -220,4 +273,5 @@ module.exports = {
   getSituationBoardPop,
   getSituationBoard,
   changeLike,
+  getSituationBoardTest, //test
 };

@@ -60,6 +60,7 @@ exports.jwtNaverCreate = async (profile) => {
     basicInfo.nickname = user.nickname;
     basicInfo.user_id = user.user_id;
     basicInfo.user_mbti = user.user_mbti;
+    basicInfo.user_authority = user.user_authority;
     console.log(basicInfo);
 
     //access token 발급

@@ -1,6 +1,6 @@
-const { User } = require('../../models');
+const { Board } = require('../../models');
 
-const getUserFunc = async (req, res) => {
+const situationSearchFunc = async (req, res) => {
   try {
     const userId = req.userId;
     const users = await User.findAll({});
@@ -14,4 +14,4 @@ const getUserFunc = async (req, res) => {
   }
 };
 
-module.exports = getUserFunc;
+module.exports = situationSearchFunc;

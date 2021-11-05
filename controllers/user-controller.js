@@ -32,6 +32,7 @@ const auth = async (req, res, next) => {
       nickname: basicInfo.nickname,
       user_mbti: basicInfo.user_mbti,
       user_id: basicInfo.user_id,
+      user_authority: basicInfo.user_authority,
     };
     res.json({
       result: 'success',
@@ -58,6 +59,7 @@ const authGoogle = async (req, res, next) => {
       nickname: basicInfo.nickname,
       user_mbti: basicInfo.user_mbti,
       user_id: basicInfo.user_id,
+      user_authority: basicInfo.user_authority,
     };
     res.json({
       result: 'success',
@@ -84,6 +86,7 @@ const authNaver = async (req, res, next) => {
       nickname: basicInfo.nickname,
       user_mbti: basicInfo.user_mbti,
       user_id: basicInfo.user_id,
+      user_authority: basicInfo.user_authority,
     };
     res.json({
       result: 'success',
@@ -169,6 +172,7 @@ const login = async (req, res) => {
         nickname: userCheck?.dataValues?.nickname,
         user_mbti: userCheck?.dataValues?.user_mbti,
         user_id: userCheck?.dataValues?.user_id,
+        user_authority: userCheck?.dataValues?.user_authority,
       };
       res.json({
         result: 'success',
