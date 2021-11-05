@@ -172,6 +172,7 @@ const login = async (req, res) => {
         nickname: userCheck?.dataValues?.nickname,
         user_mbti: userCheck?.dataValues?.user_mbti,
         user_id: userCheck?.dataValues?.user_id,
+        user_authority: userCheck?.dataValues?.user_authority,
       };
       res.json({
         result: 'success',
