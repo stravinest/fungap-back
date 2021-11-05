@@ -1,6 +1,5 @@
 const { User } = require('../../models');
 const { Board } = require('../../models');
-const { Op } = require('sequelize');
 
 const editBoardFunc = async (req, res) => {
   try {
@@ -15,6 +14,7 @@ const editBoardFunc = async (req, res) => {
 
     res.json({ result: 'success' });
   } catch (err) {
+    console.log(err);
     res.status(400).send({
       msg: '게시글 수정에 실패했습니다.',
     });
