@@ -324,7 +324,7 @@ exports.situationBoardView = async function () {
 //게시글 디테일 페이지 조회(board) (로그인)
 exports.detailBoardLogin = async function (user_id, board_id) {
   const queryBoard = `
-  SELECT b.board_title,b.board_image,b.board_content,b.view_count,count(l.board_id) as like_count,
+  SELECT b.board_title,b.board_image,b.board_content,b.board_desc,b.view_count,count(l.board_id) as like_count,
   CASE u.board_id
   WHEN b.board_id THEN 'true'
   ELSE 'false'
@@ -360,7 +360,7 @@ exports.detailCommentsAll = async function (board_id) {
 //게시글 디테일 페이지 조회(board) (비로그인)
 exports.detailBoard = async function (board_id) {
   const queryBoard = `
-  SELECT b.board_title,b.board_image,b.board_content,b.view_count,count(l.board_id) as like_count,
+  SELECT b.board_title,b.board_image,b.board_content,b.board_desc,b.view_count,count(l.board_id) as like_count,
   CASE l.board_id
   WHEN '말이안되는값' THEN 'true'
   ELSE 'false'
