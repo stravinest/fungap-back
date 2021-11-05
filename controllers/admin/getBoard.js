@@ -5,8 +5,8 @@ const getBoardFunc = async (req, res) => {
     const user_id = req.userId;
     
     const query = `
-    select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
-    (SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count
+    select t1.board_id, t1.board_title, t1.board_image,t1.board_desc, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
+    (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.view_count,count(l.board_id) as like_count
  
     FROM boards AS b
     left OUTER JOIN likes AS l
