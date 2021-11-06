@@ -28,7 +28,7 @@ router.get('/:board_id', authenticateJWTall, boardController.getDetailBoard);
 router.post('/:board_id/like', authenticateJWTall, boardController.changeLike);
 
 //홈 게시글 검색
-router.post('/home/:keyword', authenticateJWTall, homeSearch);
+router.post('/search', authenticateJWTall, homeSearch);
 //상황별 게시글 검색
 router.post('/situation/:keyword', situationSearch);
 
