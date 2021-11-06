@@ -8,7 +8,7 @@ const detailBoardFunc = async (req, res) => {
     const {board_id} = req.params;
 
     const query = `
-    select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state, t3.comment from
+    select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state, JSON_ARRAYAGG(t3.comment) as comments from
     (SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(distinct l.board_id) as like_count,c.comment
     FROM boards AS b
     left OUTER JOIN likes AS l
@@ -31,14 +31,15 @@ const detailBoardFunc = async (req, res) => {
     on b.board_id = u.board_id and u.user_id = ${user_id}
     group by b.board_id
     ORDER BY b.createdAt DESC) as t2
-    join
+    left outer join
     (SELECT b.board_id, c.comment
     FROM boards AS b
     left OUTER JOIN comments AS c
     ON b.board_id = c.board_id
     WHERE b.board_delete_code = 0
     ORDER BY b.createdAt DESC) as t3
-    on t1.board_id = t2.board_id AND t1.board_id = t3.board_id AND t1.board_id = ${board_id}`;
+    on t1.board_id = t2.board_id AND t1.board_id = t3.board_id 
+    WHERE t1.board_id = ${board_id}`;
     const board = await sequelize.query(query, {
       type: Sequelize.QueryTypes.SELECT,
     });
