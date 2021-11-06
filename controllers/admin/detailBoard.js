@@ -1,5 +1,5 @@
 const { User } = require('../../models');
-const { Board, Comment,Like,Sequelize,sequelize } = require('../../models');
+const { Board, Comment, Like, Sequelize, sequelize } = require('../../models');
 const { Op } = require('sequelize');
 
 const writeBoardFunc = async (req, res) => {
