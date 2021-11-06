@@ -131,8 +131,8 @@ exports.PopBoardHome = async function () {
 //상황별 페이지 시작
 //상황별 페이지 게시글 전체 조회 로그인시(최신순)
 exports.situationBoardLogin = async function (user_id) {
-  const query = `select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
-  (SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count
+  const query = `select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
+  (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
    
     FROM boards AS b
     left OUTER JOIN likes AS l
@@ -163,8 +163,8 @@ exports.situationBoardLogin = async function (user_id) {
 };
 //상황별 페이지 게시글 전체 조회 비로그인(최신순)
 exports.situationBoard = async function () {
-  const query = `select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
-  (SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count
+  const query = `select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
+  (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
    
     FROM boards AS b
     left OUTER JOIN likes AS l
@@ -193,8 +193,8 @@ exports.situationBoard = async function () {
 };
 //상황별 페이지 게시글 전체 조회 로그인시(인기순)
 exports.situationBoardPopLogin = async function (user_id) {
-  const query = `select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
-  (SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count
+  const query = `select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
+  (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
    
     FROM boards AS b
     left OUTER JOIN likes AS l
@@ -226,8 +226,8 @@ exports.situationBoardPopLogin = async function (user_id) {
 };
 //상황별 페이지 게시글 전체 조회 비로그인(인기순)
 exports.situationBoardPop = async function () {
-  const query = `select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
-  (SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count
+  const query = `select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
+  (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
    
     FROM boards AS b
     left OUTER JOIN likes AS l
@@ -257,8 +257,8 @@ exports.situationBoardPop = async function () {
 };
 //상황별 페이지 게시글 전체 조회 로그인시(조회수순)
 exports.situationBoardViewLogin = async function (user_id) {
-  const query = `select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
-  (SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count
+  const query = `select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
+  (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
    
     FROM boards AS b
     left OUTER JOIN likes AS l
@@ -290,8 +290,8 @@ exports.situationBoardViewLogin = async function (user_id) {
 };
 //상황별 페이지 게시글 전체 조회 비로그인(조회수순)
 exports.situationBoardView = async function () {
-  const query = `select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
-  (SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count
+  const query = `select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
+  (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
    
     FROM boards AS b
     left OUTER JOIN likes AS l

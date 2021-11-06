@@ -24,9 +24,11 @@ const getComment = async (req, res) => {
     const comments = await getComments(board_id);
     if (!comments[0]) {
       console.log('왜여기안걸려?');
-      res
-        .status(400)
-        .json({ result: 'fail', errormessage: '댓글이 없습니다.' });
+      res.status(400).json({
+        result: 'fail',
+        errormessage: '댓글이 없습니다.',
+      });
+
       return;
     }
     console.log('resutl는', comments);
