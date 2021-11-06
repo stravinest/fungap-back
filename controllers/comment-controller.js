@@ -15,7 +15,7 @@ const getComment = async (req, res) => {
     console.log(board_id);
     const isBoard = await Board.findOne({ where: { board_id: board_id } });
     if (!isBoard) {
-      res.status(400).json({
+      res.status(204).json({
         result: 'fail',
         errormessage: '게시글이 없습니다.',
       });
@@ -24,7 +24,7 @@ const getComment = async (req, res) => {
     const comments = await getComments(board_id);
     if (!comments[0]) {
       console.log('왜여기안걸려?');
-      res.status(400).json({
+      res.status(204).json({
         result: 'fail',
         errormessage: '댓글이 없습니다.',
       });
@@ -102,13 +102,13 @@ const deleteComment = async (req, res) => {
         res.status(200).json({ result: 'success', comment_id });
       } else {
         res
-          .status(400)
+          .status(204)
           .json({ result: 'fail', errormessage: '이미 삭제되었습니다.' });
       }
     } else {
       //내가쓴게 아니므로//내가 쓴게 아니거나 커멘트가 없거나
 
-      res.status(400).json({
+      res.status(202).json({
         result: 'false',
         errormessage: '삭제할수 없는 comment입니다.',
       });
