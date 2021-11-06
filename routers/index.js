@@ -6,8 +6,9 @@ const userRouter = require('./user');
 const mypageRouter = require('./mypage');
 const adminRouter = require('./admin');
 const boardRouter = require('./board');
-// const likesRouter = require('./likes');
+const mbtiRouter = require('./mbti');
 const commRouter = require('./comment');
+
 router.use('/user', [userRouter]);
 router.use('/auth', [authRouter]);
 router.use('/mypage', [mypageRouter]);
@@ -15,6 +16,6 @@ router.use('/admin', [adminRouter]);
 // router.use('/comment', [commRouter]);
 router.use('/board', [boardRouter]);
 router.use('/comment', [commRouter]);
-// router.use('/like', [likesRouter]);
+router.use('/mbti', [mbtiRouter]);
 
 module.exports = router;
