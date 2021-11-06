@@ -63,6 +63,7 @@ const postComment = async (req, res) => {
     });
 
     const comments = await getComments(board_id);
+    console.log(comments);
     res.status(200).json({ result: 'success', comments });
   } catch (error) {
     console.error(error);
