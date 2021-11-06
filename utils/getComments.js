@@ -2,7 +2,7 @@ const { Comment, User } = require('../models');
 const { Op } = require('sequelize');
 exports.getComments = async function (board_id) {
   const comments = await Comment.findAll({
-    attributes: ['comment', 'board_id', 'comment_id'],
+    attributes: ['comment', 'board_id', 'comment_id', 'createdAt'],
     where: {
       [Op.and]: { comment_delete_code: 0, board_id: board_id },
     },
