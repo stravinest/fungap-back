@@ -5,7 +5,7 @@ const { Op } = require('sequelize');
 const detailBoardFunc = async (req, res) => {
   try {
     const user_id = req.userId;
-    const {board_id} = req.params;
+    const { board_id } = req.params;
 
     const query = `
     select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state, JSON_ARRAYAGG(t3.comment) as comments from
@@ -40,9 +40,13 @@ const detailBoardFunc = async (req, res) => {
     ORDER BY b.createdAt DESC) as t3
     on t1.board_id = t2.board_id AND t1.board_id = t3.board_id 
     WHERE t1.board_id = ${board_id}`;
-    const board = await sequelize.query(query, {
-      type: Sequelize.QueryTypes.SELECT,
-    });
+    console.log(Date.now());
+    const beforetime = Date.now();
+    const board =
+      (await sequelize.query(query, {
+        type: Sequelize.QueryTypes.SELECT,
+      })) + (await console.log(Date.now() - beforetime));
+
     res.json({ result: 'success', board });
   } catch (err) {
     console.log(err);

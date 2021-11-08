@@ -188,8 +188,13 @@ const getDetailBoard = async (req, res) => {
     }
 
     if (user_id) {
+      const beforetime = await Date.now();
+      await console.log(Date.now());
       const result = await detailBoardLogin(user_id, board_id);
-      const comments = await detailCommentsAll(board_id);
+      const comments =
+        (await detailCommentsAll(board_id)) +
+        (await console.log(Date.now() - beforetime));
+
       const board = result[0];
       res.status(200).json({ result: 'success', board, comments });
     } else {
