@@ -53,6 +53,21 @@ const getSituationBoard = async (req, res) => {
     const { page } = req.query;
     const user_id = req.userId;
     console.log('유저로그인', user_id);
+    console.log(req.query);
+    console.log(page);
+    if (page == undefined) {
+      console.log('여기');
+      if (user_id) {
+        //로그인시
+        const board_list = await situationBoardLogin(user_id);
+        res.status(200).json({ result: 'success', board_list });
+      } else {
+        //비로그인시
+        const board_list = await situationBoard();
+        res.status(201).json({ result: 'success', board_list });
+      }
+      return;
+    }
 
     if (user_id) {
       //로그인시
