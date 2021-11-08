@@ -1,5 +1,6 @@
 const { Board, Like, sequelize, Sequelize } = require('../models');
 const { Op } = require('sequelize');
+const { getPageNum } = require('../utils/getPageNum');
 const {
   PopBoardHome,
   NewBoardHome,
@@ -45,73 +46,40 @@ const getBoardHome = async (req, res) => {
     });
   }
 };
-//상황별 페이지 게시글 전체 조회(최신순)(test)
-const getSituationBoardTest = async (req, res) => {
-  try {
-    //1,2,3,4,5,6,7 page 1일때
-    const { page } = req.query;
-    console.log(page);
-    const perPage = 3;
-    const allPage = page * perPage;
-    const pageNum = parseInt(page, 10);
-    console.log(pageNum);
-    let start_num = 0;
-    let last_num = 0;
-    if (pageNum === 1) {
-      start_num = 0;
-      last_num = 3;
-    } else {
-      (start_num = (pageNum - 1) * perPage), //3
-        (last_num = pageNum * perPage);
-    }
-
-    const user_id = req.userId;
-    console.log('유저로그인', user_id);
-
-    if (user_id) {
-      //로그인시
-
-      const allboard_list = await situationBoardLogin(user_id);
-      console.log(allboard_list.length);
-
-      if (allboard_list.length < allPage) {
-        last_num = allboard_list.length;
-      }
-      const board_list = [];
-      for (let i = start_num; i < last_num; i++) {
-        board_list.push(allboard_list[i]);
-      }
-
-      res.status(200).json({ result: 'success', board_list });
-    } else {
-      //비로그인시
-      const board_list = await situationBoard();
-
-      res.status(201).json({ result: 'success', board_list });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(400).json(() => {
-      result: 'fail';
-      errormesssage: '게시글 목록을 불러오는데 실패하였습니다.';
-    });
-  }
-};
 
 //상황별 페이지 게시글 전체 조회(최신순)
 const getSituationBoard = async (req, res) => {
   try {
+    const { page } = req.query;
     const user_id = req.userId;
     console.log('유저로그인', user_id);
+    console.log(req.query);
+    console.log(page);
+    if (page == undefined) {
+      console.log('여기');
+      if (user_id) {
+        //로그인시
+        const board_list = await situationBoardLogin(user_id);
+        res.status(200).json({ result: 'success', board_list });
+      } else {
+        //비로그인시
+        const board_list = await situationBoard();
+        res.status(201).json({ result: 'success', board_list });
+      }
+      return;
+    }
 
     if (user_id) {
       //로그인시
-      const board_list = await situationBoardLogin(user_id);
-
+      const allboard_list = await situationBoardLogin(user_id);
+      const board_list = await getPageNum(page, allboard_list);
+      console.log(board_list);
       res.status(200).json({ result: 'success', board_list });
     } else {
       //비로그인시
-      const board_list = await situationBoard();
+      const allboard_list = await situationBoard();
+      const board_list = await getPageNum(page, allboard_list);
+      console.log(board_list);
 
       res.status(201).json({ result: 'success', board_list });
     }
@@ -126,18 +94,21 @@ const getSituationBoard = async (req, res) => {
 //상황별 페이지 게시글 전체 조회(인기순)
 const getSituationBoardPop = async (req, res) => {
   try {
+    const { page } = req.query;
     const user_id = req.userId;
     console.log('유저로그인', user_id);
 
     if (user_id) {
       //로그인시
-      const board_list = await situationBoardPopLogin(user_id);
-
+      const allboard_list = await situationBoardPopLogin(user_id);
+      const board_list = await getPageNum(page, allboard_list);
+      console.log(board_list);
       res.status(200).json({ result: 'success', board_list });
     } else {
       //비로그인시
-      const board_list = await situationBoardPop();
-
+      const allboard_list = await situationBoardPop();
+      const board_list = await getPageNum(page, allboard_list);
+      console.log(board_list);
       res.status(201).json({ result: 'success', board_list });
     }
   } catch (error) {
@@ -151,16 +122,19 @@ const getSituationBoardPop = async (req, res) => {
 //상황별 페이지 게시글 전체 조회(조회순)
 const getSituationBoardView = async (req, res) => {
   try {
+    const { page } = req.query;
     const user_id = req.userId;
     console.log('유저로그인', user_id);
 
     if (user_id) {
-      const board_list = await situationBoardViewLogin(user_id);
-
+      const allboard_list = await situationBoardViewLogin(user_id);
+      const board_list = await getPageNum(page, allboard_list);
+      console.log(board_list);
       res.status(200).json({ result: 'success', board_list });
     } else {
-      const board_list = await situationBoardView();
-
+      const allboard_list = await situationBoardView();
+      const board_list = await getPageNum(page, allboard_list);
+      console.log(board_list);
       res.status(201).json({ result: 'success', board_list });
     }
   } catch (error) {
@@ -278,5 +252,4 @@ module.exports = {
   getSituationBoardPop,
   getSituationBoard,
   changeLike,
-  getSituationBoardTest, //test
 };
