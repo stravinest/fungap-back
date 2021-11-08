@@ -2,6 +2,8 @@ const express = require('express'); // express를 쓴다
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
+const swaggerUi = require('swagger-ui-express');
+const swaggerFile = require('./swagger-output');
 // const env = process.env.NODE_ENV;
 const app = express();
 const dotenv = require('dotenv');
@@ -41,10 +43,8 @@ sequelize
 
 const Router = require('./routers');
 app.use([Router]);
-// app.use('/', renders); //테스트용 지우기
-Router.get('/', (request, res) => {
-  res.render('index');
-});
+
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // const options = {
 //   ca: fs.readFileSync(process.env.HTTPS_CA),
