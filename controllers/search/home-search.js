@@ -23,8 +23,8 @@ const homeSearchFunc = async (req, res) => {
       const newlist_keywords = list_keywords.toString().replace(/,/g, "");
          
       const query = `
-      select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
-    (SELECT b.board_id,b.board_title,b.board_content,b.board_image,b.view_count,count(l.board_id) as like_count
+      select t1.board_id, t1.board_title, t1.board_image, t1.board_desc, t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
+    (SELECT b.board_id,b.board_title,b.board_content,b.board_image, b.board_desc, b.view_count,count(l.board_id) as like_count
  
     FROM boards AS b
     left OUTER JOIN likes AS l
@@ -50,10 +50,10 @@ const homeSearchFunc = async (req, res) => {
     on t1.board_id = t2.board_id
     where ${newlist_keywords}`;
 
-      const search_boards = await sequelize.query(query, {
+      const search_board_list = await sequelize.query(query, {
         type: Sequelize.QueryTypes.SELECT,
       });
-    res.json({ result: 'success', search_boards });
+    res.json({ result: 'success', search_board_list });
   } catch (err) {
     console.log(err)
     res.status(400).send({
