@@ -6,7 +6,12 @@ const { authenticateJWT } = require('../middlewares/authenticateJWT');
 
 router.get('/', authenticateJWT, mypageController.getUserInfo);
 
-router.patch('/edit', authenticateJWT, mypageController.patchUserInfo);
+router.patch(
+  '/edit',
+  authenticateJWT,
+  Validator('userEdit'),
+  mypageController.patchUserInfo
+);
 
 router.delete('/delete', authenticateJWT, mypageController.deleteUserInfo);
 
