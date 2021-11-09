@@ -11,7 +11,7 @@ RUN npm install
 # 소스복사
 COPY . /usr/src/app 
 
-expose 3000
+expose 6000
 # 앱 소스 추가
 
 
