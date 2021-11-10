@@ -46,8 +46,8 @@ const getBoardHome = async (req, res) => {
     });
   }
 };
-//test
-const getSituationBoardTest = async (req, res) => {
+//통합
+const getSituationBoardConfirm = async (req, res) => {
   try {
     const { page, sort } = req.query;
     const user_id = req.userId;
@@ -70,7 +70,7 @@ const getSituationBoardTest = async (req, res) => {
     //로그인시
     if (user_id) {
       //최신순
-      if (sort === 'data') {
+      if (sort === 'date') {
         const allboard_list = await situationBoardLogin(user_id);
         const board_list = await getPageNum(page, allboard_list);
         res.status(200).json({ result: 'success', board_list });
@@ -91,7 +91,7 @@ const getSituationBoardTest = async (req, res) => {
     //비로그인시
     else {
       //최신순
-      if (sort === 'data') {
+      if (sort === 'date') {
         const allboard_list = await situationBoard();
         const board_list = await getPageNum(page, allboard_list);
         res.status(201).json({ result: 'success', board_list });
@@ -323,5 +323,5 @@ module.exports = {
   getSituationBoardPop,
   getSituationBoard,
   changeLike,
-  getSituationBoardTest,
+  getSituationBoardConfirm,
 };
