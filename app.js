@@ -4,7 +4,6 @@ const http = require('http');
 const https = require('https');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger_output');
-// const env = process.env.NODE_ENV;
 const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
