@@ -46,6 +46,77 @@ const getBoardHome = async (req, res) => {
     });
   }
 };
+//통합
+const getSituationBoardConfirm = async (req, res) => {
+  try {
+    const { page, sort } = req.query;
+    const user_id = req.userId;
+    console.log('유저로그인', user_id);
+    console.log(req.query);
+    console.log(page);
+    if (page == undefined) {
+      console.log('여기');
+      if (user_id) {
+        //로그인시
+        const board_list = await situationBoardLogin(user_id);
+        res.status(200).json({ result: 'success', board_list });
+      } else {
+        //비로그인시
+        const board_list = await situationBoard();
+        res.status(201).json({ result: 'success', board_list });
+      }
+      return;
+    }
+    //로그인시
+    if (user_id) {
+      //최신순
+      if (sort === 'date') {
+        const allboard_list = await situationBoardLogin(user_id);
+        const board_list = await getPageNum(page, allboard_list);
+        res.status(200).json({ result: 'success', board_list });
+      }
+      //인기순
+      if (sort === 'popularity') {
+        const allboard_list = await situationBoardPopLogin(user_id);
+        const board_list = await getPageNum(page, allboard_list);
+        res.status(200).json({ result: 'success', board_list });
+      }
+      //조회순
+      if (sort === 'view') {
+        const allboard_list = await situationBoardViewLogin(user_id);
+        const board_list = await getPageNum(page, allboard_list);
+        res.status(200).json({ result: 'success', board_list });
+      }
+    }
+    //비로그인시
+    else {
+      //최신순
+      if (sort === 'date') {
+        const allboard_list = await situationBoard();
+        const board_list = await getPageNum(page, allboard_list);
+        res.status(201).json({ result: 'success', board_list });
+      }
+      //인기순
+      if (sort === 'popularity') {
+        const allboard_list = await situationBoardPop();
+        const board_list = await getPageNum(page, allboard_list);
+        res.status(201).json({ result: 'success', board_list });
+      }
+      //조회순
+      if (sort === 'view') {
+        const allboard_list = await situationBoardView();
+        const board_list = await getPageNum(page, allboard_list);
+        res.status(201).json({ result: 'success', board_list });
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(400).json(() => {
+      result: 'fail';
+      errormesssage: '게시글 목록을 불러오는데 실패하였습니다.';
+    });
+  }
+};
 
 //상황별 페이지 게시글 전체 조회(최신순)
 const getSituationBoard = async (req, res) => {
@@ -252,4 +323,5 @@ module.exports = {
   getSituationBoardPop,
   getSituationBoard,
   changeLike,
+  getSituationBoardConfirm,
 };

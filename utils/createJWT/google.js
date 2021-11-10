@@ -19,7 +19,7 @@ exports.jwtGoogleCreate = async (profile) => {
       where: { [Op.and]: [{ sns_id: profile?.sub }, { provider: 'google' }] },
     });
 
-    if (exUser?.user_delete_code==0) {
+    if (exUser?.user_delete_code == 0) {
       //구글사용자의 정보를 로그인 시마다 DB에 update
       await User.update(
         {
@@ -29,12 +29,12 @@ exports.jwtGoogleCreate = async (profile) => {
           where: { sns_id: profile?.sub },
         }
       );
-    } else if(exUser?.user_delete_code==1) {
+    } else if (exUser?.user_delete_code == 1) {
       await User.update({
         ...basicInfo,
         sns_id: snsId,
         provider: 'google',
-        user_delete_code:0,
+        user_delete_code: 0,
         refresh_token: refreshToken,
       });
     } else {
@@ -52,6 +52,7 @@ exports.jwtGoogleCreate = async (profile) => {
     basicInfo.user_id = user.user_id;
     basicInfo.user_mbti = user.user_mbti;
     basicInfo.user_authority = user.user_authority;
+    basicInfo.user_image = user.user_image;
 
     //access token 발급
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {

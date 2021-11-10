@@ -43,9 +43,9 @@ sequelize
 
 const Router = require('./routers');
 app.use([Router]);
-
+//swagger
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
-
+//https설정
 // const options = {
 //   ca: fs.readFileSync(process.env.HTTPS_CA),
 //   key: fs.readFileSync(process.env.HTTPS_KEY),

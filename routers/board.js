@@ -8,7 +8,7 @@ const { homeSearch, situationSearch } = require('../controllers/search');
 router.get('/home', authenticateJWTall, boardController.getBoardHome);
 
 //상황별 페이지 게시글 전체 조회(최신순) //쿼리스트링 값으로 page=page
-router.get('/', authenticateJWTall, boardController.getSituationBoard);
+router.get('/', authenticateJWTall, boardController.getSituationBoardConfirm);
 //상황별 페이지 게시글 전체 조회(인기순)
 router.get(
   '/popularity',
