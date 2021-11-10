@@ -65,6 +65,7 @@ exports.jwtKakaoCreate = async (profile) => {
     basicInfo.user_id = user.user_id;
     basicInfo.user_mbti = user.user_mbti;
     basicInfo.user_authority = user.user_authority;
+    basicInfo.user_image = user.user_image;
 
     //access token 발급
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
