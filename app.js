@@ -43,7 +43,7 @@ sequelize
 
 const Router = require('./routers');
 app.use([Router]);
-
+//swagger
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 const options = {
