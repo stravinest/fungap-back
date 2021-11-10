@@ -1,5 +1,5 @@
 #!/bin/sh
-ssh ubuntu@3.36.90.60 <<EOF
+ssh ubuntu@52.78.100.102  <<EOF
     cd ~/fungap-back
     sudo -s	
     git pull origin main
