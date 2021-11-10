@@ -2,7 +2,7 @@
 ssh ubuntu@15.164.225.3 <<EOF
     cd ~/fungap-back
     sudo -s	
-    git pull origin dev
+    git pull origin main
     npm install
     pm2 restart app.js
     exit
