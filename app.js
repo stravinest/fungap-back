@@ -45,15 +45,15 @@ app.use([Router]);
 //swagger
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 //https설정
-// const options = {
-//   ca: fs.readFileSync(process.env.HTTPS_CA),
-//   key: fs.readFileSync(process.env.HTTPS_KEY),
-//   cert: fs.readFileSync(process.env.HTTPS_CERT),
-// };
-// http.createServer(app).listen(3000);
-// https.createServer(options, app).listen(443);
+const options = {
+  ca: fs.readFileSync(process.env.HTTPS_CA),
+  key: fs.readFileSync(process.env.HTTPS_KEY),
+  cert: fs.readFileSync(process.env.HTTPS_CERT),
+};
+http.createServer(app).listen(6000);
+https.createServer(options, app).listen(443);
 
-app.listen(port, () => {
-  console.log(`listening at http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`listening at http://localhost:${port}`);
+// });
 module.exports = app;
