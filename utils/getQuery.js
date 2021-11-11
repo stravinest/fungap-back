@@ -324,19 +324,32 @@ exports.situationBoardView = async function () {
 //게시글 디테일 페이지 조회(board) (로그인)
 exports.detailBoardLogin = async function (user_id, board_id) {
   const queryBoard = `
-  SELECT b.board_title,b.board_image,b.board_content,b.board_desc,b.view_count,count(l.board_id) as like_count,
-  CASE u.board_id
-  WHEN b.board_id THEN 'true'
-  ELSE 'false'
-  END AS like_state
+  select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
+  (SELECT b.board_id,b.board_delete_code,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
+   
+    FROM boards AS b
+    left OUTER JOIN likes AS l
+    ON b.board_id = l.board_id
+    WHERE b.board_delete_code = 0
+    GROUP BY b.board_id
+    ORDER BY b.createdAt DESC) as t1
+    join
+    
+  (select b.board_id, count(c.board_id) as comment_count,
+  
+  case u.board_id
+  when b.board_id then 'true'
+  else 'false'
+  end as like_state
   FROM boards AS b
-  left OUTER JOIN comments AS c
-  ON (b.board_id = c.board_id AND c.comment_delete_code = 0)
-  left OUTER JOIN likes AS l
-  ON b.board_id = l.board_id
-  left OUTER JOIN likes AS u
-  ON b.board_id = u.board_id AND u.user_id=${user_id}
-  WHERE (b.board_delete_code = 0 AND b.board_id=${board_id})
+  LEFT OUTER JOIN comments AS c
+  ON (b.board_id = c.board_id AND c.comment_delete_code=0)
+  left outer join likes as u
+  on b.board_id = u.board_id and u.user_id = ${user_id}
+  group by b.board_id
+  ORDER BY b.createdAt DESC) as t2
+  on t1.board_id = t2.board_id
+  WHERE (t1.board_delete_code = 0 AND t1.board_id=${board_id})
   `;
   return await sequelize.query(queryBoard, {
     type: Sequelize.QueryTypes.SELECT,
@@ -359,19 +372,30 @@ exports.detailCommentsAll = async function (board_id) {
 
 //게시글 디테일 페이지 조회(board) (비로그인)
 exports.detailBoard = async function (board_id) {
-  const queryBoard = `
-  SELECT b.board_title,b.board_image,b.board_content,b.board_desc,b.view_count,count(l.board_id) as like_count,
-  CASE l.board_id
-  WHEN '말이안되는값' THEN 'true'
-  ELSE 'false'
-  END AS like_state
+  const queryBoard = `select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
+  (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
+   
+    FROM boards AS b
+    left OUTER JOIN likes AS l
+    ON b.board_id = l.board_id
+    WHERE b.board_delete_code = 0
+    GROUP BY b.board_id
+    ORDER BY b.createdAt DESC) as t1
+    join
+    
+  (select b.board_id, count(c.board_id) as comment_count,
+  
+  case c.board_id
+  when '말이안되는값' then 'true'
+  else 'false'
+  end as like_state
   FROM boards AS b
-  left OUTER JOIN comments AS c
-  ON (b.board_id = c.board_id AND c.comment_delete_code = 0)
-  left OUTER JOIN likes AS l
-  ON b.board_id = l.board_id
-  WHERE (b.board_delete_code = 0 AND b.board_id=${board_id})
-  `;
+  LEFT OUTER JOIN comments AS c
+  ON (b.board_id = c.board_id AND c.comment_delete_code=0)
+  group by b.board_id
+  ORDER BY b.createdAt DESC) as t2
+  on t1.board_id = t2.board_id
+  where t1.board_id=${board_id}`;
   return await sequelize.query(queryBoard, {
     type: Sequelize.QueryTypes.SELECT,
   });

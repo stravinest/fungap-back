@@ -233,6 +233,7 @@ const getDetailBoard = async (req, res) => {
     }
 
     if (user_id) {
+      //로그인
       const beforetime = await Date.now();
       await console.log(Date.now());
       const result = await detailBoardLogin(user_id, board_id);
@@ -243,9 +244,11 @@ const getDetailBoard = async (req, res) => {
       const board = result[0];
       res.status(200).json({ result: 'success', board, comments });
     } else {
-      console.log('여기일텐데??');
+      //비로그인
+      console.log('여기일텐데??', board_id);
       const result = await detailBoard(board_id);
       const comments = await detailCommentsAll(board_id);
+      console.log(result);
       const board = result[0];
       res.status(201).json({ result: 'success', board, comments });
     }
