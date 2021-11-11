@@ -28,9 +28,7 @@ node {
 
       stage('Tag') {
 
-            sh(script: '''docker tag ${DOCKER_USER_ID}/fungap \
-
-            ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}''') }
+            sh(script: '''docker tag ${DOCKER_USER_ID}/fungap ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}''') }
 
       stage('Push') {
 
