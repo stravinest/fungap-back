@@ -55,8 +55,6 @@ node {
 
 // Pull: git 소스를 다운로드합니다. 위에서 만든 자신의 프로젝트 git url를 넣어줍니다.
 
-// Unit Test: 빈 값으로 넣어 진행하지 않겠습니다.
-
 // Build: docker-compose를 이용해 build를 진행합니다.
 
 // Tag: docker image tag를 진행합니다.
