@@ -12,7 +12,7 @@ node {
 
      stage('Pull') {
 
-            git 'https://github.com/fungap/fungap-back.git' 
+           git branch: 'main', url: 'https://github.com/fungap/fungap-back.git'
 
      }
 
