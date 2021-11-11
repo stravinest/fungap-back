@@ -1,6 +1,6 @@
 node {
 
-  git poll: true, url:'https://github.com/fungap/fungap-back.git'
+  git branch: 'main', url:'https://github.com/fungap/fungap-back.git'
 
   withCredentials([[$class: 'UsernamePasswordMultiBinding',
 
