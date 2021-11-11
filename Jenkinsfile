@@ -40,11 +40,11 @@ node {
 
       }
 
-      stage('Deploy') {
+      // stage('Deploy') {
 
-          sh(script: 'docker-compose up -d production') 
+      //     sh(script: 'docker-compose up -d production') 
 
-      }
+      // }
 
     } 
 
