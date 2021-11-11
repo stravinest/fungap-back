@@ -1,6 +1,7 @@
 const { Board, Like, sequelize, Sequelize } = require('../models');
 const { Op } = require('sequelize');
 const { getPageNum } = require('../utils/getPageNum');
+const { getComments } = require('../utils/getComments');
 const {
   PopBoardHome,
   NewBoardHome,
@@ -224,6 +225,7 @@ const getDetailBoard = async (req, res) => {
     console.log('유저로그인', user_id);
     const { board_id } = req.params;
     console.log(req.cookies);
+    const comments = await getComments(board_id);
     if (req.cookies['f' + board_id] == undefined) {
       res.cookie('f' + board_id, getUserIP(req), {
         maxAge: 720000, //12분
@@ -234,12 +236,12 @@ const getDetailBoard = async (req, res) => {
 
     if (user_id) {
       //로그인
-      const beforetime = await Date.now();
-      await console.log(Date.now());
+      // const beforetime = await Date.now();
+      // await console.log(Date.now());
       const result = await detailBoardLogin(user_id, board_id);
-      const comments =
-        (await detailCommentsAll(board_id)) +
-        (await console.log(Date.now() - beforetime));
+      // const comments =
+      //   (await detailCommentsAll(board_id)) +
+      //   (await console.log(Date.now() - beforetime));
 
       const board = result[0];
       res.status(200).json({ result: 'success', board, comments });
@@ -247,8 +249,8 @@ const getDetailBoard = async (req, res) => {
       //비로그인
       console.log('여기일텐데??', board_id);
       const result = await detailBoard(board_id);
-      const comments = await detailCommentsAll(board_id);
-      console.log(result);
+      // const comments = await detailCommentsAll(board_id);
+      // console.log(result);
       const board = result[0];
       res.status(201).json({ result: 'success', board, comments });
     }
