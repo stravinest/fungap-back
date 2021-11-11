@@ -69,13 +69,10 @@ const callEmail = async (req, res) => {
       },
       user_id
     );
-    res.status(200).json({ result: success });
+    res.status(200).send({ result: 'university authorized' });
     return;
   }
-  res.status(409).json({
-    result: fail,
-    errormessage: '',
-  });
+  res.status(403).send({ result: 'not supported university' });
 };
 module.exports = {
   sendEmail,
