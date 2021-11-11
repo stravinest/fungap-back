@@ -1,5 +1,16 @@
-# version: '3'
-# services:
+version: '3'
+services:
+  app:
+    build: .
+    image: ${DOCKER_USER_ID}/fungap
+
+  production:
+    image: ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+    ports:
+      - '6000:3000'
+    command: node app.js
 #   proxy:
 #     restart: unless-stopped
 #     image: 077a0597bdf7
