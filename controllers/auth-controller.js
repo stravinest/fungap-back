@@ -72,7 +72,7 @@ const callEmail = async (req, res) => {
     res.status(200).send({ result: 'university authorized' });
     return;
   }
-  res.status(403).send({ result: 'not supported university' });
+  res.status(409).send({ result: 'not supported university' });
 };
 module.exports = {
   sendEmail,
