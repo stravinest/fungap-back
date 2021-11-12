@@ -43,6 +43,10 @@ sequelize
 
 const Router = require('./routers');
 app.use([Router]);
+// app.use('/', renders); //테스트용 지우기
+Router.get('/', (request, res) => {
+  res.render('index');
+});
 //swagger
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 //https설정
