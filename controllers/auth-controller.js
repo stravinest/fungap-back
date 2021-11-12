@@ -1,6 +1,6 @@
 // const jwt = require('jsonwebtoken');
-// const { User } = require('../models');
-// const bcrypt = require('bcrypt');
+const { User } = require('../models');
+const bcrypt = require('bcrypt');
 // const crypto = require('crypto');
 const express = require('express');
 const router = express.Router();
@@ -12,7 +12,7 @@ var appDir = path.dirname(require.main.filename);
 
 //이메일 발송
 const sendEmail = async (req, res) => {
-  const { mbti_email } = req.body;
+  const { email } = req.body;
   let authNum = Math.random().toString().substr(2, 6);
   let emailTemplete;
   ejs.renderFile(
@@ -40,7 +40,7 @@ const sendEmail = async (req, res) => {
   await transporter.sendMail(
     {
       from: 'FUNGAP',
-      to: mbti_email,
+      to: email,
       subject: '회원가입을 위한 인증번호를 입력해주세요.',
       html: emailTemplete,
     },
@@ -52,6 +52,40 @@ const sendEmail = async (req, res) => {
       transporter.close();
     }
   );
+};
+
+//비밀번호 변경
+const changePassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const userCheck = await User.findOne({
+      where: {
+        [Op.and]: { user_delete_code: 0, email: email },
+      },
+    });
+    if (!userCheck) {
+      res.status(400).send({
+        result: 'fail',
+        errorMessage: '변경하시려는 이메일이 없습니다.',
+      });
+      return;
+    }
+    const hash = await bcrypt.hash(password, 12);
+    await User.update(
+      {
+        password: hash,
+      },
+      {
+        where: { email: email },
+      }
+    );
+    res.status(200).json({ result: 'success' });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      errorMessage: '알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.',
+    });
+  }
 };
 
 //이메일체크
@@ -77,4 +111,5 @@ const callEmail = async (req, res) => {
 module.exports = {
   sendEmail,
   callEmail,
+  changePassword,
 };
