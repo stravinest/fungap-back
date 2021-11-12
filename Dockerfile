@@ -1,5 +1,5 @@
 #베이스 이미지 
-FROM node:14.17.3
+FROM node:14-alpine
 
 # 앱 디렉터리 생성
 COPY    ./package* /usr/src/app/
@@ -14,5 +14,7 @@ COPY . /usr/src/app
 expose 6000
 # 앱 소스 추가
 
-CMD pm2 start app.js
+
+CMD node app.js
 # CMD [ "pm2-runtime", "server.js", "-i", "max" ]
+

@@ -22,9 +22,9 @@ exports.jwtNaverCreate = async (profile) => {
     const exUser = await User.findOne({
       where: { [Op.and]: [{ sns_id: snsId }, { provider: 'naver' }] },
     });
-    console.log(exUser?.user_delete_code,'오오오');
+    console.log(exUser?.user_delete_code, '오오오');
 
-    if (exUser?.user_delete_code==0) {
+    if (exUser?.user_delete_code == 0) {
       //네이버 사용자의 정보를 로그인 시마다 DB에 update
       await User.update(
         {
@@ -34,12 +34,12 @@ exports.jwtNaverCreate = async (profile) => {
           where: { sns_id: snsId },
         }
       );
-    } else if(exUser?.user_delete_code==1) {
+    } else if (exUser?.user_delete_code == 1) {
       await User.update({
         ...basicInfo,
         sns_id: snsId,
         provider: 'naver',
-        user_delete_code:0,
+        user_delete_code: 0,
         refresh_token: refreshToken,
       });
     } else {
