@@ -202,8 +202,9 @@ const email_check = async (req, res) => {
     const existUserId = await User.findOne({ where: { email } });
 
     if (existUserId) {
-      res.status(400).send({
-        msg: '이미 사용중인 이메일이 있습니다.',
+      res.status(409).send({
+        result: 'fail',
+        errormessage: '이미 사용중인 이메일이 있습니다.',
       });
       return;
     }
@@ -213,7 +214,8 @@ const email_check = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(401).send({
+    res.status(400).send({
+      result: 'fail',
       errorMessage: '알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.',
     });
   }
@@ -226,8 +228,9 @@ const nickname_check = async (req, res) => {
     const existUserId = await User.findOne({ where: { nickname } });
 
     if (existUserId) {
-      res.status(400).send({
-        msg: '이미 사용중인 닉네임이 있습니다.',
+      res.status(409).send({
+        result: 'fail',
+        errormessage: '이미 사용중인 닉네임이 있습니다.',
       });
       return;
     }
@@ -237,7 +240,8 @@ const nickname_check = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(401).send({
+    res.status(400).send({
+      result: 'fail',
       errorMessage: '알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.',
     });
   }

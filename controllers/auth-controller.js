@@ -12,7 +12,7 @@ var appDir = path.dirname(require.main.filename);
 
 //이메일 발송
 const sendEmail = async (req, res) => {
-  const { email } = req.body;
+  const { mbti_email } = req.body;
   let authNum = Math.random().toString().substr(2, 6);
   let emailTemplete;
   ejs.renderFile(
@@ -40,7 +40,7 @@ const sendEmail = async (req, res) => {
   await transporter.sendMail(
     {
       from: 'FUNGAP',
-      to: email,
+      to: mbti_email,
       subject: '회원가입을 위한 인증번호를 입력해주세요.',
       html: emailTemplete,
     },
@@ -72,7 +72,7 @@ const callEmail = async (req, res) => {
     res.status(200).send({ result: 'university authorized' });
     return;
   }
-  res.status(403).send({ result: 'not supported university' });
+  res.status(409).send({ result: 'not supported university' });
 };
 module.exports = {
   sendEmail,
