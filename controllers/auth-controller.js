@@ -14,6 +14,14 @@ var appDir = path.dirname(require.main.filename);
 //이메일 발송
 const sendEmail = async (req, res) => {
   const { email } = req.body;
+  const existUserId = await User.findOne({ where: { email } });
+  if (!existUserId) {
+    res.status(400).send({
+      result: 'fail',
+      errormessage: '존재하지 않는 이메일입니다.',
+    });
+    return;
+  }
   let authNum = Math.random().toString().substr(2, 6);
   let emailTemplete;
   ejs.renderFile(
