@@ -17,6 +17,7 @@ const cors = require('cors');
 let colsOptions = {
   origin: true, // 접근 권한을 부여하는 도메
   credentials: true, // 응답 헤더에 Access-Control-Allow-Credentials 추가
+  methods: ['POST', 'PUT', 'GET', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
   optionsSuccessStatus: 200, // 응답 상태 200으로 설정
 };
 app.use(cors(colsOptions));
