@@ -22,7 +22,7 @@ node {
 
       stage('Build') {
 
-            sh(script: 'docker-compose build app')
+            sh(script: 'sudo docker-compose build app')
 
       }
 
