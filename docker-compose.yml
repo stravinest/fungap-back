@@ -5,7 +5,10 @@ services:
     image: stravinest/fungap
 
   production:
-    image: ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}
+    web:
+      env_file:
+        - .env
+    image: ${DOCKER_USER_ID}/fungap:latest
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
     ports:
