@@ -18,6 +18,8 @@ let colsOptions = {
   origin: [
     'http://localhost:3000', // 접근 권한을 부여하는 도메
     'http://fungap.shop',
+    'https://localhost:3000',
+    'https://fungap.shop',
   ],
   credentials: true, // 응답 헤더에 Access-Control-Allow-Credentials 추가
   // exposedHeaders: [Set - Cookie],
