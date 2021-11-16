@@ -1,7 +1,8 @@
-const { sequelize, Sequelize } = require('../models');
+import { sequelize } from '../models';
+import * as Sequelize from 'sequelize';
 
 //홈화면 조회 신규 순 로그인
-exports.NewBoardHomeLogin = async function (user_id) {
+export const NewBoardHomeLogin = async function (user_id: number) {
   const queryNew = `select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
   (SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count
    
@@ -34,7 +35,7 @@ exports.NewBoardHomeLogin = async function (user_id) {
   // return new_board_list;
 };
 //홈화면 조회 인기순 로그인
-exports.PopBoardHomeLogin = async function (user_id) {
+export const PopBoardHomeLogin = async function (user_id: number) {
   const queryPop = `select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
   (SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count
    
@@ -67,7 +68,7 @@ exports.PopBoardHomeLogin = async function (user_id) {
   });
 };
 //홈화면 조회 신규순 비로그인
-exports.NewBoardHome = async function () {
+export const NewBoardHome = async function () {
   const query = `select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
   (SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count
    
@@ -97,7 +98,7 @@ exports.NewBoardHome = async function () {
   });
 };
 //홈화면 조회 인기순 비로그인
-exports.PopBoardHome = async function () {
+export const PopBoardHome = async function () {
   const query = `select t1.board_id, t1.board_title, t1.board_image, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
   (SELECT b.board_id,b.board_title,b.board_image,b.view_count,count(l.board_id) as like_count
    
@@ -130,7 +131,7 @@ exports.PopBoardHome = async function () {
 
 //상황별 페이지 시작
 //상황별 페이지 게시글 전체 조회 로그인시(최신순)
-exports.situationBoardLogin = async function (user_id) {
+export const situationBoardLogin = async function (user_id: number) {
   const query = `select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
   (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
    
@@ -162,7 +163,7 @@ exports.situationBoardLogin = async function (user_id) {
   });
 };
 //상황별 페이지 게시글 전체 조회 비로그인(최신순)
-exports.situationBoard = async function () {
+export const situationBoard = async function () {
   const query = `select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
   (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
    
@@ -192,7 +193,7 @@ exports.situationBoard = async function () {
   });
 };
 //상황별 페이지 게시글 전체 조회 로그인시(인기순)
-exports.situationBoardPopLogin = async function (user_id) {
+export const situationBoardPopLogin = async function (user_id: number) {
   const query = `select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
   (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
    
@@ -225,7 +226,7 @@ exports.situationBoardPopLogin = async function (user_id) {
   });
 };
 //상황별 페이지 게시글 전체 조회 비로그인(인기순)
-exports.situationBoardPop = async function () {
+export const situationBoardPop = async function () {
   const query = `select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
   (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
    
@@ -256,7 +257,7 @@ exports.situationBoardPop = async function () {
   });
 };
 //상황별 페이지 게시글 전체 조회 로그인시(조회수순)
-exports.situationBoardViewLogin = async function (user_id) {
+export const situationBoardViewLogin = async function (user_id: number) {
   const query = `select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
   (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
    
@@ -289,7 +290,7 @@ exports.situationBoardViewLogin = async function (user_id) {
   });
 };
 //상황별 페이지 게시글 전체 조회 비로그인(조회수순)
-exports.situationBoardView = async function () {
+export const situationBoardView = async function () {
   const query = `select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
   (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
    
@@ -322,7 +323,10 @@ exports.situationBoardView = async function () {
 //상황별페이지 끝
 
 //게시글 디테일 페이지 조회(board) (로그인)
-exports.detailBoardLogin = async function (user_id, board_id) {
+export const detailBoardLogin = async function (
+  user_id: number,
+  board_id: number
+) {
   const queryBoard = `
   select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
   (SELECT b.board_id,b.board_delete_code,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
@@ -356,7 +360,7 @@ exports.detailBoardLogin = async function (user_id, board_id) {
   });
 };
 //게시글 디테일 페이지 조회(comments) (로그인,비로그인)
-exports.detailCommentsAll = async function (board_id) {
+export const detailCommentsAll = async function (board_id: number) {
   const queryComment = `
     SELECT u.user_image,u.user_id,c.board_id,u.user_mbti,u.nickname,c.comment,c.comment_id
     FROM comments AS c
@@ -371,7 +375,7 @@ exports.detailCommentsAll = async function (board_id) {
 };
 
 //게시글 디테일 페이지 조회(board) (비로그인)
-exports.detailBoard = async function (board_id) {
+export const detailBoard = async function (board_id: number) {
   const queryBoard = `select t1.board_id, t1.board_title, t1.board_image,t1.board_desc,t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
   (SELECT b.board_id,b.board_title,b.board_image,b.board_desc,b.board_content,b.view_count,count(l.board_id) as like_count
    

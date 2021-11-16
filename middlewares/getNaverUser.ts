@@ -1,6 +1,12 @@
-const axios = require('axios');
+import axios from 'axios';
+import { NextFunction, Request } from 'express';
+import { NaverReq } from '../interface/socialLogin';
 
-exports.getNaverUser = async (req, res, next) => {
+exports.getNaverUser = async (
+  req: NaverReq,
+  res: Request,
+  next: NextFunction
+) => {
   const { access_token } = req.body;
 
   try {

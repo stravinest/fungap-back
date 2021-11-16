@@ -1,6 +1,6 @@
-const Joi = require('joi');
+import * as Joi from 'joi';
 
-const loginSchema = Joi.object({
+export const loginSchema = Joi.object({
   email: Joi.string().email().required().messages({
     'string.email': `메일형식이 잘못되었습니다.`,
     'string.empty': `"a" cannot be an empty field`,
@@ -15,9 +15,6 @@ const loginSchema = Joi.object({
       'string.pattern.base': `비밀번호는 비밀번호는 최소 8 자이상, 최소 하나의 문자 및 하나의 숫자.`,
       'string.min': `최소 8자 이상이어야 합니다.`,
       'string.empty': `"a" cannot be an empty field`,
-      'string.min': `최소 네자리 수 이상이어야 합니다.`,
       'any.required': `"a" is a required field`,
     }),
 });
-
-module.exports = loginSchema;

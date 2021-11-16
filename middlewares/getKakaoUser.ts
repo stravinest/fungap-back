@@ -1,6 +1,12 @@
-const axios = require('axios');
+import axios from 'axios';
+import { NextFunction, Response } from 'express';
+import { KakaoReq } from '../interface/socialLogin';
 
-exports.getKakaoUser = async (req, res, next) => {
+exports.getKakaoUser = async (
+  req: KakaoReq,
+  res: Response,
+  next: NextFunction
+) => {
   const { access_token } = req.body;
   console.log(access_token);
 
@@ -15,7 +21,7 @@ exports.getKakaoUser = async (req, res, next) => {
       },
     });
     console.log(profile);
-    req.kakao = profile;
+    req.kakao = profile.data;
     next();
   } catch (error) {
     console.error(error);

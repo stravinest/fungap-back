@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
-const { User } = require('../models');
+import * as jwt from 'jsonwebtoken';
+import User from '../models/user';
 
-exports.getNewAuth = async function (refresh_token) {
+const getNewAuth = async function (refresh_token: string) {
   console.log('새로 accesstoken 발급');
   const info = await User.findOne({
     attributes: ['user_id', 'email', 'nickname', 'user_image', 'provider'],
@@ -17,7 +17,7 @@ exports.getNewAuth = async function (refresh_token) {
       provider: info.provider,
     };
     console.log(basicInfo);
-    const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
+    const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET!, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,
     });
     return {
@@ -31,3 +31,5 @@ exports.getNewAuth = async function (refresh_token) {
   }
   return null;
 };
+
+export default getNewAuth;

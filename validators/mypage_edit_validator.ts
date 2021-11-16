@@ -1,6 +1,6 @@
-const Joi = require('joi');
+import * as Joi from 'joi';
 
-const userEditSchema = Joi.object({
+export const userEditSchema = Joi.object({
   user_image: Joi.string().empty('').messages({
     'string.base': `"a" should be a type of 'text'`,
   }),
@@ -15,5 +15,3 @@ const userEditSchema = Joi.object({
     'string.base': `"a" should be a type of 'text'`,
   }),
 });
-
-module.exports = userEditSchema;

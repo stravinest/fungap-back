@@ -1,6 +1,12 @@
-const axios = require('axios');
+import { NextFunction, Request, Response } from 'express';
+import { GoogleReq } from '../interface/socialLogin';
+import axios from 'axios';
 
-exports.getGoogleUser = async (req, res, next) => {
+exports.getGoogleUser = async (
+  req: GoogleReq,
+  res: Response,
+  next: NextFunction
+) => {
   const { access_token } = req.body;
   console.log(access_token);
 

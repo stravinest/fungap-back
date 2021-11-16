@@ -5,7 +5,7 @@ type Config = {
   username: string;
   password: string;
   database: string;
-  [key: string]: string;
+  [key: string]: string | boolean | object;
 };
 
 interface IConfigGroup {

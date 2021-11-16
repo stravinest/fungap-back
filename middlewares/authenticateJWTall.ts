@@ -1,11 +1,17 @@
-const jwt = require('jsonwebtoken');
-const { getNewAuth } = require('../utils/renewAuth');
-const { loginUser } = require('../utils/setLoginUser');
+import * as jwt from 'jsonwebtoken';
+import getNewAuth from '../utils/renewAuth';
+import loginUser from '../utils/setLoginUser';
+import { UserMiddlewareinfo } from '../interface/user';
+import { NextFunction, Response } from 'express';
 
-exports.authenticateJWTall = async (req, res, next) => {
+const authenticateJWTall = async (
+  req: UserMiddlewareinfo,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     if (!req.headers['authorization']) {
-      req.userId = null;
+      req.userId = NaN;
       next();
     } else {
       const [accessToken, refreshToken] =
@@ -88,14 +94,13 @@ exports.authenticateJWTall = async (req, res, next) => {
   }
 };
 
-function verifyToken(token) {
+function verifyToken(token: string) {
   try {
-    // console.log('아놔좀 나와');
-    // console.log(token);
-    // console.log(jwt.verify(token, process.env.JWT_SECRET));
-    return jwt.verify(token, process.env.JWT_SECRET);
-  } catch (error) {
-    console.error(error);
+    return jwt.verify(token, process.env.JWT_SECRET!);
+  } catch (error: any) {
+    //애니는 용납못해 다시봐~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return error.message;
   }
 }
+
+export default authenticateJWTall;

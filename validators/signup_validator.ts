@@ -1,6 +1,6 @@
-const Joi = require('joi');
+import * as Joi from 'joi';
 
-const signupSchema = Joi.object({
+export const signupSchema = Joi.object({
   email: Joi.string().email().required().messages({
     'string.email': `메일형식이 잘못되었습니다.`,
     'string.empty': `"a" cannot be an empty field`,
@@ -40,5 +40,3 @@ const signupSchema = Joi.object({
       'string.base': `"a" should be a type of 'text'`,
     }),
 }).unknown();
-
-module.exports = signupSchema;

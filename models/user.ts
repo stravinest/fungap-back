@@ -1,12 +1,12 @@
 import * as Sequelize from 'sequelize';
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from './sequelize';
-import Comment from '../models/comment';
-import Like from '../models/like';
+import Comment from './comment';
+import Like from './like';
 import { dbType } from '.';
 
 class User extends Model {
-  public user_id!: string;
+  public user_id!: number;
   public email!: string;
   public nickname!: string;
   public user_image!: string;
@@ -19,139 +19,77 @@ class User extends Model {
   public sns_id!: string;
 }
 
-User.init({
-  user_id: {
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true,
-    type: Sequelize.INTEGER,
+User.init(
+  {
+    user_id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: Sequelize.INTEGER,
+    },
+    email: {
+      type: Sequelize.STRING(40),
+      allowNull: true,
+    },
+    nickname: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      defaultValue: '아무개',
+    },
+    user_image: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    user_mbti: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    password: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    user_authority: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      defaultValue: 'public',
+    },
+    user_delete_code: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    refresh_token: {
+      type: Sequelize.STRING,
+    },
+    provider: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      defaultValue: 'local',
+    },
+    sns_id: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
   },
-  email: {
-    type: Sequelize.STRING(40),
-    allowNull: true,
-  },
-  nickname: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    defaultValue: '아무개',
-  },
-  user_image: {
-    type: Sequelize.STRING,
-    allowNull: true,
-  },
-  user_mbti: {
-    type: Sequelize.STRING,
-    allowNull: true,
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: true,
-  },
-  user_authority: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    defaultValue: 'public',
-  },
-  user_delete_code: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-  },
-  refresh_token: {
-    type: Sequelize.STRING,
-  },
-  provider: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    defaultValue: 'local',
-  },
-  sns_id: {
-    type: Sequelize.STRING,
-    allowNull: true,
-  },
-},
-{
-  sequelize,
-  timestamps: true,
-  modelName: 'User',
-  tableName: 'users',
-  charset: 'utf8',
-  collate: 'utf8_general_ci',
-})
-
-
-export default = class User extends Sequelize.Model {
-  static init(sequelize) {
-    return super.init(
-      {
-        user_id: {
-          allowNull: false,
-          autoIncrement: true,
-          primaryKey: true,
-          type: Sequelize.INTEGER,
-        },
-        email: {
-          type: Sequelize.STRING(40),
-          allowNull: true,
-        },
-        nickname: {
-          type: Sequelize.STRING,
-          allowNull: false,
-          defaultValue: '아무개',
-        },
-        user_image: {
-          type: Sequelize.STRING,
-          allowNull: true,
-        },
-        user_mbti: {
-          type: Sequelize.STRING,
-          allowNull: true,
-        },
-        password: {
-          type: Sequelize.STRING,
-          allowNull: true,
-        },
-        user_authority: {
-          type: Sequelize.STRING,
-          allowNull: false,
-          defaultValue: 'public',
-        },
-        user_delete_code: {
-          type: Sequelize.INTEGER,
-          allowNull: false,
-          defaultValue: 0,
-        },
-        refresh_token: {
-          type: Sequelize.STRING,
-        },
-        provider: {
-          type: Sequelize.STRING,
-          allowNull: false,
-          defaultValue: 'local',
-        },
-        sns_id: {
-          type: Sequelize.STRING,
-          allowNull: true,
-        },
-      },
-      {
-        sequelize,
-        timestamps: true,
-        modelName: 'User',
-        tableName: 'users',
-        charset: 'utf8',
-        collate: 'utf8_general_ci',
-      }
-    );
+  {
+    sequelize,
+    timestamps: true,
+    modelName: 'User',
+    tableName: 'users',
+    charset: 'utf8',
+    collate: 'utf8_general_ci',
   }
-  static associate(db: dbType) {
-    db.User.hasMany(db.Comment, {
-      foreignKey: 'user_id',
-      sourceKey: 'user_id',
-    });
-    db.User.hasMany(db.Like, {
-      foreignKey: 'user_id',
-      sourceKey: 'user_id',
-    });
-  }
+);
+
+export const associate = (db: dbType) => {
+  db.User.hasMany(db.Comment, {
+    foreignKey: 'user_id',
+    sourceKey: 'user_id',
+  });
+  db.User.hasMany(db.Like, {
+    foreignKey: 'user_id',
+    sourceKey: 'user_id',
+  });
 };
+
+export default User;

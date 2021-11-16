@@ -1,14 +1,11 @@
-const {
-  Board,
-  User,
-  Like,
-  Comment,
-  sequelize,
-  Sequelize,
-} = require('../models');
+import { Board, User, Like, Comment } from '../models';
+import { sequelize } from '../models';
+import * as Sequelize from 'sequelize';
+import { UserReqinfo, UserMiddlewareinfo } from '../interface/user';
+import { Response } from 'express';
 
 //유저 정보 조회
-const getUserInfo = async (req, res) => {
+const getUserInfo = async (req: UserReqinfo, res: Response) => {
   try {
     const userId = req.userInfo.userId;
     const provider = req.userInfo.provider;
@@ -19,9 +16,9 @@ const getUserInfo = async (req, res) => {
     res.status(200).json({
       result: 'success',
       user: {
-        nickname: userInfo.nickname,
-        user_image: userInfo.user_image,
-        user_mbti: userInfo.user_mbti,
+        nickname: userInfo?.nickname,
+        user_image: userInfo?.user_image,
+        user_mbti: userInfo?.user_mbti,
       },
     });
   } catch (err) {
@@ -33,7 +30,7 @@ const getUserInfo = async (req, res) => {
 };
 
 //유저 정보 수정
-const patchUserInfo = async (req, res) => {
+const patchUserInfo = async (req: UserReqinfo, res: Response) => {
   try {
     const userId = req.userInfo.userId;
     const provider = req.userInfo.provider;
@@ -71,7 +68,7 @@ const patchUserInfo = async (req, res) => {
 };
 
 //유저 탈퇴
-const deleteUserInfo = async (req, res) => {
+const deleteUserInfo = async (req: UserMiddlewareinfo, res: Response) => {
   try {
     const userId = req.userInfo.userId;
     const provider = req.userInfo.provider;
@@ -79,21 +76,21 @@ const deleteUserInfo = async (req, res) => {
     const userInfo = await User.findOne({
       where: { user_id: userId, provider: provider },
     });
-    await userInfo.update({ user_delete_code: 1 });
-    
+    await userInfo?.update({ user_delete_code: 1 });
+
     // 유저 delete_code 1
     const deleteUserQuery = `UPDATE users As u 
         SET u.user_delete_code = 1
-      WHERE u.user_id = ${userId}`
+      WHERE u.user_id = ${userId}`;
 
     await sequelize.query(deleteUserQuery, {
-      type: Sequelize.QueryTypes.UPDATE
-    })
+      type: Sequelize.QueryTypes.UPDATE,
+    });
     // 유저가 쓴 코멘트 delete_code 1
     const deleteCommentQuery = `UPDATE comments AS c
       LEFT OUTER JOIN users AS u ON c.user_id = u.user_id
         SET c.comment_delete_code = 1 
-      WHERE (c.user_id = ${userId})`
+      WHERE (c.user_id = ${userId})`;
 
     await sequelize.query(deleteCommentQuery, {
       type: Sequelize.QueryTypes.UPDATE,
@@ -103,16 +100,15 @@ const deleteUserInfo = async (req, res) => {
     const deleteLikeQuery = `DELETE l
       FROM likes AS l
       LEFT OUTER JOIN users AS u ON l.user_id = u.user_id
-      WHERE u.user_id = 3`
+      WHERE u.user_id = 3`;
 
-      await sequelize.query(deleteLikeQuery, {
-        type: Sequelize.QueryTypes.DELETE,
-      });
+    await sequelize.query(deleteLikeQuery, {
+      type: Sequelize.QueryTypes.DELETE,
+    });
 
     res.status(200).json({
       result: 'success',
     });
-
   } catch (err) {
     console.log(err);
     res.status(400).json({
@@ -121,13 +117,12 @@ const deleteUserInfo = async (req, res) => {
   }
 };
 
-
-const likedBoardList = async (req, res) => {
+const likedBoardList = async (req: UserMiddlewareinfo, res: Response) => {
   try {
     console.log(req.userInfo);
-    
+
     const userId = req.userInfo.userId;
-    
+
     console.log(userId);
 
     const query = `SELECT b.board_id, b.board_title,b.board_content,b.view_count,b.board_image, count(l.board_id) as likeCnt,count(c.board_id) as commentCnt,
@@ -163,7 +158,7 @@ const likedBoardList = async (req, res) => {
   }
 };
 
-module.exports = {
+export = {
   getUserInfo,
   patchUserInfo,
   deleteUserInfo,

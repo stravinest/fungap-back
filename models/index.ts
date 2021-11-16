@@ -18,6 +18,15 @@ const config = require('../config/config.js')[env];
 
 export * from './sequelize';
 
+export { User };
+export { Comment };
+export { Board };
+export { Celebrity };
+export { Like };
+export { Obtion };
+export { Job_recommendation };
+export { Mbti_relationship };
+
 const db = {
   Board,
   Comment,
@@ -29,6 +38,8 @@ const db = {
   Obtion,
 };
 
+export type dbType = typeof db;
+
 associateUser(db);
 associateBoard(db);
 associateCelebrity(db);
@@ -37,5 +48,3 @@ associateLike(db);
 associateMbti_relationship(db);
 associateJob_recommendation(db);
 associateObtion(db);
-
-export type dbType = typeof db;
