@@ -1,13 +1,22 @@
-const express = require('express'); // express를 쓴다
-const fs = require('fs');
-const http = require('http');
-const https = require('https');
-const swaggerUi = require('swagger-ui-express');
-const swaggerFile = require('./swagger_output');
-const app = express();
-const dotenv = require('dotenv');
+import * as express from 'express'; // express를 쓴다
+import {
+  RequestHandler,
+  ErrorRequestHandler,
+  Request,
+  Response,
+  NextFunction,
+} from 'express';
+
+import * as fs from 'fs';
+import * as http from 'http';
+import * as https from 'https';
+import * as dotenv from 'dotenv';
+
 dotenv.config();
-const { sequelize } = require('./models');
+const app = express();
+
+import { sequelize } from './models';
+import { cookie } from 'request';
 
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
@@ -41,19 +50,20 @@ sequelize
   .then(() => {
     console.log('데이터베이스 연결 성공');
   })
-  .catch((err) => {
+  .catch((err: Error) => {
     console.error(err);
   });
 
 const Router = require('./routers');
-const { cookie } = require('request');
+
 app.use([Router]);
 // app.use('/', renders); //테스트용 지우기
-Router.get('/', (request, res) => {
+Router.get('/', (req: Request, res: Response) => {
   res.render('index');
 });
+
 //swagger
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+// app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // const options = {
 //   ca: fs.readFileSync(process.env.HTTPS_CA),
