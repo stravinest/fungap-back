@@ -1,3 +1,5 @@
+import { User } from '../models';
+
 //토큰 검증 미들웨어를 통과하며 정보를 받은 상태
 export interface UserMiddlewareinfo {
   headers: {
@@ -15,7 +17,7 @@ export interface UserMiddlewareinfo {
 }
 
 //바디로 받은 정보 + 토큰 검증 미들웨어를 통과하며 정보를 받은 상태
-export interface UserReqinfo {
+export interface UserinfoReq {
   headers: {
     authorization: string;
   };
@@ -36,4 +38,8 @@ export interface UserReqinfo {
     user_image: string;
     provider: string;
   };
+}
+
+export interface Request {
+  [key: string]: any;
 }

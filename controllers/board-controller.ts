@@ -1,27 +1,30 @@
-const { Board, Like, sequelize, Sequelize } = require('../models');
-const { Op } = require('sequelize');
-const { getPageNum } = require('../utils/getPageNum');
-const { getComments } = require('../utils/getComments');
-const {
+import { Board, Like } from '../models';
+import { sequelize } from '../models';
+import * as Sequelize from 'sequelize';
+import { Op } from 'sequelize';
+import { getPageNum } from '../utils/getPageNum';
+import { getComments } from '../utils/getComments';
+import { Response } from 'express';
+import { Request } from '../interface/interface';
+import {
   PopBoardHome,
   NewBoardHome,
   NewBoardHomeLogin,
   PopBoardHomeLogin,
-
   situationBoardLogin, //최신순로그인시
   situationBoard, //최신순비로그인
   situationBoardPopLogin, //인기순 로그인
   situationBoardPop, //인기순 비로그인
   situationBoardViewLogin, //조회순 로그인
   situationBoardView, //조회순 비로그인
-
   detailCommentsAll, //로그인비로그인시 댓글
   detailBoard, //비로그인 상세 게시글
-  detailBoardLogin, //로그인 상세 게시글
-} = require('../utils/getQuery');
+  detailBoardLogin,
+} from '../utils/getQuery';
+import request = require('request');
 
 //홈화면 조회
-const getBoardHome = async (req, res) => {
+const getBoardHome = async (req: Request, res: Response) => {
   try {
     const user_id = req.userId;
     console.log('유저로그인', user_id);
@@ -48,7 +51,7 @@ const getBoardHome = async (req, res) => {
   }
 };
 //통합
-const getSituationBoardConfirm = async (req, res) => {
+const getSituationBoardConfirm = async (req: Request, res: Response) => {
   try {
     const { page, sort } = req.query;
     const user_id = req.userId;
@@ -120,7 +123,7 @@ const getSituationBoardConfirm = async (req, res) => {
 };
 
 //상황별 페이지 게시글 전체 조회(최신순)
-const getSituationBoard = async (req, res) => {
+const getSituationBoard = async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
     const user_id = req.userId;
@@ -164,7 +167,7 @@ const getSituationBoard = async (req, res) => {
   }
 };
 //상황별 페이지 게시글 전체 조회(인기순)
-const getSituationBoardPop = async (req, res) => {
+const getSituationBoardPop = async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
     const user_id = req.userId;
@@ -192,7 +195,7 @@ const getSituationBoardPop = async (req, res) => {
   }
 };
 //상황별 페이지 게시글 전체 조회(조회순)
-const getSituationBoardView = async (req, res) => {
+const getSituationBoardView = async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
     const user_id = req.userId;
@@ -219,7 +222,7 @@ const getSituationBoardView = async (req, res) => {
 };
 
 // 게시글 디테일페이지 조회
-const getDetailBoard = async (req, res) => {
+const getDetailBoard = async (req: Request, res: Response) => {
   try {
     const user_id = req.userId;
     console.log('유저로그인', user_id);
@@ -263,14 +266,14 @@ const getDetailBoard = async (req, res) => {
   }
 };
 
-function getUserIP(req) {
+function getUserIP(req: Request) {
   console.log(req.headers);
   const addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   return addr;
 }
 
 //좋아요 /좋아요 취소
-const changeLike = async (req, res) => {
+const changeLike = async (req: Request, res: Response) => {
   try {
     const user_id = req.userId;
     const { board_id } = req.params;
@@ -321,7 +324,7 @@ const changeLike = async (req, res) => {
     });
   }
 };
-module.exports = {
+export {
   getDetailBoard,
   getBoardHome,
   getSituationBoardView,

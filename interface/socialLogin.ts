@@ -1,4 +1,4 @@
-export interface GoogleUserinfo {
+export interface GoogleReq {
   headers: {
     authorization: string;
   };
@@ -8,7 +8,7 @@ export interface GoogleUserinfo {
   google: JSON;
 }
 
-export interface KakaoUserinfo {
+export interface KakaoReq {
   headers: {
     authorization: string;
   };
@@ -18,7 +18,7 @@ export interface KakaoUserinfo {
   kakao: JSON;
 }
 
-export interface NaverUserinfo {
+export interface NaverReq {
   headers: {
     authorization: string;
   };
@@ -26,4 +26,15 @@ export interface NaverUserinfo {
     access_token: string;
   };
   naver: JSON;
+}
+
+export interface GoogleProfile {
+  sub: number;
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  email: string;
+  email_verified: boolean;
+  locale: string;
 }

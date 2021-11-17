@@ -1,15 +1,12 @@
-const {
-  Board,
-  Comment,
-  User,
-  Like,
-  sequelize,
-  Sequelize,
-} = require('../models');
-const { getComments } = require('../utils/getComments');
+import { Board, Comment, User, Like } from '../models';
+import { sequelize } from '../models';
+import * as Sequelize from 'sequelize';
+import { getComments } from '../utils/getComments';
+import { Response } from 'express';
+import { Request } from '../interface/interface';
 
 //댓글조회
-const getComment = async (req, res) => {
+const getComment = async (req: Request, res: Response) => {
   try {
     const { board_id } = req.params;
     console.log(board_id);
@@ -32,7 +29,7 @@ const getComment = async (req, res) => {
       return;
     }
     console.log('resutl는', comments);
-    console.log(comments[0].dataValues);
+    // console.log(comments[0].dataValues);
 
     res.status(200).json({ result: 'success', comments });
   } catch (error) {
@@ -44,7 +41,7 @@ const getComment = async (req, res) => {
   }
 };
 //댓글등록
-const postComment = async (req, res) => {
+const postComment = async (req: Request, res: Response) => {
   try {
     const user_id = req.userId; //임의로 user_id 1이 로그인 하였음
     const { board_id } = req.params;
@@ -74,7 +71,7 @@ const postComment = async (req, res) => {
   }
 };
 //댓글삭제
-const deleteComment = async (req, res) => {
+const deleteComment = async (req: Request, res: Response) => {
   try {
     const user_id = req.userId;
     const { board_id, comment_id } = req.params;
@@ -123,7 +120,7 @@ const deleteComment = async (req, res) => {
   }
 };
 //댓글수정
-const patchComment = async (req, res) => {
+const patchComment = async (req: Request, res: Response) => {
   try {
     const user_id = req.userId; //임의로 user_id 1이 로그인 하였음
     const { board_id, comment_id } = req.params;

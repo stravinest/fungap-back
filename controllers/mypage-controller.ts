@@ -1,11 +1,11 @@
 import { Board, User, Like, Comment } from '../models';
 import { sequelize } from '../models';
 import * as Sequelize from 'sequelize';
-import { UserReqinfo, UserMiddlewareinfo } from '../interface/user';
+import { UserinfoReq, UserMiddlewareinfo } from '../interface/user';
 import { Response } from 'express';
-
+import { Request } from '../interface/interface';
 //유저 정보 조회
-const getUserInfo = async (req: UserReqinfo, res: Response) => {
+const getUserInfo = async (req: Request, res: Response) => {
   try {
     const userId = req.userInfo.userId;
     const provider = req.userInfo.provider;
@@ -30,7 +30,7 @@ const getUserInfo = async (req: UserReqinfo, res: Response) => {
 };
 
 //유저 정보 수정
-const patchUserInfo = async (req: UserReqinfo, res: Response) => {
+const patchUserInfo = async (req: Request, res: Response) => {
   try {
     const userId = req.userInfo.userId;
     const provider = req.userInfo.provider;
@@ -68,7 +68,7 @@ const patchUserInfo = async (req: UserReqinfo, res: Response) => {
 };
 
 //유저 탈퇴
-const deleteUserInfo = async (req: UserMiddlewareinfo, res: Response) => {
+const deleteUserInfo = async (req: Request, res: Response) => {
   try {
     const userId = req.userInfo.userId;
     const provider = req.userInfo.provider;
@@ -117,7 +117,7 @@ const deleteUserInfo = async (req: UserMiddlewareinfo, res: Response) => {
   }
 };
 
-const likedBoardList = async (req: UserMiddlewareinfo, res: Response) => {
+const likedBoardList = async (req: Request, res: Response) => {
   try {
     console.log(req.userInfo);
 
@@ -158,9 +158,4 @@ const likedBoardList = async (req: UserMiddlewareinfo, res: Response) => {
   }
 };
 
-export = {
-  getUserInfo,
-  patchUserInfo,
-  deleteUserInfo,
-  likedBoardList,
-};
+export { getUserInfo, patchUserInfo, deleteUserInfo, likedBoardList };

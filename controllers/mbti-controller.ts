@@ -56,7 +56,7 @@ const mbtiTest = async (req: Request, res: Response) => {
   }
 };
 
-export = {
+export {
   mbtiTest,
   // mbtiCelebrity,
 };

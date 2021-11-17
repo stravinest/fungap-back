@@ -3,9 +3,10 @@ import getNewAuth from '../utils/renewAuth';
 import loginUser from '../utils/setLoginUser';
 import { UserMiddlewareinfo } from '../interface/user';
 import { Response, NextFunction } from 'express';
+import { Request } from '../interface/interface';
 
 const authenticateJWT = async (
-  req: UserMiddlewareinfo,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {

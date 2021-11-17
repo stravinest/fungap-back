@@ -8,11 +8,11 @@ const userController = require('./user-controller');
 // const univBoardController = require('./univ-board-controller');
 // const utilController = require('./util-controller');
 
-export = {
-  authController,
-  boardController,
-  commentController,
-  userController,
+export {
+  // authController,
+  // boardController,
+  // commentController,
+  // userController,
   mypageController,
   mbtiController,
 
