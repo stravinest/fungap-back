@@ -9,6 +9,8 @@ exports.jwtGoogleCreate = async (profile) => {
     user_image: profile?.picture || '',
     provider: 'google',
   };
+  console.log(profile)
+  const snsId = profile.data?.id || profile.id || undefined;
   //refresh token 발급
   const refreshToken = jwt.sign({}, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_REFRESH_EXPIRE,
