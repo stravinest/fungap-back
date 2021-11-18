@@ -12,8 +12,8 @@ RUN npm install -g pm2 node-gyp
 COPY . /usr/src/app 
 
 expose 3000
-# 앱 소스 추가
-
+#10초 마다 체크 
+HEALTHCHECK --interval=10s CMD wget -qO- localhost:3000
 
 CMD pm2 start app.js
 # CMD [ "pm2-runtime", "server.js", "-i", "max" ]
