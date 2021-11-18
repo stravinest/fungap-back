@@ -9,7 +9,7 @@ services:
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
     ports:
-      - '6000:3000'
+      - '3000:3000'
     command: node app.js
 #   proxy:
 #     restart: unless-stopped
