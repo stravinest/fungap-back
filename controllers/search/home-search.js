@@ -47,8 +47,9 @@ const homeSearchFunc = async (req, res) => {
     on b.board_id = u.board_id and u.user_id = ${user_id}
     group by b.board_id
     ORDER BY b.createdAt DESC) as t2
-    on t1.board_id = t2.board_id
-    where ${newlist_keywords}`;
+    join
+    (SELECT * FROM boards WHERE MATCH (board_title,board_desc) AGAINST ('${keywords}' IN NATURAL LANGUAGE MODE)) as t3
+    on t1.board_id = t2.board_id and t2.board_id = t3.board_id`;
 
       const search_board_list = await sequelize.query(query, {
         type: Sequelize.QueryTypes.SELECT,

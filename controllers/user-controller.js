@@ -159,7 +159,9 @@ const login = async (req, res) => {
       });
       return;
     }
-
+    // console.log('유저 체크 패스워드', userCheck.password);
+    // console.log('유저 체크 mbti', userCheck.user_mbti);
+    // console.log('유저 체크', userCheck);
     const authenticate = await bcrypt.compare(password, userCheck.password);
 
     if (authenticate === true) {
@@ -168,12 +170,13 @@ const login = async (req, res) => {
       const token = loginUser(accessToken, refreshToken);
       console.log(userCheck);
       const user = {
-        user_image: userCheck?.dataValues?.user_image,
-        nickname: userCheck?.dataValues?.nickname,
-        user_mbti: userCheck?.dataValues?.user_mbti,
-        user_id: userCheck?.dataValues?.user_id,
-        user_authority: userCheck?.dataValues?.user_authority,
+        user_image: userCheck.user_image,
+        nickname: userCheck.nickname,
+        user_mbti: userCheck.user_mbti,
+        user_id: userCheck.user_id,
+        user_authority: userCheck.user_authority,
       };
+      console.log('유저', user);
       res.json({
         result: 'success',
         token,
@@ -202,8 +205,9 @@ const email_check = async (req, res) => {
     const existUserId = await User.findOne({ where: { email } });
 
     if (existUserId) {
-      res.status(400).send({
-        msg: '이미 사용중인 이메일이 있습니다.',
+      res.status(409).send({
+        result: 'fail',
+        errormessage: '이미 사용중인 이메일이 있습니다.',
       });
       return;
     }
@@ -213,7 +217,8 @@ const email_check = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(401).send({
+    res.status(400).send({
+      result: 'fail',
       errorMessage: '알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.',
     });
   }
@@ -226,8 +231,9 @@ const nickname_check = async (req, res) => {
     const existUserId = await User.findOne({ where: { nickname } });
 
     if (existUserId) {
-      res.status(400).send({
-        msg: '이미 사용중인 닉네임이 있습니다.',
+      res.status(409).send({
+        result: 'fail',
+        errormessage: '이미 사용중인 닉네임이 있습니다.',
       });
       return;
     }
@@ -237,7 +243,8 @@ const nickname_check = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(401).send({
+    res.status(400).send({
+      result: 'fail',
       errorMessage: '알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.',
     });
   }

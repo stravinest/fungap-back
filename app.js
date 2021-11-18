@@ -15,8 +15,13 @@ app.use(cookieParser());
 const port = process.env.EXPRESS_PORT;
 const cors = require('cors');
 let colsOptions = {
-  origin: '*', // 접근 권한을 부여하는 도메인
+  origin: [
+    'http://localhost:3000', // 접근 권한을 부여하는 도메
+    'http://fungap.shop',
+  ],
   credentials: true, // 응답 헤더에 Access-Control-Allow-Credentials 추가
+  // exposedHeaders: [Set - Cookie],
+  methods: ['POST', 'PUT', 'GET', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
   optionsSuccessStatus: 200, // 응답 상태 200으로 설정
 };
 app.use(cors(colsOptions));
@@ -41,10 +46,15 @@ sequelize
   });
 
 const Router = require('./routers');
+const { cookie } = require('request');
 app.use([Router]);
+// app.use('/', renders); //테스트용 지우기
+Router.get('/', (request, res) => {
+  res.render('index');
+});
 //swagger
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
-//https설정
+
 // const options = {
 //   ca: fs.readFileSync(process.env.HTTPS_CA),
 //   key: fs.readFileSync(process.env.HTTPS_KEY),
