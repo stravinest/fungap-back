@@ -1,5 +1,5 @@
 #베이스 이미지 
-FROM node:14-alpine
+FROM node:14
 
 # 앱 디렉터리 생성
 COPY    ./package* /usr/src/app/
