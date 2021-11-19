@@ -2,8 +2,7 @@ import * as jwt from 'jsonwebtoken';
 import getNewAuth from '../utils/renewAuth';
 import loginUser from '../utils/setLoginUser';
 import { UserMiddlewareinfo } from '../interface/user';
-import { Response, NextFunction } from 'express';
-import { Request } from '../interface/interface';
+import { Request, Response, NextFunction } from 'express';
 
 const authenticateJWT = async (
   req: Request,
@@ -48,10 +47,9 @@ const authenticateJWT = async (
           return res
             .status(403)
             .json({ result: 'fail', error: 'invalid token' });
-
-        req.loginUser = loginUser(newAuth.accessToken, refreshToken);
-        req.userId = newAuth.userId;
-        req.userInfo = {
+        res.locals.loginUser = loginUser(newAuth.accessToken, refreshToken);
+        res.locals.userId = newAuth.userId;
+        res.locals.userInfo = {
           userId: newAuth.userId,
           email: newAuth.email,
           nickname: newAuth.nickname,
@@ -68,9 +66,10 @@ const authenticateJWT = async (
       }
     } else {
       console.log('둘다 만료되지 않은 토큰입니다.굳굳');
-      req.loginUser = loginUser(accessToken, refreshToken);
-      req.userId = iAccessToken.user_id;
-      req.userInfo = {
+
+      res.locals.loginUser = loginUser(accessToken, refreshToken);
+      res.locals.userId = iAccessToken.user_id;
+      res.locals.userInfo = {
         userId: iAccessToken.user_id,
         email: iAccessToken.email,
         nickname: iAccessToken.nickname,

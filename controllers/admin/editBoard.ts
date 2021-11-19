@@ -1,9 +1,9 @@
-const { User } = require('../../models');
-const { Board } = require('../../models');
+import { Request, Response } from 'express';
+import { User, Board } from '../../models';
 
-const editBoardFunc = async (req, res) => {
+const editBoardFunc = async (req: Request, res: Response) => {
   try {
-    const userId = req.userId;
+    const userId = res.locals.userId;
     const { board_id } = req.params;
     const { board_title, board_image, board_desc, board_content } = req.body;
 
@@ -21,4 +21,4 @@ const editBoardFunc = async (req, res) => {
   }
 };
 
-module.exports = editBoardFunc;
+export default editBoardFunc;

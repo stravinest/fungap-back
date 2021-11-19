@@ -1,11 +1,12 @@
-const express = require('express');
-const request = require('request');
-const Validator = require('../middlewares/validator');
+import * as express from 'express';
+import request = require('request');
+import Validator = require('../middlewares/validator');
+import { userController } from '../controllers';
+import { getKakaoUser } from '../middlewares/getKakaoUser';
+import { getGoogleUser } from '../middlewares/getGoogleUser';
+import { getNaverUser } from '../middlewares/getNaverUser';
+
 const router = express.Router(); // 라우터라고 선언한다.
-const { userController } = require('../controllers');
-const { getKakaoUser } = require('../middlewares/getKakaoUser');
-const { getGoogleUser } = require('../middlewares/getGoogleUser');
-const { getNaverUser } = require('../middlewares/getNaverUser');
 
 //회원가입
 router.post('/signup', Validator('signup'), userController.signup);
@@ -76,4 +77,4 @@ router.get('/naver/callback', function (req, res) {
   });
 });
 
-module.exports = router;
+export default router;

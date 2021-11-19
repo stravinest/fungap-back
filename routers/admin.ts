@@ -1,8 +1,9 @@
-const express = require('express');
+import * as express from 'express';
+import authenticateJWT from '../middlewares/authenticateJWT';
+import { checkAuthority } from '../middlewares/checkAuthority';
+
 const router = express.Router();
 
-const { authenticateJWT } = require('../middlewares/authenticateJWT');
-const { checkAuthority } = require('../middlewares/checkAuthority');
 const {
   getBoard,
   writeBoard,
@@ -10,7 +11,7 @@ const {
   deleteBoard,
   detailBoard,
   getUser,
-  getComment
+  getComment,
 } = require('../controllers/admin');
 
 router.get('/board', authenticateJWT, checkAuthority, getBoard);
@@ -34,6 +35,11 @@ router.get(
   detailBoard
 );
 router.get('/user', authenticateJWT, checkAuthority, getUser);
-router.post('/user/:user_id/comment', authenticateJWT, checkAuthority, getComment);
+router.post(
+  '/user/:user_id/comment',
+  authenticateJWT,
+  checkAuthority,
+  getComment
+);
 
 module.exports = router;

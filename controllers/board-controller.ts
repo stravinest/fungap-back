@@ -4,8 +4,8 @@ import * as Sequelize from 'sequelize';
 import { Op } from 'sequelize';
 import { getPageNum } from '../utils/getPageNum';
 import { getComments } from '../utils/getComments';
-import { Response } from 'express';
-import { Request } from '../interface/interface';
+import { Request, Response, NextFunction } from 'express';
+import * as ParsedQs from 'express';
 import {
   PopBoardHome,
   NewBoardHome,
@@ -22,11 +22,12 @@ import {
   detailBoardLogin,
 } from '../utils/getQuery';
 import request = require('request');
+import { string } from 'joi';
 
 //홈화면 조회
 const getBoardHome = async (req: Request, res: Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     console.log('유저로그인', user_id);
 
     if (user_id) {
@@ -54,7 +55,8 @@ const getBoardHome = async (req: Request, res: Response) => {
 const getSituationBoardConfirm = async (req: Request, res: Response) => {
   try {
     const { page, sort } = req.query;
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
+    res.locals;
     console.log('유저로그인', user_id);
     console.log(req.query);
     console.log(page);
@@ -76,19 +78,19 @@ const getSituationBoardConfirm = async (req: Request, res: Response) => {
       //최신순
       if (sort === 'date') {
         const allboard_list = await situationBoardLogin(user_id);
-        const board_list = await getPageNum(page, allboard_list);
+        const board_list = await getPageNum(String(page), allboard_list);
         res.status(200).json({ result: 'success', board_list });
       }
       //인기순
       if (sort === 'popularity') {
         const allboard_list = await situationBoardPopLogin(user_id);
-        const board_list = await getPageNum(page, allboard_list);
+        const board_list = await getPageNum(String(page), allboard_list);
         res.status(200).json({ result: 'success', board_list });
       }
       //조회순
       if (sort === 'view') {
         const allboard_list = await situationBoardViewLogin(user_id);
-        const board_list = await getPageNum(page, allboard_list);
+        const board_list = await getPageNum(String(page), allboard_list);
         res.status(200).json({ result: 'success', board_list });
       }
     }
@@ -97,19 +99,19 @@ const getSituationBoardConfirm = async (req: Request, res: Response) => {
       //최신순
       if (sort === 'date') {
         const allboard_list = await situationBoard();
-        const board_list = await getPageNum(page, allboard_list);
+        const board_list = await getPageNum(String(page), allboard_list);
         res.status(201).json({ result: 'success', board_list });
       }
       //인기순
       if (sort === 'popularity') {
         const allboard_list = await situationBoardPop();
-        const board_list = await getPageNum(page, allboard_list);
+        const board_list = await getPageNum(String(page), allboard_list);
         res.status(201).json({ result: 'success', board_list });
       }
       //조회순
       if (sort === 'view') {
         const allboard_list = await situationBoardView();
-        const board_list = await getPageNum(page, allboard_list);
+        const board_list = await getPageNum(String(page), allboard_list);
         res.status(201).json({ result: 'success', board_list });
       }
     }
@@ -126,7 +128,7 @@ const getSituationBoardConfirm = async (req: Request, res: Response) => {
 const getSituationBoard = async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     console.log('유저로그인', user_id);
     console.log(req.query);
     console.log(page);
@@ -147,13 +149,13 @@ const getSituationBoard = async (req: Request, res: Response) => {
     if (user_id) {
       //로그인시
       const allboard_list = await situationBoardLogin(user_id);
-      const board_list = await getPageNum(page, allboard_list);
+      const board_list = await getPageNum(String(page), allboard_list);
       console.log(board_list);
       res.status(200).json({ result: 'success', board_list });
     } else {
       //비로그인시
       const allboard_list = await situationBoard();
-      const board_list = await getPageNum(page, allboard_list);
+      const board_list = await getPageNum(String(page), allboard_list);
       console.log(board_list);
 
       res.status(201).json({ result: 'success', board_list });
@@ -170,19 +172,19 @@ const getSituationBoard = async (req: Request, res: Response) => {
 const getSituationBoardPop = async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     console.log('유저로그인', user_id);
 
     if (user_id) {
       //로그인시
       const allboard_list = await situationBoardPopLogin(user_id);
-      const board_list = await getPageNum(page, allboard_list);
+      const board_list = await getPageNum(String(page), allboard_list);
       console.log(board_list);
       res.status(200).json({ result: 'success', board_list });
     } else {
       //비로그인시
       const allboard_list = await situationBoardPop();
-      const board_list = await getPageNum(page, allboard_list);
+      const board_list = await getPageNum(String(page), allboard_list);
       console.log(board_list);
       res.status(201).json({ result: 'success', board_list });
     }
@@ -198,17 +200,17 @@ const getSituationBoardPop = async (req: Request, res: Response) => {
 const getSituationBoardView = async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     console.log('유저로그인', user_id);
 
     if (user_id) {
       const allboard_list = await situationBoardViewLogin(user_id);
-      const board_list = await getPageNum(page, allboard_list);
+      const board_list = await getPageNum(String(page), allboard_list);
       console.log(board_list);
       res.status(200).json({ result: 'success', board_list });
     } else {
       const allboard_list = await situationBoardView();
-      const board_list = await getPageNum(page, allboard_list);
+      const board_list = await getPageNum(String(page), allboard_list);
       console.log(board_list);
       res.status(201).json({ result: 'success', board_list });
     }
@@ -224,7 +226,7 @@ const getSituationBoardView = async (req: Request, res: Response) => {
 // 게시글 디테일페이지 조회
 const getDetailBoard = async (req: Request, res: Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     console.log('유저로그인', user_id);
     const { board_id } = req.params;
     console.log(req.cookies);
@@ -241,7 +243,7 @@ const getDetailBoard = async (req: Request, res: Response) => {
       //로그인
       // const beforetime = await Date.now();
       // await console.log(Date.now());
-      const result = await detailBoardLogin(user_id, board_id);
+      const result = await detailBoardLogin(user_id, Number(board_id));
       // const comments =
       //   (await detailCommentsAll(board_id)) +
       //   (await console.log(Date.now() - beforetime));
@@ -251,7 +253,7 @@ const getDetailBoard = async (req: Request, res: Response) => {
     } else {
       //비로그인
       console.log('여기일텐데??', board_id);
-      const result = await detailBoard(board_id);
+      const result = await detailBoard(Number(board_id));
       // const comments = await detailCommentsAll(board_id);
       // console.log(result);
       const board = result[0];
@@ -275,7 +277,7 @@ function getUserIP(req: Request) {
 //좋아요 /좋아요 취소
 const changeLike = async (req: Request, res: Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     const { board_id } = req.params;
     console.log('유저로그인', user_id);
     if (user_id) {

@@ -1,14 +1,10 @@
-import { Board, Comment, User, Like } from '../models';
-import { sequelize } from '../models';
-import * as Sequelize from 'sequelize';
+import { Board, Comment } from '../models';
 import { getComments } from '../utils/getComments';
-import { Response } from 'express';
-import { Request } from '../interface/interface';
-
+import { Request, Response, NextFunction } from 'express';
 //댓글조회
 const getComment = async (req: Request, res: Response) => {
   try {
-    const { board_id } = req.params;
+    const { board_id } = res.locals.params;
     console.log(board_id);
     const isBoard = await Board.findOne({ where: { board_id: board_id } });
     if (!isBoard) {
@@ -43,7 +39,7 @@ const getComment = async (req: Request, res: Response) => {
 //댓글등록
 const postComment = async (req: Request, res: Response) => {
   try {
-    const user_id = req.userId; //임의로 user_id 1이 로그인 하였음
+    const user_id = res.locals.userId; //임의로 user_id 1이 로그인 하였음
     const { board_id } = req.params;
     const { comment } = req.body;
 
@@ -73,7 +69,7 @@ const postComment = async (req: Request, res: Response) => {
 //댓글삭제
 const deleteComment = async (req: Request, res: Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     const { board_id, comment_id } = req.params;
     const isComment = await Comment.findOne({
       //내가 쓴 comment 인지 확인
@@ -122,7 +118,7 @@ const deleteComment = async (req: Request, res: Response) => {
 //댓글수정
 const patchComment = async (req: Request, res: Response) => {
   try {
-    const user_id = req.userId; //임의로 user_id 1이 로그인 하였음
+    const user_id = res.locals.userId; //임의로 user_id 1이 로그인 하였음
     const { board_id, comment_id } = req.params;
     const { comment } = req.body;
     console.log(board_id, comment_id);
@@ -168,9 +164,4 @@ const patchComment = async (req: Request, res: Response) => {
     });
   }
 };
-module.exports = {
-  deleteComment,
-  postComment,
-  getComment,
-  patchComment,
-};
+export { deleteComment, postComment, getComment, patchComment };

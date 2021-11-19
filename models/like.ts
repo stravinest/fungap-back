@@ -42,12 +42,10 @@ Like.init(
 export const associate = (db: dbType) => {
   db.Like.belongsTo(db.User, {
     foreignKey: 'user_id',
-    sourceKey: 'user_id',
     onDelete: 'CASCADE',
   });
   db.Like.belongsTo(db.Board, {
     foreignKey: 'user_id',
-    sourceKey: 'user_id',
     onDelete: 'CASCADE',
   });
 };

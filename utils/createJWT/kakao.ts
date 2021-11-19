@@ -1,9 +1,10 @@
-const jwt = require('jsonwebtoken');
-const User = require('../../models/user');
-const { Op } = require('sequelize');
+import * as jwt from 'jsonwebtoken';
+import { User } from '../../models';
+import { Op } from 'sequelize/types';
+import { KakaoProfile } from '../../interface/socialLogin';
 
-exports.jwtKakaoCreate = async (profile) => {
-  const basicInfo = {
+export const jwtKakaoCreate = async (profile: KakaoProfile) => {
+  const basicInfo: object = {
     email:
       profile.data?.kakao_account?.email ||
       profile.data?.properties.email ||
@@ -20,10 +21,10 @@ exports.jwtKakaoCreate = async (profile) => {
     provider: 'kakao',
   };
 
-  const snsId = profile.data?.id || profile.id;
+  const snsId: string = profile.data?.id || profile.id;
 
   //refresh token 발급
-  const refreshToken = jwt.sign({}, process.env.JWT_SECRET, {
+  const refreshToken: string = jwt.sign({}, process.env.JWT_SECRET!, {
     expiresIn: process.env.JWT_REFRESH_EXPIRE,
   });
 
@@ -43,13 +44,20 @@ exports.jwtKakaoCreate = async (profile) => {
         }
       );
     } else if (exUser?.user_delete_code == 1) {
-      await User.update({
-        ...basicInfo,
-        sns_id: snsId,
-        provider: 'kakao',
-        user_delete_code: 0,
-        refresh_token: refreshToken,
-      });
+      await User.update(
+        {
+          ...basicInfo,
+          sns_id: snsId,
+          provider: 'kakao',
+          user_delete_code: 0,
+          refresh_token: refreshToken,
+        },
+        {
+          where: {
+            [Op.and]: [{ sns_id: snsId }, { provider: 'kakao' }],
+          },
+        }
+      );
     } else {
       await User.create({
         ...basicInfo,
@@ -60,15 +68,20 @@ exports.jwtKakaoCreate = async (profile) => {
     const user = await User.findOne({
       where: { [Op.and]: [{ sns_id: snsId }, { provider: 'kakao' }] },
     });
-    basicInfo.email = user.email;
-    basicInfo.nickname = user.nickname;
-    basicInfo.user_id = user.user_id;
-    basicInfo.user_mbti = user.user_mbti;
-    basicInfo.user_authority = user.user_authority;
-    basicInfo.user_image = user.user_image;
+
+    const updateBasicInfo: object = {
+      nickname: user?.nickname,
+      email: user?.email,
+      user_id: user?.user_id,
+      user_mbti: user?.user_mbti,
+      user_authority: user?.user_authority,
+      user_image: user?.user_image,
+    };
+
+    Object.assign(basicInfo, updateBasicInfo);
 
     //access token 발급
-    const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
+    const accessToken: string = jwt.sign(basicInfo, process.env.JWT_SECRET!, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,
     });
     return [accessToken, refreshToken, basicInfo];

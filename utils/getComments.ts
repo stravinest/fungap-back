@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import { Comment, User } from '../models';
 
-export const getComments = async function (board_id: number) {
+export const getComments = async function (board_id: string) {
   const comments = await Comment.findAll({
     attributes: ['comment', 'board_id', 'comment_id', 'createdAt'],
     where: {

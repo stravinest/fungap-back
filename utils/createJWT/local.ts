@@ -1,9 +1,11 @@
-const jwt = require('jsonwebtoken');
-const User = require('../../models/user');
-const { Op } = require('sequelize');
+import * as jwt from 'jsonwebtoken';
+import { User } from '../../models';
+import { Op } from 'sequelize/types';
+import { LocalProfile } from '../../interface/socialLogin';
 
-exports.jwtLocalCreate = async (profile) => {
-  const basicInfo = {
+export const jwtLocalCreate = async (profile: LocalProfile) => {
+  const basicInfo: object = {
+    user_id: profile?.dataValues?.user_id,
     email: profile?.dataValues?.email,
     nickname: profile?.dataValues?.nickname,
     user_image: profile?.dataValues?.profile_image,
@@ -12,7 +14,7 @@ exports.jwtLocalCreate = async (profile) => {
     provider: profile?.dataValues?.provider,
   };
 
-  const refreshToken = jwt.sign({}, process.env.JWT_SECRET, {
+  const refreshToken = jwt.sign({}, process.env.JWT_SECRET!, {
     expiresIn: process.env.JWT_REFRESH_EXPIRE,
   });
 
@@ -28,10 +30,8 @@ exports.jwtLocalCreate = async (profile) => {
     );
     console.log('여기 되나요?');
 
-    const user_id = profile?.dataValues?.user_id;
-    basicInfo.user_id = user_id;
     //access token 발급
-    const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
+    const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET!, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,
     });
     return [accessToken, refreshToken];

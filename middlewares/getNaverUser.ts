@@ -1,10 +1,9 @@
 import axios from 'axios';
-import { NextFunction, Request } from 'express';
-import { NaverReq } from '../interface/socialLogin';
+import { Request, Response, NextFunction } from 'express';
 
-exports.getNaverUser = async (
-  req: NaverReq,
-  res: Request,
+export const getNaverUser = async (
+  req: Request,
+  res: Response,
   next: NextFunction
 ) => {
   const { access_token } = req.body;
@@ -19,7 +18,7 @@ exports.getNaverUser = async (
         Authorization,
       },
     });
-    req.naver = profile.data;
+    res.locals.naver = profile.data;
     next();
   } catch (error) {
     console.error(error);

@@ -1,18 +1,18 @@
 import mypageController = require('./mypage-controller');
 import mbtiController = require('./mbti-controller');
+import authController = require('./auth-controller');
+import boardController = require('./board-controller');
+import commentController = require('./comment-controller');
+import userController = require('./user-controller');
 
-const authController = require('./auth-controller');
-const boardController = require('./board-controller');
-const commentController = require('./comment-controller');
-const userController = require('./user-controller');
 // const univBoardController = require('./univ-board-controller');
 // const utilController = require('./util-controller');
 
 export {
-  // authController,
-  // boardController,
-  // commentController,
-  // userController,
+  authController,
+  boardController,
+  commentController,
+  userController,
   mypageController,
   mbtiController,
 

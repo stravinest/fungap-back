@@ -2,9 +2,6 @@ import * as Sequelize from 'sequelize';
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from './sequelize';
 import { dbType } from '.';
-import User from './user';
-import Comment from './comment';
-import Like from './like';
 
 class Board extends Model {
   public board_id!: number;

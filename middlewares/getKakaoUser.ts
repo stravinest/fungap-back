@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { NextFunction, Response } from 'express';
-import { KakaoReq } from '../interface/socialLogin';
+import { Request, Response, NextFunction } from 'express';
 
-exports.getKakaoUser = async (
-  req: KakaoReq,
+export const getKakaoUser = async (
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -21,7 +20,7 @@ exports.getKakaoUser = async (
       },
     });
     console.log(profile);
-    req.kakao = profile.data;
+    res.locals.kakao = profile.data;
     next();
   } catch (error) {
     console.error(error);

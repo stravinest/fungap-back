@@ -1,27 +1,22 @@
-const {
+import {
   jwtKakaoCreate,
   jwtGoogleCreate,
   jwtNaverCreate,
   jwtLocalCreate,
-} = require('../utils/createJWT');
-const { loginUser } = require('../utils/setLoginUser');
-const jwt = require('jsonwebtoken');
-const {
-  Board,
-  User,
-  Like,
-  Comment,
-  sequelize,
-  Sequelize,
-} = require('../models');
-const { Op } = require('sequelize');
-const bcrypt = require('bcrypt');
+} from '../utils/createJWT';
+import loginUser from '../utils/setLoginUser';
+import * as jwt from 'jsonwebtoken';
+import { Board, User, Like, Comment, sequelize } from '../models';
+import * as Sequelize from 'sequelize';
+import { Op } from 'sequelize/types';
+import * as bcrypt from 'bcrypt';
+import { Request, Response, NextFunction } from 'express';
 
 //카카오
-const auth = async (req, res, next) => {
+const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const profile = req.kakao;
-    const [accessToken, refreshToken, basicInfo] = await jwtKakaoCreate(
+    const profile = res.locals.kakao;
+    const [accessToken, refreshToken, basicInfo]: any = await jwtKakaoCreate(
       profile
     );
 
@@ -46,11 +41,11 @@ const auth = async (req, res, next) => {
 };
 
 //구글
-const authGoogle = async (req, res, next) => {
+const authGoogle = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log(req.google);
-    const profile = req.google;
-    const [accessToken, refreshToken, basicInfo] = await jwtGoogleCreate(
+    console.log(res.locals.google);
+    const profile = res.locals.google;
+    const [accessToken, refreshToken, basicInfo]: any = await jwtGoogleCreate(
       profile
     );
     const token = loginUser(accessToken, refreshToken);
@@ -73,11 +68,11 @@ const authGoogle = async (req, res, next) => {
 };
 
 //네이버
-const authNaver = async (req, res, next) => {
+const authNaver = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const profile = req.naver;
+    const profile = res.locals.naver;
 
-    const [accessToken, refreshToken, basicInfo] = await jwtNaverCreate(
+    const [accessToken, refreshToken, basicInfo]: any = await jwtNaverCreate(
       profile
     );
     const token = loginUser(accessToken, refreshToken);
@@ -100,7 +95,7 @@ const authNaver = async (req, res, next) => {
 };
 
 //회원가입
-const signup = async (req, res) => {
+const signup = async (req: Request, res: Response) => {
   try {
     const { nickname, email, user_mbti, password, confirm_password } = req.body;
     const existUserId = await User.findOne({
@@ -143,10 +138,10 @@ const signup = async (req, res) => {
   }
 };
 //로컬로그인
-const login = async (req, res) => {
+const login = async (req: Request, res: Response) => {
   let { email, password } = req.body;
   try {
-    const userCheck = await User.findOne({
+    const userCheck: any = await User.findOne({
       where: {
         [Op.and]: { user_delete_code: 0, email: email },
       },
@@ -164,15 +159,15 @@ const login = async (req, res) => {
 
     if (authenticate === true) {
       console.log('비밀번호 맞으면 실행');
-      const [accessToken, refreshToken] = await jwtLocalCreate(userCheck);
+      const [accessToken, refreshToken]: any = await jwtLocalCreate(userCheck);
       const token = loginUser(accessToken, refreshToken);
       console.log(userCheck);
       const user = {
-        user_image: userCheck?.dataValues?.user_image,
-        nickname: userCheck?.dataValues?.nickname,
-        user_mbti: userCheck?.dataValues?.user_mbti,
-        user_id: userCheck?.dataValues?.user_id,
-        user_authority: userCheck?.dataValues?.user_authority,
+        user_image: userCheck?.user_image,
+        nickname: userCheck?.nickname,
+        user_mbti: userCheck?.user_mbti,
+        user_id: userCheck?.user_id,
+        user_authority: userCheck?.user_authority,
       };
       res.json({
         result: 'success',
@@ -196,7 +191,7 @@ const login = async (req, res) => {
 };
 
 //이메일 중복체크
-const email_check = async (req, res) => {
+const email_check = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
     const existUserId = await User.findOne({ where: { email } });
@@ -222,7 +217,7 @@ const email_check = async (req, res) => {
 };
 
 //닉네임 중복체크
-const nickname_check = async (req, res) => {
+const nickname_check = async (req: Request, res: Response) => {
   try {
     const { nickname } = req.body;
     const existUserId = await User.findOne({ where: { nickname } });
@@ -246,7 +241,7 @@ const nickname_check = async (req, res) => {
     });
   }
 };
-module.exports = {
+export {
   authNaver,
   authGoogle,
   auth,

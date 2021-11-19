@@ -2,13 +2,12 @@ import { Board, User, Like, Comment } from '../models';
 import { sequelize } from '../models';
 import * as Sequelize from 'sequelize';
 import { UserinfoReq, UserMiddlewareinfo } from '../interface/user';
-import { Response } from 'express';
-import { Request } from '../interface/interface';
+import { Request, Response, NextFunction } from 'express';
 //유저 정보 조회
 const getUserInfo = async (req: Request, res: Response) => {
   try {
-    const userId = req.userInfo.userId;
-    const provider = req.userInfo.provider;
+    const userId = res.locals.userInfo.userId;
+    const provider = res.locals.userInfo.provider;
 
     const userInfo = await User.findOne({
       where: { user_id: userId, provider: provider },
@@ -32,8 +31,8 @@ const getUserInfo = async (req: Request, res: Response) => {
 //유저 정보 수정
 const patchUserInfo = async (req: Request, res: Response) => {
   try {
-    const userId = req.userInfo.userId;
-    const provider = req.userInfo.provider;
+    const userId = res.locals.userInfo.userId;
+    const provider = res.locals.userInfo.provider;
 
     const resNickname = req.body.nickname;
     const resUserImage = req.body.user_image;
@@ -70,8 +69,8 @@ const patchUserInfo = async (req: Request, res: Response) => {
 //유저 탈퇴
 const deleteUserInfo = async (req: Request, res: Response) => {
   try {
-    const userId = req.userInfo.userId;
-    const provider = req.userInfo.provider;
+    const userId = res.locals.userInfo.userId;
+    const provider = res.locals.userInfo.provider;
 
     const userInfo = await User.findOne({
       where: { user_id: userId, provider: provider },
@@ -119,9 +118,9 @@ const deleteUserInfo = async (req: Request, res: Response) => {
 
 const likedBoardList = async (req: Request, res: Response) => {
   try {
-    console.log(req.userInfo);
+    console.log(res.locals.userInfo);
 
-    const userId = req.userInfo.userId;
+    const userId = res.locals.userInfo.userId;
 
     console.log(userId);
 

@@ -1,9 +1,9 @@
-const { User } = require('../../models');
-const { Board } = require('../../models');
+import { Request, Response } from 'express';
+import { Board } from '../../models';
 
-const writeBoardFunc = async (req, res) => {
+const writeBoardFunc = async (req: Request, res: Response) => {
   try {
-    const userId = req.userId;
+    const userId = res.locals.userId;
     const { board_title, board_image, board_desc, board_content } = req.body;
 
     await Board.create({
@@ -16,11 +16,11 @@ const writeBoardFunc = async (req, res) => {
 
     res.json({ result: 'success' });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(400).send({
       msg: '게시글 작성에 실패했습니다.',
     });
   }
 };
 
-module.exports = writeBoardFunc;
+export default writeBoardFunc;

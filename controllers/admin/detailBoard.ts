@@ -1,10 +1,11 @@
-const { User } = require('../../models');
-const { Board, Comment, Like, Sequelize, sequelize } = require('../../models');
-const { Op } = require('sequelize');
+import { User, Board, Comment, Like, sequelize } from '../../models';
+import * as Sequelize from 'sequelize';
+import { Op } from 'sequelize/types';
+import { Request, Response } from 'express';
 
-const detailBoardFunc = async (req, res) => {
+const detailBoardFunc = async (req: Request, res: Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     const { board_id } = req.params;
 
     const query = `
@@ -42,12 +43,9 @@ const detailBoardFunc = async (req, res) => {
       ORDER BY b.createdAt DESC) as t3
     on t1.board_id = t2.board_id AND t1.board_id = t3.board_id 
     WHERE t1.board_id = ${board_id}`;
-    console.log(Date.now());
-    const beforetime = Date.now();
-    const board =
-      (await sequelize.query(query, {
-        type: Sequelize.QueryTypes.SELECT,
-      })) + (await console.log(Date.now() - beforetime));
+    const board = await sequelize.query(query, {
+      type: Sequelize.QueryTypes.SELECT,
+    });
 
     res.json({ result: 'success', board });
   } catch (err) {
@@ -58,4 +56,4 @@ const detailBoardFunc = async (req, res) => {
   }
 };
 
-module.exports = detailBoardFunc;
+export default detailBoardFunc;

@@ -1,8 +1,9 @@
-const express = require('express');
+import * as express from 'express';
+import { commentController } from '../controllers';
+import authenticateJWT from '../middlewares/authenticateJWT';
+import authenticateJWTall from '../middlewares/authenticateJWTall';
+
 const router = express.Router(); // 라우터라고 선언한다.
-const { commentController } = require('../controllers');
-const { authenticateJWT } = require('../middlewares/authenticateJWT');
-const { authenticateJWTall } = require('../middlewares/authenticateJWTall');
 
 ///comment/
 //댓글조회 쿼리로 완료 문제는 ESCAPE/시퀄라이즈도 해보자
@@ -22,4 +23,4 @@ router.patch(
   commentController.patchComment
 );
 
-module.exports = router;
+export default router;

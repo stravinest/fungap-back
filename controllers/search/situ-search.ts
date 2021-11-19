@@ -1,8 +1,9 @@
-const { User } = require('../../models');
+import { Request, Response } from 'express';
+import { User } from '../../models';
 
-const getUserFunc = async (req, res) => {
+const situationSearchFunc = async (req: Request, res: Response) => {
   try {
-    const userId = req.userId;
+    const userId = res.locals.userId;
     const users = await User.findAll({});
     const userCount = await User.count({});
 
@@ -14,4 +15,4 @@ const getUserFunc = async (req, res) => {
   }
 };
 
-module.exports = getUserFunc;
+export default situationSearchFunc;

@@ -1,18 +1,19 @@
 // const jwt = require('jsonwebtoken');
-const { User } = require('../models');
-const bcrypt = require('bcrypt');
-const { Op } = require('sequelize');
-// const crypto = require('crypto');
-const express = require('express');
-const router = express.Router();
-const nodemailer = require('nodemailer');
-const ejs = require('ejs');
-const path = require('path');
-const { info } = require('console');
-var appDir = path.dirname(require.main.filename);
+import { User } from '../models';
+import * as bcrypt from 'bcrypt';
+import { Op } from 'sequelize';
+import * as express from 'express';
+import { Request, Response } from 'express';
+import * as nodemailer from 'nodemailer';
+
+import * as ejs from 'ejs';
+import * as path from 'path';
+import { info } from 'console';
+
+let appDir = path.dirname(require.main!.filename);
 
 //이메일 발송
-const sendEmail = async (req, res) => {
+const sendEmail = async (req: Request, res: Response) => {
   const { email } = req.body;
   const existUserId = await User.findOne({ where: { email } });
   if (!existUserId) {
@@ -64,7 +65,7 @@ const sendEmail = async (req, res) => {
 };
 
 //비밀번호 변경
-const changePassword = async (req, res) => {
+const changePassword = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     const userCheck = await User.findOne({
@@ -97,28 +98,4 @@ const changePassword = async (req, res) => {
   }
 };
 
-//이메일체크
-const callEmail = async (req, res) => {
-  const { school_email, user_id } = req.body;
-  const school_domain = school_email.split('@')[1];
-  const isExist = await authService.findUnivByEmail(school_domain);
-  if (isExist) {
-    await authService.updateUserByUserId(
-      {
-        school_auth: true,
-        school_email,
-        univ_id: isExist.univ_id,
-        country_id: isExist.country_id,
-      },
-      user_id
-    );
-    res.status(200).send({ result: 'university authorized' });
-    return;
-  }
-  res.status(409).send({ result: 'not supported university' });
-};
-module.exports = {
-  sendEmail,
-  callEmail,
-  changePassword,
-};
+export { sendEmail, changePassword };

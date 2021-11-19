@@ -1,14 +1,14 @@
 import User from '../models/user';
 import { UserMiddlewareinfo } from '../interface/user';
-import { NextFunction, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
-exports.checkAuthority = async (
-  req: UserMiddlewareinfo,
+export const checkAuthority = async (
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const userId = req.userId;
+    const userId = res.locals.userId;
     console.log(userId);
     const userInfo = await User.findOne({ where: { user_id: userId } });
 

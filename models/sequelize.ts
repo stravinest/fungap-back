@@ -8,4 +8,3 @@ const sequelize = new Sequelize(
   config.development
 );
 export { sequelize }; //대문자가 클래스 소문자가 인스턴스
-export default sequelize;

@@ -54,7 +54,7 @@ sequelize
     console.error(err);
   });
 
-const Router = require('./routers');
+import Router from './routers';
 
 app.use([Router]);
 // app.use('/', renders); //테스트용 지우기

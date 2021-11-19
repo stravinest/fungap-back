@@ -1,7 +1,9 @@
-const express = require('express');
+import * as express from 'express';
+import { boardController } from '../controllers';
+import authenticateJWTall from '../middlewares/authenticateJWTall';
+
 const router = express.Router(); // 라우터라고 선언한다.
-const { boardController } = require('../controllers');
-const { authenticateJWTall } = require('../middlewares/authenticateJWTall');
+
 const { homeSearch, situationSearch } = require('../controllers/search');
 ///board/;
 //홈화면
@@ -29,4 +31,4 @@ router.post('/search', authenticateJWTall, homeSearch);
 //상황별 게시글 검색
 router.post('/situation/:keyword', situationSearch);
 
-module.exports = router;
+export default router;

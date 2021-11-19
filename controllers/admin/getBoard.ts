@@ -1,9 +1,12 @@
-const { Board, Like, sequelize, Sequelize, User } = require('../../models');
+import { Board, Like, User, sequelize } from '../../models';
 
-const getBoardFunc = async (req, res) => {
+import * as Sequelize from 'sequelize';
+import { Request, Response } from 'express';
+
+const getBoardFunc = async (req: Request, res: Response) => {
   try {
-    const user_id = req.userId;
-    
+    const user_id = res.locals.userId;
+
     const query = `
     select t1.board_id, t1.board_title, t1.board_image,t1.board_desc, t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
     (SELECT b.board_id,b.board_title,b.board_image,b.board_desc, b.board_content, b.view_count,count(l.board_id) as like_count
@@ -43,4 +46,4 @@ const getBoardFunc = async (req, res) => {
   }
 };
 
-module.exports = getBoardFunc;
+export default getBoardFunc;

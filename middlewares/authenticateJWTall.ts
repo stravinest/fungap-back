@@ -1,17 +1,17 @@
 import * as jwt from 'jsonwebtoken';
 import getNewAuth from '../utils/renewAuth';
 import loginUser from '../utils/setLoginUser';
-import { UserMiddlewareinfo } from '../interface/user';
-import { NextFunction, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import authenticateJWT from './authenticateJWT';
 
 const authenticateJWTall = async (
-  req: UserMiddlewareinfo,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
     if (!req.headers['authorization']) {
-      req.userId = NaN;
+      res.locals.userId = NaN;
       next();
     } else {
       const [accessToken, refreshToken] =
@@ -55,9 +55,9 @@ const authenticateJWTall = async (
               .status(403)
               .json({ ok: false, message: 'invalid token' });
 
-          req.loginUser = loginUser(newAuth.accessToken, refreshToken);
-          req.userId = newAuth.userId;
-          req.userInfo = {
+          res.locals.loginUser = loginUser(newAuth.accessToken, refreshToken);
+          res.locals.userId = newAuth.userId;
+          res.locals.userInfo = {
             userId: newAuth.userId,
             email: newAuth.email,
             nickname: newAuth.nickname,
@@ -76,9 +76,9 @@ const authenticateJWTall = async (
         console.log('아아하하하하하');
         console.log(iAccessToken);
         console.log('아아하하하하하');
-        req.loginUser = loginUser(accessToken, refreshToken);
-        req.userId = iAccessToken.user_id;
-        req.userInfo = {
+        res.locals.loginUser = loginUser(accessToken, refreshToken);
+        res.locals.userId = iAccessToken.user_id;
+        res.locals.userInfo = {
           userId: iAccessToken.user_id,
           email: iAccessToken.email,
           nickname: iAccessToken.nickname,

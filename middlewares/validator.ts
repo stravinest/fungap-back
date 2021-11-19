@@ -3,7 +3,7 @@ import * as Joi from 'joi';
 import * as Validators from '../validators';
 
 //--- 2. validators 경로 내 index 파일을 불러와 파라미터로 받은 항목이 있는지 체크한다 ---
-export = function (validator: string) {
+export function (validator: string) {
   //parameter로 받은 값이 validators/index.js 내 존재하지 않으면 throw error
   if (!Validators.hasOwnProperty(validator))
     throw new Error(`'${validator}' validator is not exist`);

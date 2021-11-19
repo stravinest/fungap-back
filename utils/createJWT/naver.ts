@@ -1,19 +1,20 @@
-const jwt = require('jsonwebtoken');
-const User = require('../../models/user');
-const { Op } = require('sequelize');
+import * as jwt from 'jsonwebtoken';
+import { User } from '../../models';
+import { Op } from 'sequelize/types';
+import { NaverProfile } from '../../interface/socialLogin';
 
-exports.jwtNaverCreate = async (profile) => {
-  const basicInfo = {
+export const jwtNaverCreate = async (profile: NaverProfile) => {
+  const basicInfo: object = {
     email: profile?.response?.email,
     nickname: profile?.response?.nickname,
     user_image: profile?.response?.profile_image,
     provider: 'naver',
   };
 
-  const snsId = profile?.response?.id;
+  const snsId: string = profile?.response?.id;
 
   //refresh token 발급
-  const refreshToken = jwt.sign({}, process.env.JWT_SECRET, {
+  const refreshToken = jwt.sign({}, process.env.JWT_SECRET!, {
     expiresIn: process.env.JWT_REFRESH_EXPIRE,
   });
   console.log(profile?.response?.email);
@@ -35,13 +36,20 @@ exports.jwtNaverCreate = async (profile) => {
         }
       );
     } else if (exUser?.user_delete_code == 1) {
-      await User.update({
-        ...basicInfo,
-        sns_id: snsId,
-        provider: 'naver',
-        user_delete_code: 0,
-        refresh_token: refreshToken,
-      });
+      await User.update(
+        {
+          ...basicInfo,
+          sns_id: snsId,
+          provider: 'naver',
+          user_delete_code: 0,
+          refresh_token: refreshToken,
+        },
+        {
+          where: {
+            [Op.and]: [{ sns_id: snsId }, { provider: 'kakao' }],
+          },
+        }
+      );
     } else {
       await User.create({
         ...basicInfo,
@@ -55,17 +63,19 @@ exports.jwtNaverCreate = async (profile) => {
         [Op.and]: [{ sns_id: snsId }, { provider: 'naver' }],
       },
     });
+    const updateBasicInfo: object = {
+      nickname: user?.nickname,
+      email: user?.email,
+      user_id: user?.user_id,
+      user_mbti: user?.user_mbti,
+      user_authority: user?.user_authority,
+      user_image: user?.user_image,
+    };
 
-    basicInfo.email = user.email;
-    basicInfo.nickname = user.nickname;
-    basicInfo.user_id = user.user_id;
-    basicInfo.user_mbti = user.user_mbti;
-    basicInfo.user_authority = user.user_authority;
-    basicInfo.user_image = user.user_image;
-    console.log(basicInfo);
+    Object.assign(basicInfo, updateBasicInfo);
 
     //access token 발급
-    const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
+    const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET!, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,
     });
 

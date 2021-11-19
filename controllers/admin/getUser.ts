@@ -1,8 +1,9 @@
-const { Board } = require('../../models');
+import { Request, Response } from 'express';
+import { User } from '../../models';
 
-const situationSearchFunc = async (req, res) => {
+const getUserFunc = async (req: Request, res: Response) => {
   try {
-    const userId = req.userId;
+    const userId = res.locals.userId;
     const users = await User.findAll({});
     const userCount = await User.count({});
 
@@ -14,4 +15,4 @@ const situationSearchFunc = async (req, res) => {
   }
 };
 
-module.exports = situationSearchFunc;
+export default getUserFunc;

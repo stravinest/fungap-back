@@ -1,19 +1,9 @@
 import * as jwt from 'jsonwebtoken';
 import { User } from '../../models';
 import { Op } from 'sequelize/types';
+import { GoogleProfile } from '../../interface/socialLogin';
 
-interface GoogleProfile {
-  sub: number;
-  name: string;
-  given_name: string;
-  family_name: string;
-  picture: string;
-  email: string;
-  email_verified: boolean;
-  locale: string;
-}
-
-exports.jwtGoogleCreate = async (profile: GoogleProfile) => {
+export const jwtGoogleCreate = async (profile: GoogleProfile) => {
   const basicInfo: object = {
     email: profile?.email || '',
     nickname: profile?.name || '',
@@ -54,7 +44,7 @@ exports.jwtGoogleCreate = async (profile: GoogleProfile) => {
         },
         {
           where: {
-            [Op.and]: [{ sns_id: profile?.sub }, { provider: 'google' }],
+            [Op.and]: [{ sns_id: snsId }, { provider: 'google' }],
           },
         }
       );
@@ -79,13 +69,6 @@ exports.jwtGoogleCreate = async (profile: GoogleProfile) => {
     };
 
     Object.assign(basicInfo, updateBasicInfo);
-
-    basicInfo.email = user!.email;
-    basicInfo.nickname = user!.nickname;
-    basicInfo.user_id = user!.user_id;
-    basicInfo.user_mbti = user!.user_mbti;
-    basicInfo.user_authority = user!.user_authority;
-    basicInfo.user_image = user!.user_image;
 
     //access token 발급
     const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET!, {

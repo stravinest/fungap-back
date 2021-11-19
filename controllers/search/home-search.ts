@@ -1,28 +1,31 @@
-const { Sequelize,sequelize } = require('../../models');
+import { Request, Response } from 'express';
+import { string } from 'joi';
+import * as Sequelize from 'sequelize';
+import { sequelize } from '../../models';
 
-const homeSearchFunc = async (req, res) => {
+const homeSearchFunc = async (req: Request, res: Response) => {
   try {
-      const user_id = req.userId
-      const {keyword} = req.query;
-      console.log(keyword)
-      const keywords = keyword.split(' ')
-      const list_keywords = []
-      
-      for (let i = 0; i < keywords.length; i++) {
-        if (i == 0) {
-          list_keywords.push(
-            `t1.board_title LIKE '%${keywords[i]}%' OR t1.board_content LIKE '%${keywords[i]}%'`
-          )
-        } else {
-          list_keywords.push(
-            `OR t1.board_title LIKE '%${keywords[i]}%' OR t1.board_content LIKE '%${keywords[i]}%'`
-          )
-        }
+    const user_id = res.locals.userId;
+    const { keyword } = req.query;
+    console.log(keyword);
+    const keywords = String(keyword).split(' ');
+    const list_keywords = [];
+
+    for (let i = 0; i < keywords.length; i++) {
+      if (i == 0) {
+        list_keywords.push(
+          `t1.board_title LIKE '%${keywords[i]}%' OR t1.board_content LIKE '%${keywords[i]}%'`
+        );
+      } else {
+        list_keywords.push(
+          `OR t1.board_title LIKE '%${keywords[i]}%' OR t1.board_content LIKE '%${keywords[i]}%'`
+        );
       }
-      
-      const newlist_keywords = list_keywords.toString().replace(/,/g, "");
-         
-      const query = `
+    }
+
+    const newlist_keywords = list_keywords.toString().replace(/,/g, '');
+
+    const query = `
       select t1.board_id, t1.board_title, t1.board_image, t1.board_desc, t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
     (SELECT b.board_id,b.board_title,b.board_content,b.board_image, b.board_desc, b.view_count,count(l.board_id) as like_count
  
@@ -51,16 +54,16 @@ const homeSearchFunc = async (req, res) => {
     (SELECT * FROM boards WHERE MATCH (board_title,board_desc) AGAINST ('${keywords}' IN NATURAL LANGUAGE MODE)) as t3
     on t1.board_id = t2.board_id and t2.board_id = t3.board_id`;
 
-      const search_board_list = await sequelize.query(query, {
-        type: Sequelize.QueryTypes.SELECT,
-      });
+    const search_board_list = await sequelize.query(query, {
+      type: Sequelize.QueryTypes.SELECT,
+    });
     res.json({ result: 'success', search_board_list });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(400).send({
       msg: '알 수 없는 오류가 발생했습니다. 관리자에게 문의하세요.',
     });
   }
 };
 
-module.exports = homeSearchFunc;
+export default homeSearchFunc;

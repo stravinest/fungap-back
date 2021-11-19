@@ -1,9 +1,8 @@
-import { NextFunction, Request, Response } from 'express';
-import { GoogleReq } from '../interface/socialLogin';
+import { Request, Response, NextFunction } from 'express';
 import axios from 'axios';
 
-exports.getGoogleUser = async (
-  req: GoogleReq,
+export const getGoogleUser = async (
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -21,7 +20,7 @@ exports.getGoogleUser = async (
       },
     });
 
-    req.google = profile.data;
+    res.locals.google = profile.data;
     //console.log(profile.data);
     next();
   } catch (error) {

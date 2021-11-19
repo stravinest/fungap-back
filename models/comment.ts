@@ -52,12 +52,10 @@ Comment.init(
 export const associate = (db: dbType) => {
   db.Comment.belongsTo(db.User, {
     foreignKey: 'user_id',
-    sourceKey: 'user_id',
     onDelete: 'CASCADE',
   });
   db.Comment.belongsTo(db.Board, {
     foreignKey: 'board_id',
-    sourceKey: 'board_id',
     onDelete: 'CASCADE',
   });
 };
