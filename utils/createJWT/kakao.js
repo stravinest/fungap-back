@@ -19,7 +19,7 @@ exports.jwtKakaoCreate = async (profile) => {
       profile.data?.properties.user_mbti,
     provider: 'kakao',
   };
-
+  console.log(profile)
   const snsId = profile.data?.id || profile.id;
 
   //refresh token 발급

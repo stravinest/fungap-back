@@ -9,7 +9,7 @@ exports.jwtNaverCreate = async (profile) => {
     user_image: profile?.response?.profile_image,
     provider: 'naver',
   };
-
+  console.log(profile)
   const snsId = profile?.response?.id;
 
   //refresh token 발급

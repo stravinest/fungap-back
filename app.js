@@ -20,6 +20,8 @@ let colsOptions = {
   origin: [
     'http://localhost:3000', // 접근 권한을 부여하는 도메
     'http://fungap.shop',
+    'https://localhost:3000',
+    'https://fungap.shop',
   ],
   credentials: true, // 응답 헤더에 Access-Control-Allow-Credentials 추가
   // exposedHeaders: [Set - Cookie],
@@ -50,11 +52,20 @@ sequelize
 const Router = require('./routers');
 const { cookie } = require('request');
 app.use([Router]);
-
-// Router.get('/', (request, res) => {
-//   res.render('index');
-// });
+// app.use('/', renders); //테스트용 지우기
+Router.get('/', (request, res) => {
+  res.render('index');
+});
+//swagger
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
+// const options = {
+//   ca: fs.readFileSync(process.env.HTTPS_CA),
+//   key: fs.readFileSync(process.env.HTTPS_KEY),
+//   cert: fs.readFileSync(process.env.HTTPS_CERT),
+// };
+// http.createServer(app).listen(3000);
+// https.createServer(options, app).listen(443);
 
 app.listen(port, () => {
   console.log(`listening at http://localhost:${port}`);
