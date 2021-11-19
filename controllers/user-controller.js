@@ -151,7 +151,7 @@ const login = async (req, res) => {
         [Op.and]: { user_delete_code: 0, email: email },
       },
     }); //users로 받으면 안되네??
-
+    console.log(userCheck);
     if (!userCheck) {
       res.status(400).send({
         result: 'fail',
