@@ -6,7 +6,9 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger_output');
 const app = express();
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config({
+  path: './env/.env',
+});
 const { sequelize } = require('./models');
 
 const cookieParser = require('cookie-parser');
