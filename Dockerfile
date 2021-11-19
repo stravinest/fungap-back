@@ -1,5 +1,5 @@
 #베이스 이미지 
-FROM node:14
+FROM node:14.17.3
 
 # 앱 디렉터리 생성
 COPY    ./package* /usr/src/app/
@@ -15,6 +15,6 @@ expose 3000
 #10초 마다 체크 
 HEALTHCHECK --interval=10s CMD wget -qO- localhost:3000
 
-CMD pm2 start app.js
+CMD node app.js
 # CMD [ "pm2-runtime", "server.js", "-i", "max" ]
 
