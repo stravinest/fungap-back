@@ -48,11 +48,10 @@ sequelize
 const Router = require('./routers');
 const { cookie } = require('request');
 app.use([Router]);
-// app.use('/', renders); //테스트용 지우기
-Router.get('/', (request, res) => {
-  res.render('index');
-});
-//swagger
+
+// Router.get('/', (request, res) => {
+//   res.render('index');
+// });
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // const options = {
