@@ -69,5 +69,7 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.listen(port, () => {
   console.log(`listening at http://localhost:${port}`);
 });
+const httpServer = http.createServer(app);
+SocketIO(httpServer, app);
 
 module.exports = app;
