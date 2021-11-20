@@ -8,6 +8,7 @@ const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
 const { sequelize } = require('./models');
+const SocketIO = require('./socket');
 
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
@@ -68,4 +69,5 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.listen(port, () => {
   console.log(`listening at http://localhost:${port}`);
 });
+
 module.exports = app;

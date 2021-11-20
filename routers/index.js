@@ -8,6 +8,7 @@ const adminRouter = require('./admin');
 const boardRouter = require('./board');
 const mbtiRouter = require('./mbti');
 const commRouter = require('./comment');
+const chatRouter = require('./chat');
 
 router.use('/user', [userRouter]);
 router.use('/auth', [authRouter]);
@@ -17,5 +18,6 @@ router.use('/admin', [adminRouter]);
 router.use('/board', [boardRouter]);
 router.use('/comment', [commRouter]);
 router.use('/mbti', [mbtiRouter]);
+router.use('/chat', [chatRouter]);
 
 module.exports = router;
