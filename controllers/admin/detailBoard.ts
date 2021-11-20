@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 
 const detailBoardFunc = async (req: Request, res: Response) => {
   try {
-    const user_id = res.locals.userId;
+    const user_id: number = res.locals.userId;
     const { board_id } = req.params;
 
     const query = `

@@ -2,9 +2,7 @@ import * as express from 'express';
 import authenticateJWT from '../middlewares/authenticateJWT';
 import { checkAuthority } from '../middlewares/checkAuthority';
 
-const router = express.Router();
-
-const {
+import {
   getBoard,
   writeBoard,
   editBoard,
@@ -12,7 +10,9 @@ const {
   detailBoard,
   getUser,
   getComment,
-} = require('../controllers/admin');
+} from '../controllers/admin';
+
+const router = express.Router();
 
 router.get('/board', authenticateJWT, checkAuthority, getBoard);
 router.post('/board/write', authenticateJWT, checkAuthority, writeBoard);
@@ -42,4 +42,4 @@ router.post(
   getComment
 );
 
-module.exports = router;
+export default router;

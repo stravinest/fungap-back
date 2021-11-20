@@ -5,7 +5,6 @@ import { Op } from 'sequelize';
 import { getPageNum } from '../utils/getPageNum';
 import { getComments } from '../utils/getComments';
 import { Request, Response, NextFunction } from 'express';
-import * as ParsedQs from 'express';
 import {
   PopBoardHome,
   NewBoardHome,
@@ -21,13 +20,12 @@ import {
   detailBoard, //비로그인 상세 게시글
   detailBoardLogin,
 } from '../utils/getQuery';
-import request = require('request');
-import { string } from 'joi';
+import { Reqbodystring, ReqQuery } from '../interface/request';
 
 //홈화면 조회
 const getBoardHome = async (req: Request, res: Response) => {
   try {
-    const user_id = res.locals.userId;
+    const user_id: number = res.locals.userId;
     console.log('유저로그인', user_id);
 
     if (user_id) {
@@ -55,7 +53,7 @@ const getBoardHome = async (req: Request, res: Response) => {
 const getSituationBoardConfirm = async (req: Request, res: Response) => {
   try {
     const { page, sort } = req.query;
-    const user_id = res.locals.userId;
+    const user_id: number = res.locals.userId;
     res.locals;
     console.log('유저로그인', user_id);
     console.log(req.query);
@@ -128,7 +126,7 @@ const getSituationBoardConfirm = async (req: Request, res: Response) => {
 const getSituationBoard = async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
-    const user_id = res.locals.userId;
+    const user_id: number = res.locals.userId;
     console.log('유저로그인', user_id);
     console.log(req.query);
     console.log(page);
@@ -172,7 +170,7 @@ const getSituationBoard = async (req: Request, res: Response) => {
 const getSituationBoardPop = async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
-    const user_id = res.locals.userId;
+    const user_id: number = res.locals.userId;
     console.log('유저로그인', user_id);
 
     if (user_id) {
@@ -200,7 +198,7 @@ const getSituationBoardPop = async (req: Request, res: Response) => {
 const getSituationBoardView = async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
-    const user_id = res.locals.userId;
+    const user_id: number = res.locals.userId;
     console.log('유저로그인', user_id);
 
     if (user_id) {
@@ -226,7 +224,7 @@ const getSituationBoardView = async (req: Request, res: Response) => {
 // 게시글 디테일페이지 조회
 const getDetailBoard = async (req: Request, res: Response) => {
   try {
-    const user_id = res.locals.userId;
+    const user_id: number = res.locals.userId;
     console.log('유저로그인', user_id);
     const { board_id } = req.params;
     console.log(req.cookies);
@@ -277,7 +275,7 @@ function getUserIP(req: Request) {
 //좋아요 /좋아요 취소
 const changeLike = async (req: Request, res: Response) => {
   try {
-    const user_id = res.locals.userId;
+    const user_id: number = res.locals.userId;
     const { board_id } = req.params;
     console.log('유저로그인', user_id);
     if (user_id) {

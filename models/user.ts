@@ -90,6 +90,10 @@ export const associate = (db: dbType) => {
     foreignKey: 'user_id',
     sourceKey: 'user_id',
   });
+  db.User.hasMany(db.Chatlog, {
+    foreignKey: 'user_id',
+    sourceKey: 'user_id',
+  });
 };
 
 export default User;

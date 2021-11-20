@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import { User } from '../../models';
-import { Op } from 'sequelize/types';
+import { Op } from 'sequelize';
 import { LocalProfile } from '../../interface/socialLogin';
 
 export const jwtLocalCreate = async (profile: LocalProfile) => {

@@ -2,9 +2,9 @@ import { Board } from '../../models';
 import { User } from '../../models';
 import { Request, Response } from 'express';
 
-const writeBoardFunc = async (req: Request, res: Response) => {
+const deleteBoardFunc = async (req: Request, res: Response) => {
   try {
-    const userId = res.locals.userId;
+    const userId: number = res.locals.userId;
     const board_id = req.params;
 
     await Board.update({ board_delete_code: 1 }, { where: board_id });
@@ -18,4 +18,4 @@ const writeBoardFunc = async (req: Request, res: Response) => {
   }
 };
 
-export default writeBoardFunc;
+export default deleteBoardFunc;

@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 
 const getBoardFunc = async (req: Request, res: Response) => {
   try {
-    const user_id = res.locals.userId;
+    const user_id: number = res.locals.userId;
 
     const query = `
     select t1.board_id, t1.board_title, t1.board_image,t1.board_desc, t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
@@ -36,7 +36,7 @@ const getBoardFunc = async (req: Request, res: Response) => {
     const board_list = await sequelize.query(query, {
       type: Sequelize.QueryTypes.SELECT,
     });
-    console.log(board_list);
+
     res.status(200).json({ result: 'success', board_list });
   } catch (err) {
     console.log(err);

@@ -1,8 +1,8 @@
 import { Board, User, Like, Comment } from '../models';
 import { sequelize } from '../models';
 import * as Sequelize from 'sequelize';
-import { UserinfoReq, UserMiddlewareinfo } from '../interface/user';
 import { Request, Response, NextFunction } from 'express';
+import { userEditSchema } from '../validators/mypage_edit_validator';
 //유저 정보 조회
 const getUserInfo = async (req: Request, res: Response) => {
   try {
@@ -34,18 +34,17 @@ const patchUserInfo = async (req: Request, res: Response) => {
     const userId = res.locals.userInfo.userId;
     const provider = res.locals.userInfo.provider;
 
-    const resNickname = req.body.nickname;
-    const resUserImage = req.body.user_image;
-    const resUserMbti = req.body.user_mbti;
+    const { nickname, user_image, user_mbti } =
+      await userEditSchema.validateAsync(req.body);
 
     const userInfo = await User.findOne({
       where: { user_id: userId, provider: provider },
     });
     await User.update(
       {
-        nickname: resNickname,
-        user_image: resUserImage,
-        user_mbti: resUserMbti,
+        nickname: nickname,
+        user_image: user_image,
+        user_mbti: user_mbti,
       },
       { where: { user_id: userId } }
     );
@@ -53,9 +52,9 @@ const patchUserInfo = async (req: Request, res: Response) => {
     res.status(200).json({
       result: 'success',
       user: {
-        nickname: resNickname,
-        user_image: resUserImage,
-        user_mbti: resUserMbti,
+        nickname: nickname,
+        user_image: user_image,
+        user_mbti: user_mbti,
       },
     });
   } catch (err) {

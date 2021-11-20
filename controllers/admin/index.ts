@@ -6,7 +6,7 @@ import detailBoard from './detailBoard';
 import getUser from './getUser';
 import getComment from './getComment';
 
-export = {
+export {
   getBoard,
   writeBoard,
   editBoard,

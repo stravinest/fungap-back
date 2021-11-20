@@ -3,9 +3,9 @@ import { User } from '../../models';
 
 const getUserFunc = async (req: Request, res: Response) => {
   try {
-    const userId = res.locals.userId;
-    const users = await User.findAll({});
-    const userCount = await User.count({});
+    const userId: number = res.locals.userId;
+    const users: User[] = await User.findAll({});
+    const userCount: number = await User.count({});
 
     res.json({ result: 'success', users, userCount });
   } catch (err) {

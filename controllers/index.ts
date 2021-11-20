@@ -1,9 +1,10 @@
-import mypageController = require('./mypage-controller');
-import mbtiController = require('./mbti-controller');
-import authController = require('./auth-controller');
-import boardController = require('./board-controller');
-import commentController = require('./comment-controller');
-import userController = require('./user-controller');
+import * as mypageController from './mypage-controller';
+import * as mbtiController from './mbti-controller';
+import * as authController from './auth-controller';
+import * as boardController from './board-controller';
+import * as commentController from './comment-controller';
+import * as userController from './user-controller';
+import * as chatController from './chat-controller';
 
 // const univBoardController = require('./univ-board-controller');
 // const utilController = require('./util-controller');
@@ -15,7 +16,7 @@ export {
   userController,
   mypageController,
   mbtiController,
-
+  chatController,
   // freeBoardController,
   // univBoardController,
   // utilController,

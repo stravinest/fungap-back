@@ -1,6 +1,5 @@
 import * as express from 'express';
 import request = require('request');
-import Validator = require('../middlewares/validator');
 import { userController } from '../controllers';
 import { getKakaoUser } from '../middlewares/getKakaoUser';
 import { getGoogleUser } from '../middlewares/getGoogleUser';
@@ -9,13 +8,13 @@ import { getNaverUser } from '../middlewares/getNaverUser';
 const router = express.Router(); // 라우터라고 선언한다.
 
 //회원가입
-router.post('/signup', Validator('signup'), userController.signup);
+router.post('/signup', userController.signup);
 //이메일 중복확인
 router.post('/email_check', userController.email_check);
 //닉네임 중복확인
 router.post('/nickname_check', userController.nickname_check);
 //로컬 로그인
-router.post('/signin', Validator('login'), userController.login);
+router.post('/signin', userController.login);
 //카카오 로그인
 router.post('/signin/kakao', getKakaoUser, userController.auth);
 //구글 로그인
@@ -23,12 +22,12 @@ router.post('/signin/google', getGoogleUser, userController.authGoogle);
 //네이버 로그인
 router.post('/signin/naver', getNaverUser, userController.authNaver);
 
-var app = express();
-var client_id = process.env.NAVER_CLIENT_ID;
-var client_secret = process.env.NAVER_CLIENT_SECRET;
-var state = 'RAMDOM_STATE';
-var redirectURI = encodeURI('http://localhost:3000/user/naver/callback');
-var api_url = '';
+const app = express();
+const client_id = process.env.NAVER_CLIENT_ID;
+const client_secret = process.env.NAVER_CLIENT_SECRET;
+let state = 'RAMDOM_STATE';
+let redirectURI = encodeURI('http://localhost:3000/user/naver/callback');
+let api_url = '';
 router.get('/naverlogin', function (req, res) {
   api_url =
     'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' +
@@ -45,8 +44,8 @@ router.get('/naverlogin', function (req, res) {
   );
 });
 router.get('/naver/callback', function (req, res) {
-  code = req.query.code;
-  state = req.query.state;
+  const code = req.query.code;
+  const state = req.query.state;
   api_url =
     'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=' +
     client_id +
@@ -59,7 +58,7 @@ router.get('/naver/callback', function (req, res) {
     '&state=' +
     state;
 
-  var options = {
+  const options = {
     url: api_url,
     headers: {
       'X-Naver-Client-Id': client_id,

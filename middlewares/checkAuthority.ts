@@ -1,5 +1,4 @@
 import User from '../models/user';
-import { UserMiddlewareinfo } from '../interface/user';
 import { Request, Response, NextFunction } from 'express';
 
 export const checkAuthority = async (

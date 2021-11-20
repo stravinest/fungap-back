@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 //댓글조회
 const getComment = async (req: Request, res: Response) => {
   try {
-    const { board_id } = res.locals.params;
+    const { board_id } = req.params;
     console.log(board_id);
     const isBoard = await Board.findOne({ where: { board_id: board_id } });
     if (!isBoard) {
@@ -24,8 +24,6 @@ const getComment = async (req: Request, res: Response) => {
 
       return;
     }
-    console.log('resutl는', comments);
-    // console.log(comments[0].dataValues);
 
     res.status(200).json({ result: 'success', comments });
   } catch (error) {

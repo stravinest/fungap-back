@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import { User } from '../../models';
-import { Op } from 'sequelize/types';
+import { Op } from 'sequelize';
 import { NaverProfile } from '../../interface/socialLogin';
 
 export const jwtNaverCreate = async (profile: NaverProfile) => {

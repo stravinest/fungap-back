@@ -8,10 +8,11 @@ import loginUser from '../utils/setLoginUser';
 import * as jwt from 'jsonwebtoken';
 import { Board, User, Like, Comment, sequelize } from '../models';
 import * as Sequelize from 'sequelize';
-import { Op } from 'sequelize/types';
+import { Op } from 'sequelize';
 import * as bcrypt from 'bcrypt';
 import { Request, Response, NextFunction } from 'express';
-
+import { loginSchema } from '../validators/login_validator';
+import { signupSchema } from '../validators/signup_validator';
 //카카오
 const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -97,7 +98,9 @@ const authNaver = async (req: Request, res: Response, next: NextFunction) => {
 //회원가입
 const signup = async (req: Request, res: Response) => {
   try {
-    const { nickname, email, user_mbti, password, confirm_password } = req.body;
+    const { nickname, email, user_mbti, password, confirm_password } =
+      await signupSchema.validateAsync(req.body);
+
     const existUserId = await User.findOne({
       where: {
         [Op.and]: { user_delete_code: 0, email: email },
@@ -139,7 +142,7 @@ const signup = async (req: Request, res: Response) => {
 };
 //로컬로그인
 const login = async (req: Request, res: Response) => {
-  let { email, password } = req.body;
+  let { email, password } = await loginSchema.validateAsync(req.body);
   try {
     const userCheck: any = await User.findOne({
       where: {

@@ -1,7 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import getNewAuth from '../utils/renewAuth';
 import loginUser from '../utils/setLoginUser';
-import { UserMiddlewareinfo } from '../interface/user';
 import { Request, Response, NextFunction } from 'express';
 
 const authenticateJWT = async (

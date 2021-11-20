@@ -5,7 +5,7 @@ import { sequelize } from '../../models';
 
 const homeSearchFunc = async (req: Request, res: Response) => {
   try {
-    const user_id = res.locals.userId;
+    const user_id: number = res.locals.userId;
     const { keyword } = req.query;
     console.log(keyword);
     const keywords = String(keyword).split(' ');

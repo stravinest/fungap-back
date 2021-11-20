@@ -1,11 +1,5 @@
 import * as express from 'express'; // express를 쓴다
-import {
-  RequestHandler,
-  ErrorRequestHandler,
-  Request,
-  Response,
-  NextFunction,
-} from 'express';
+import { Request, Response } from 'express';
 
 import * as fs from 'fs';
 import * as http from 'http';
@@ -17,12 +11,13 @@ const app = express();
 
 import { sequelize } from './models';
 import { cookie } from 'request';
+import * as cookieParser from 'cookie-parser';
 
-const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
 const port = process.env.EXPRESS_PORT;
-const cors = require('cors');
+import * as cors from 'cors';
+
 let colsOptions = {
   origin: [
     'http://localhost:3000', // 접근 권한을 부여하는 도메
@@ -76,4 +71,4 @@ Router.get('/', (req: Request, res: Response) => {
 app.listen(port, () => {
   console.log(`listening at http://localhost:${port}`);
 });
-module.exports = app;
+export default app;

@@ -4,10 +4,10 @@ import { Request, Response } from 'express';
 
 const getCommentFunc = async (req: Request, res: Response) => {
   try {
-    const user_id = res.locals.userId;
+    const user_id: number = res.locals.userId;
 
     const users = await User.findOne({
-      where: user_id,
+      where: { user_id: user_id },
       include: [{ model: Comment }, { model: Like }],
     });
 
