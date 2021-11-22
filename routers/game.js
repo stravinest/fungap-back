@@ -1,36 +1,47 @@
 const express = require('express');
 const router = express.Router(); // 라우터라고 선언한다.
-const { boardController } = require('../controllers');
+const { gameController } = require('../controllers');
 const { authenticateJWTall } = require('../middlewares/authenticateJWTall');
-const { likeGame, writeComment, editComment, deleteComment } = require('../controllers/game-controller');
-///games/;
+
+///games/
+//전체게임조회
+router.get('/', authenticateJWTall, gameController.getGameAll);
+
+//게임 상세조회
+router.get('/:game_id', authenticateJWTall, gameController.getGameDetail);
 
 //game 생성
-router.get('/write', authenticateJWTall, boardController.getBoardHome);
+router.post('/write', authenticateJWTall, gameController.writeGame);
 
-// //상황별 페이지 게시글 전체 조회(최신순) //쿼리스트링 값으로 page=page
-// router.get('/', authenticateJWTall, boardController.getSituationBoardConfirm);
-// //상황별 페이지 게시글 전체 조회(인기순)
-// router.get(
-//   '/popularity',
-//   authenticateJWTall,
-//   boardController.getSituationBoardPop
-// );
-// //상황별 페이지 게시글 전체 조회(조회순)
-// router.get('/view', authenticateJWTall, boardController.getSituationBoardView);
+//game 수정
+router.patch('/:game_id/edit', authenticateJWTall, gameController.editGame);
 
-// //상황별 게시글
-// router.get('/:board_id', authenticateJWTall, boardController.getDetailBoard);
+//game 삭제
+router.delete(
+  '/:game_id/delete',
+  authenticateJWTall,
+  gameController.deleteGame
+);
+//game 선택
+router.post('/:game_id', authenticateJWTall, gameController.selectGame);
 
-// // 게시글 좋아요,취소
-// router.post('/:board_id/like', authenticateJWTall, boardController.changeLike);
+router.post('/:game_id/like', authenticateJWTall, gameController.likeGame);
 
-// //홈 게시글 검색
-// router.post('/search', authenticateJWTall, homeSearch);
-// //상황별 게시글 검색
-// router.post('/situation/:keyword', situationSearch);
-router.post('/:game_id/like', authenticateJWTall, likeGame);
-router.post('/:game_id/comment', authenticateJWTall, writeComment);
-router.patch('/:game_id/comment/:game_comment_id', authenticateJWTall, editComment);
-router.delete('/:game_id/comment/:game_comment_id', authenticateJWTall, deleteComment);
+router.post(
+  '/:game_id/comment',
+  authenticateJWTall,
+  gameController.writeComment
+);
+
+router.patch(
+  '/:game_id/comment/:game_comment_id',
+  authenticateJWTall,
+  gameController.editComment
+);
+
+router.delete(
+  '/:game_id/comment/:game_comment_id',
+  authenticateJWTall,
+  gameController.deleteComment
+);
 module.exports = router;

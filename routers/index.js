@@ -8,7 +8,7 @@ const adminRouter = require('./admin');
 const boardRouter = require('./board');
 const mbtiRouter = require('./mbti');
 const commRouter = require('./comment');
-const gameRouter = require('./game')
+const gameRouter = require('./game');
 
 router.use('/user', [userRouter]);
 router.use('/auth', [authRouter]);
