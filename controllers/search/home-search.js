@@ -1,28 +1,79 @@
-const { Sequelize,sequelize } = require('../../models');
+const { Sequelize, sequelize } = require('../../models');
+const { Client } = require('@elastic/elasticsearch');
+const { errors } = require('@elastic/elasticsearch');
+
+
+const client = new Client({
+  node: process.env.elastic_node,
+  auth: {
+    username: process.env.elastic_username,
+    password: process.env.elastic_password,
+    log: 'trace'
+  },
+});
 
 const homeSearchFunc = async (req, res) => {
   try {
-      const user_id = req.userId
-      const {keyword} = req.query;
-      console.log(keyword)
-      const keywords = keyword.split(' ')
-      const list_keywords = []
-      
-      for (let i = 0; i < keywords.length; i++) {
-        if (i == 0) {
-          list_keywords.push(
-            `t1.board_title LIKE '%${keywords[i]}%' OR t1.board_content LIKE '%${keywords[i]}%'`
-          )
-        } else {
-          list_keywords.push(
-            `OR t1.board_title LIKE '%${keywords[i]}%' OR t1.board_content LIKE '%${keywords[i]}%'`
-          )
+    const user_id = req.userId;
+    const { keyword } = req.query;
+    console.log(keyword);
+    const keywords = keyword.split(' ');
+    
+
+    const search_board_list = await client.search({
+      index: 'fungapsearch',
+      body: {
+        query: { 
+          multi_match: { 
+            query: `${keywords}`,
+            fields: ["board_title","board_desc","board_content"]
+          }
         }
       }
-      
-      const newlist_keywords = list_keywords.toString().replace(/,/g, "");
-         
-      const query = `
+    });
+
+    const test = await client.sql.query({
+      body: {
+        query: `SELECT board_title, board_desc, board_content AS "content"
+        FROM "fungapsearch"
+        
+      `}
+    });
+
+    // const liked_user = await client.search({
+    //   index: 'fungaplikes',
+    //   body: {
+    //     query:{
+    //       bool: {
+    //         must: [
+    //           { match: { board_id: "1" } },
+    //           { match: { user_id: "3" } }
+    //         ]
+    //       }
+    //     }
+    //   }
+    // });
+    for (i=0;i<search_board_list.body.hits.hits.length;i++) {
+      if(search_board_list.body.hits.hits[i]._source.liked_users.includes(user_id)){
+        search_board_list.body.hits.hits[i]._source.like_state = true;
+      } else {
+        search_board_list.body.hits.hits[i]._source.like_state = false;
+      }
+    }
+    // if (liked_user.body.hits.hits.length == 0 ) {
+    //   const like_state = false;
+    //   search_board_list.body.like_state = like_state
+    // } else {
+    //   const like_state = true;
+    //   search_board_list.body.like_state = like_state
+    // }
+    console.log(search_board_list.body);
+    console.log(search_board_list.body.hits.hits[4]._source.liked_users);
+    console.log(search_board_list.body.hits.hits[4]._source.liked_users.includes(2));
+
+    // console.log(liked_user.body);
+    
+    const query = `
       select t1.board_id, t1.board_title, t1.board_image, t1.board_desc, t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
     (SELECT b.board_id,b.board_title,b.board_content,b.board_image, b.board_desc, b.view_count,count(l.board_id) as like_count
  
@@ -51,12 +102,14 @@ const homeSearchFunc = async (req, res) => {
     (SELECT * FROM boards WHERE MATCH (board_title,board_desc) AGAINST ('${keywords}' IN NATURAL LANGUAGE MODE)) as t3
     on t1.board_id = t2.board_id and t2.board_id = t3.board_id`;
 
-      const search_board_list = await sequelize.query(query, {
-        type: Sequelize.QueryTypes.SELECT,
-      });
-    res.json({ result: 'success', search_board_list });
+    const search_board = await sequelize.query(query, {
+      type: Sequelize.QueryTypes.SELECT,
+    });
+    
+    
+    res.json({ result: 'success', search_board_list:search_board_list.body });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(400).send({
       msg: '알 수 없는 오류가 발생했습니다. 관리자에게 문의하세요.',
     });
