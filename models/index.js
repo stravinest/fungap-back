@@ -11,6 +11,10 @@ const User = require('./user');
 const Job_recommendation = require('./job_recommendation');
 const Obtion = require('./obtion');
 const Chatlog = require('./chatlog');
+const Game = require('./game');
+const Game_comment = require('./game_comment');
+const Game_like = require('./game_like');
+const Game_count = require('./game_count');
 
 const db = {};
 const sequelize = new Sequelize(
@@ -33,6 +37,10 @@ db.User = User;
 db.Job_recommendation = Job_recommendation;
 db.Obtion = Obtion;
 db.Chatlog = Chatlog;
+db.Game = Game;
+db.Game_comment = Game_comment;
+db.Game_like = Game_like;
+db.Game_count = Game_count;
 
 Board.init(sequelize);
 Celebrity.init(sequelize);
@@ -43,6 +51,10 @@ User.init(sequelize);
 Job_recommendation.init(sequelize);
 Obtion.init(sequelize);
 Chatlog.init(sequelize);
+Game.init(sequelize);
+Game_comment.init(sequelize);
+Game_like.init(sequelize);
+Game_count.init(sequelize);
 
 Board.associate(db);
 Celebrity.associate(db);
@@ -53,5 +65,9 @@ User.associate(db);
 Obtion.associate(db);
 Job_recommendation.associate(db);
 Chatlog.associate(db);
+Game.associate(db);
+Game_comment.associate(db);
+Game_like.associate(db);
+Game_count.associate(db);
 
 module.exports = db;

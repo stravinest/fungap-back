@@ -16,27 +16,27 @@ node {
 
      }
 
-      stage('Unit Test') {
+      // stage('Unit Test') {
 
-      }
+      // }
 
       stage('Build') {
 
-            sh(script: 'docker-compose build app')
+            sh(script: 'sudo docker-compose build app')
 
       }
 
       stage('Tag') {
 
-            sh(script: '''docker tag ${DOCKER_USER_ID}/fungap ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}''') }
+            sh(script: '''sudo docker tag ${DOCKER_USER_ID}/fungap ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}''') }
 
       stage('Push') {
 
-            sh(script: 'docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}') 
+            sh(script: 'sudo docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}') 
 
-            // sh(script: 'docker push ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
+             sh(script: 'sudo docker push ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
 
-            sh(script: 'docker push ${DOCKER_USER_ID}/fungap:latest')
+            sh(script: 'sudo docker push ${DOCKER_USER_ID}/fungap:latest')
 
       }
 

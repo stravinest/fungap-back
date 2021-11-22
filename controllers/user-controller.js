@@ -159,7 +159,9 @@ const login = async (req, res) => {
       });
       return;
     }
-
+    // console.log('유저 체크 패스워드', userCheck.password);
+    // console.log('유저 체크 mbti', userCheck.user_mbti);
+    // console.log('유저 체크', userCheck);
     const authenticate = await bcrypt.compare(password, userCheck.password);
 
     if (authenticate === true) {
@@ -168,12 +170,13 @@ const login = async (req, res) => {
       const token = loginUser(accessToken, refreshToken);
       console.log(userCheck);
       const user = {
-        user_image: userCheck?.dataValues?.user_image,
-        nickname: userCheck?.dataValues?.nickname,
-        user_mbti: userCheck?.dataValues?.user_mbti,
-        user_id: userCheck?.dataValues?.user_id,
-        user_authority: userCheck?.dataValues?.user_authority,
+        user_image: userCheck.user_image,
+        nickname: userCheck.nickname,
+        user_mbti: userCheck.user_mbti,
+        user_id: userCheck.user_id,
+        user_authority: userCheck.user_authority,
       };
+      console.log('유저', user);
       res.json({
         result: 'success',
         token,
