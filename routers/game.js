@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router(); // 라우터라고 선언한다.
-const { gameController } = require('../controllers');
+const { gameController, gameCommController } = require('../controllers');
 const { authenticateJWTall } = require('../middlewares/authenticateJWTall');
 
 ///games/
@@ -30,18 +30,18 @@ router.post('/:game_id/like', authenticateJWTall, gameController.likeGame);
 router.post(
   '/:game_id/comment',
   authenticateJWTall,
-  gameController.writeComment
+  gameCommController.writeComment
 );
 
 router.patch(
   '/:game_id/comment/:game_comment_id',
   authenticateJWTall,
-  gameController.editComment
+  gameCommController.editComment
 );
 
 router.delete(
   '/:game_id/comment/:game_comment_id',
   authenticateJWTall,
-  gameController.deleteComment
+  gameCommController.deleteComment
 );
 module.exports = router;
