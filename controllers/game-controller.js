@@ -1,53 +1,104 @@
 const {
-  Board,
   Comment,
-  User,
-  Like,
-  sequelize,
-  Sequelize,
+  Game_like,
+  Game,
+  Game_comment
+  
 } = require('../models');
-const { getComments } = require('../utils/getComments');
+const { Op } = require('sequelize');
+const { getComments } = require('../utils/getGameComments');
 
-//댓글조회
-const getComment = async (req, res) => {
+const likeGame = async (req, res) => {
   try {
-    const { board_id } = req.params;
-    console.log(board_id);
-    const isBoard = await Board.findOne({ where: { board_id: board_id } });
-    if (!isBoard) {
-      res.status(204).json({
-        result: 'fail',
-        errormessage: '게시글이 없습니다.',
+    const user_id = req.userId;
+    const { game_id } = req.params;
+    console.log('like user', user_id);
+    if (user_id) {
+      const isLike = await Game_like.findOne({
+        where: {
+          [Op.and]: { game_id: game_id, user_id: user_id },
+        },
       });
-      return;
-    }
-    const comments = await getComments(board_id);
-    if (!comments[0]) {
-      console.log('왜여기안걸려?');
-      res.status(204).json({
-        result: 'fail',
-        errormessage: '댓글이 없습니다.',
-      });
+      //isLike 가 있으면 delete 없으면 create
+      if (isLike) {
+        await Game_like.destroy({
+          where: {
+            [Op.and]: { game_id: game_id, user_id: user_id },
+          },
+        });
+        res.status(200).json({ result: 'success', like_state: false });
+      } else {
+        const isGame = await Game.findOne({
+          //찍고자하는 게시물이 있는지 검사
+          where: {
+            game_id: game_id,
+          },
+        });
 
-      return;
+        if (isGame === null) {
+          res
+            .status(400)
+            .json({ result: 'fail', errormessage: '게임이 없습니다.' });
+          return;
+        }
+        await Game_like.create({
+          user_id: user_id,
+          game_id: game_id,
+        });
+        res.status(200).json({ result: 'success', like_state: true });
+      }
+    } else {
+      console.log('여기로 안들어와?');
+      res.status(402).json({ result: 'fail', msg: '로그인이 필요합니다.' });
     }
-    console.log('resutl는', comments);
-    console.log(comments[0].dataValues);
-
-    res.status(200).json({ result: 'success', comments });
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      result: 'fail',
-      errormessage: '댓글목록 호출 실패.',
+    res.status(400).json(() => {
+      result: 'fail';
+      errormessage: '좋아요 변경 실패';
     });
   }
 };
+//댓글조회
+// const getComment = async (req, res) => {
+//   try {
+//     const { game_id } = req.params;
+//     console.log(board_id);
+//     const isBoard = await Board.findOne({ where: { board_id: board_id } });
+//     if (!isBoard) {
+//       res.status(204).json({
+//         result: 'fail',
+//         errormessage: '게시글이 없습니다.',
+//       });
+//       return;
+//     }
+//     const comments = await getComments(board_id);
+//     if (!comments[0]) {
+//       console.log('왜여기안걸려?');
+//       res.status(204).json({
+//         result: 'fail',
+//         errormessage: '댓글이 없습니다.',
+//       });
+
+//       return;
+//     }
+//     console.log('resutl는', comments);
+//     console.log(comments[0].dataValues);
+
+//     res.status(200).json({ result: 'success', comments });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(400).json({
+//       result: 'fail',
+//       errormessage: '댓글목록 호출 실패.',
+//     });
+//   }
+// };
 //댓글등록
-const postComment = async (req, res) => {
+const writeComment = async (req, res) => {
   try {
-    const user_id = req.userId; //임의로 user_id 1이 로그인 하였음
-    const { board_id } = req.params;
+    const user_id = req.userId; 
+    const { game_id } = req.params;
     const { comment } = req.body;
 
     if (!comment) {
@@ -56,13 +107,13 @@ const postComment = async (req, res) => {
       return;
     }
 
-    await Comment.create({
+    await Game_comment.create({
       user_id: user_id,
-      board_id: board_id,
-      comment: comment,
+      game_id: game_id,
+      game_comment: comment,
     });
 
-    const comments = await getComments(board_id);
+    const comments = await getComments(game_id);
     console.log(comments);
     res.status(200).json({ result: 'success', comments });
   } catch (error) {
@@ -77,30 +128,30 @@ const postComment = async (req, res) => {
 const deleteComment = async (req, res) => {
   try {
     const user_id = req.userId;
-    const { board_id, comment_id } = req.params;
-    const isComment = await Comment.findOne({
+    const { game_id, game_comment_id } = req.params;
+    const isComment = await Game_comment.findOne({
       //내가 쓴 comment 인지 확인
-      where: { board_id: board_id, comment_id: comment_id, user_id: user_id },
+      where: { game_id: game_id, game_comment_id: game_comment_id, user_id: user_id },
     });
     if (isComment) {
       console.log(isComment);
       if (isComment.comment_delete_code !== 1) {
         //삭제 된게 아니면
         // //내가 쓴 comment 이면 수정가능
-        await Comment.update(
+        await Game_comment.update(
           //del code 숫자 수정
           {
-            comment_delete_code: 1,
+            game_comment_delete_code: 1,
           },
           {
             where: {
-              board_id: board_id,
-              comment_id: comment_id,
+              game_id: game_id,
+              game_comment_id: game_comment_id,
               user_id: user_id,
             },
           }
         );
-        res.status(200).json({ result: 'success', comment_id });
+        res.status(200).json({ result: 'success', game_comment_id });
       } else {
         res
           .status(204)
@@ -123,15 +174,15 @@ const deleteComment = async (req, res) => {
   }
 };
 //댓글수정
-const patchComment = async (req, res) => {
+const editComment = async (req, res) => {
   try {
     const user_id = req.userId; //임의로 user_id 1이 로그인 하였음
-    const { board_id, comment_id } = req.params;
+    const { game_id, game_comment_id } = req.params;
     const { comment } = req.body;
-    console.log(board_id, comment_id);
-    const isComment = await Comment.findOne({
+    console.log(game_id, game_comment_id);
+    const isComment = await Game_comment.findOne({
       //내가 쓴 comment 인지 확인
-      where: { board_id: board_id, comment_id: comment_id, user_id: user_id },
+      where: { game_id: game_id, game_comment_id: game_comment_id, user_id: user_id },
     });
     if (isComment) {
       //내가 쓴게 맞으면
@@ -139,14 +190,14 @@ const patchComment = async (req, res) => {
       if (isComment.comment_delete_code !== 1) {
         //삭제 된게 아니면
 
-        await Comment.update(
+        await Game_comment.update(
           {
-            comment: comment,
+            game_comment: comment,
           },
           {
             where: {
-              board_id: board_id,
-              comment_id: comment_id,
+              game_id: game_id,
+              game_comment_id: game_comment_id,
               user_id: user_id,
             },
           }
@@ -172,8 +223,9 @@ const patchComment = async (req, res) => {
   }
 };
 module.exports = {
+  likeGame,
   deleteComment,
-  postComment,
-  getComment,
-  patchComment,
+  writeComment,
+  // getComment,
+  editComment,
 };
