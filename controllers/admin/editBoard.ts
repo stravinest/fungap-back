@@ -1,17 +1,13 @@
 import { Request, Response } from 'express';
-import { User, Board } from '../../models';
-import { Reqbodystring } from '../../interface/request';
+import { Board } from '../../models';
+import { IBoard } from '../../interface/board';
 
 const editBoardFunc = async (req: Request, res: Response) => {
   try {
     const userId: number = res.locals.userId;
     const { board_id } = req.params;
-    const {
-      board_title,
-      board_image,
-      board_desc,
-      board_content,
-    }: Reqbodystring = req.body;
+    const { board_title, board_image, board_desc, board_content }: IBoard =
+      req.body;
 
     await Board.update(
       { board_title, board_image, board_desc, board_content },

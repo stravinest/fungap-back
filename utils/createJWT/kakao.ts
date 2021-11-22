@@ -2,14 +2,17 @@ import * as jwt from 'jsonwebtoken';
 import { User } from '../../models';
 import { Op } from 'sequelize';
 import { KakaoProfile } from '../../interface/socialLogin';
+import { IBasicinfo } from '../../interface/socialLogin';
 
 export const jwtKakaoCreate = async (profile: KakaoProfile) => {
-  const basicInfo: object = {
+  const basicInfo: IBasicinfo = {
     email: profile.data?.kakao_account?.email || '',
     nickname: profile.data?.properties.nickname,
     user_image: profile.data?.properties?.profile_image,
-    user_mbti: undefined,
+    user_mbti: '',
     provider: 'kakao',
+    user_authority: '',
+    user_id: Number.MAX_SAFE_INTEGER,
   };
 
   const snsId: string = profile.data?.id || profile.id;

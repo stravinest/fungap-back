@@ -5,14 +5,13 @@ import {
   jwtLocalCreate,
 } from '../utils/createJWT';
 import loginUser from '../utils/setLoginUser';
-import * as jwt from 'jsonwebtoken';
 import { Board, User, Like, Comment, sequelize } from '../models';
-import * as Sequelize from 'sequelize';
 import { Op } from 'sequelize';
 import * as bcrypt from 'bcrypt';
 import { Request, Response, NextFunction } from 'express';
 import { loginSchema } from '../validators/login_validator';
 import { signupSchema } from '../validators/signup_validator';
+import { IResUserinfo } from '../interface/user';
 //카카오
 const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -23,7 +22,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
 
     const token = loginUser(accessToken, refreshToken);
     console.log(token);
-    const user = {
+    const user: IResUserinfo = {
       user_image: basicInfo.user_image,
       nickname: basicInfo.nickname,
       user_mbti: basicInfo.user_mbti,
@@ -50,7 +49,7 @@ const authGoogle = async (req: Request, res: Response, next: NextFunction) => {
       profile
     );
     const token = loginUser(accessToken, refreshToken);
-    const user = {
+    const user: IResUserinfo = {
       user_image: basicInfo.user_image,
       nickname: basicInfo.nickname,
       user_mbti: basicInfo.user_mbti,
@@ -77,7 +76,7 @@ const authNaver = async (req: Request, res: Response, next: NextFunction) => {
       profile
     );
     const token = loginUser(accessToken, refreshToken);
-    const user = {
+    const user: IResUserinfo = {
       user_image: basicInfo.user_image,
       nickname: basicInfo.nickname,
       user_mbti: basicInfo.user_mbti,
@@ -165,7 +164,7 @@ const login = async (req: Request, res: Response) => {
       const [accessToken, refreshToken]: any = await jwtLocalCreate(userCheck);
       const token = loginUser(accessToken, refreshToken);
       console.log(userCheck);
-      const user = {
+      const user: IResUserinfo = {
         user_image: userCheck?.user_image,
         nickname: userCheck?.nickname,
         user_mbti: userCheck?.user_mbti,

@@ -1,15 +1,12 @@
 import { Request, Response } from 'express';
 import { Board } from '../../models';
-import { Reqbodystring } from '../../interface/request';
+import { IBoard } from '../../interface/board';
+
 const writeBoardFunc = async (req: Request, res: Response) => {
   try {
     const userId: number = res.locals.userId;
-    const {
-      board_title,
-      board_image,
-      board_desc,
-      board_content,
-    }: Reqbodystring = req.body;
+    const { board_title, board_image, board_desc, board_content }: IBoard =
+      req.body;
 
     await Board.create({
       user_id: userId,

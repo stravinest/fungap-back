@@ -6,13 +6,12 @@ import * as nodemailer from 'nodemailer';
 import { loginSchema } from '../validators/login_validator';
 import * as ejs from 'ejs';
 import * as path from 'path';
-import { Reqbodystring } from '../interface/request';
 
 let appDir = path.dirname(require.main!.filename);
 
 //이메일 발송
 const sendEmail = async (req: Request, res: Response) => {
-  const { email }: Reqbodystring = req.body;
+  const { email } = req.body;
   const existUserId = await User.findOne({ where: { email } });
   if (!existUserId) {
     res.status(400).send({
@@ -65,9 +64,7 @@ const sendEmail = async (req: Request, res: Response) => {
 //비밀번호 변경
 const changePassword = async (req: Request, res: Response) => {
   try {
-    const { email, password }: Reqbodystring = await loginSchema.validateAsync(
-      req.body
-    );
+    const { email, password } = await loginSchema.validateAsync(req.body);
     const userCheck = await User.findOne({
       where: {
         [Op.and]: { user_delete_code: 0, email: email },

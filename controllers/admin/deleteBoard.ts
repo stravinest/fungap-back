@@ -1,5 +1,4 @@
 import { Board } from '../../models';
-import { User } from '../../models';
 import { Request, Response } from 'express';
 
 const deleteBoardFunc = async (req: Request, res: Response) => {

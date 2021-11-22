@@ -1,14 +1,17 @@
 import * as jwt from 'jsonwebtoken';
 import { User } from '../../models';
 import { Op } from 'sequelize';
-import { NaverProfile } from '../../interface/socialLogin';
+import { NaverProfile, IBasicinfo } from '../../interface/socialLogin';
 
 export const jwtNaverCreate = async (profile: NaverProfile) => {
-  const basicInfo: object = {
+  const basicInfo: IBasicinfo = {
     email: profile?.response?.email,
     nickname: profile?.response?.nickname,
     user_image: profile?.response?.profile_image,
+    user_mbti: '',
     provider: 'naver',
+    user_authority: '',
+    user_id: Number.MAX_SAFE_INTEGER,
   };
 
   const snsId: string = profile?.response?.id;

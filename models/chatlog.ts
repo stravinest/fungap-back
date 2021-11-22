@@ -2,8 +2,6 @@ import * as Sequelize from 'sequelize';
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from './sequelize';
 import { dbType } from '.';
-import User from './user';
-import Board from './board';
 
 class Chatlog extends Model {
   public chat_id!: number;
@@ -31,11 +29,6 @@ Chatlog.init(
     message: {
       type: Sequelize.STRING,
       allowNull: false,
-    },
-    comment_delete_code: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      defaultValue: 0,
     },
   },
   {

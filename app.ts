@@ -5,12 +5,13 @@ import * as fs from 'fs';
 import * as http from 'http';
 import * as https from 'https';
 import * as dotenv from 'dotenv';
+import socketIO from './socket';
 
 dotenv.config();
 const app = express();
 
 import { sequelize } from './models';
-import { cookie } from 'request';
+
 import * as cookieParser from 'cookie-parser';
 
 app.use(cookieParser());
@@ -57,6 +58,8 @@ Router.get('/', (req: Request, res: Response) => {
   res.render('index');
 });
 
+const httpServer = http.createServer(app);
+
 //swagger
 // app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
@@ -68,7 +71,10 @@ Router.get('/', (req: Request, res: Response) => {
 // http.createServer(app).listen(3000);
 // https.createServer(options, app).listen(443);
 
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`listening at http://localhost:${port}`);
 });
+
+socketIO(httpServer);
+
 export default app;

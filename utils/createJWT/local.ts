@@ -1,10 +1,10 @@
 import * as jwt from 'jsonwebtoken';
 import { User } from '../../models';
 import { Op } from 'sequelize';
-import { LocalProfile } from '../../interface/socialLogin';
+import { LocalProfile, IBasicinfo } from '../../interface/socialLogin';
 
 export const jwtLocalCreate = async (profile: LocalProfile) => {
-  const basicInfo: object = {
+  const basicInfo: IBasicinfo = {
     user_id: profile?.dataValues?.user_id,
     email: profile?.dataValues?.email,
     nickname: profile?.dataValues?.nickname,

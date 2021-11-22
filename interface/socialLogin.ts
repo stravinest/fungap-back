@@ -1,3 +1,13 @@
+export interface IBasicinfo {
+  email: string;
+  nickname: string;
+  user_image: string;
+  user_mbti: string;
+  provider: string;
+  user_authority: string;
+  user_id: number;
+}
+
 export interface GoogleProfile {
   sub: number;
   name: string;
