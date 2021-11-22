@@ -5,12 +5,7 @@ const {
   Game,
   Game_comment,
 } = require('../models');
-const {
-  PopBoardHome,
-  NewBoardHome,
-  NewBoardHomeLogin,
-  PopBoardHomeLogin,
-} = require('../utils/getQuery');
+const { gameAllLogin, gameAll } = require('../utils/getGameQuery');
 const { Op } = require('sequelize');
 
 //전체게임조회
@@ -20,17 +15,11 @@ const getGameAll = async (req, res) => {
     console.log('유저로그인', user_id);
 
     if (user_id) {
-      const new_board_list = await NewBoardHomeLogin(user_id);
-      const popularity_board_list = await PopBoardHomeLogin(user_id);
-      res
-        .status(200)
-        .json({ result: 'success', new_board_list, popularity_board_list });
+      const game_list = await gameAllLogin(user_id);
+      res.status(200).json({ result: 'success', game_list });
     } else {
-      const new_board_list = await NewBoardHome();
-      const popularity_board_list = await PopBoardHome();
-      res
-        .status(201)
-        .json({ result: 'success', new_board_list, popularity_board_list });
+      const game_list = await gameAll();
+      res.status(201).json({ result: 'success', game_list });
     }
   } catch (error) {
     console.error(error);
@@ -41,20 +30,20 @@ const getGameAll = async (req, res) => {
   }
 };
 
-//전체게임조회
+//세부게임조회
 const getGameDetail = async (req, res) => {
   try {
     const user_id = req.userId;
     console.log('유저로그인', user_id);
 
     if (user_id) {
-      const new_board_list = await NewBoardHomeLogin(user_id);
+      const new_board_list = await GameDetailLogin(user_id);
       const popularity_board_list = await PopBoardHomeLogin(user_id);
       res
         .status(200)
         .json({ result: 'success', new_board_list, popularity_board_list });
     } else {
-      const new_board_list = await NewBoardHome();
+      const new_board_list = await GameDetail();
       const popularity_board_list = await PopBoardHome();
       res
         .status(201)
@@ -303,7 +292,6 @@ const likeGame = async (req, res) => {
     });
   }
 };
-
 
 module.exports = {
   getGameAll,
