@@ -13,7 +13,7 @@ router.use('/user', [userRouter]);
 router.use('/auth', [authRouter]);
 router.use('/mypage', [mypageRouter]);
 router.use('/admin', [adminRouter]);
-// router.use('/comment', [commRouter]);
+// router.use('/games', [gameRouter]);
 router.use('/board', [boardRouter]);
 router.use('/comment', [commRouter]);
 router.use('/mbti', [mbtiRouter]);
