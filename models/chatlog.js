@@ -18,10 +18,6 @@ module.exports = class Chatlog extends Sequelize.Model {
           type: Sequelize.INTEGER,
           allowNull: false,
         },
-        nickname: {
-          type: Sequelize.STRING(40),
-          allowNull: false,
-        },
         message: {
           type: Sequelize.STRING,
           allowNull: false,
@@ -31,7 +27,7 @@ module.exports = class Chatlog extends Sequelize.Model {
         sequelize,
         timestamps: true,
         modelName: 'Chatlog',
-        tableName: 'chatlog',
+        tableName: 'chatlogs',
         charset: 'utf8',
         collate: 'utf8_general_ci',
       }

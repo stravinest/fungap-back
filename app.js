@@ -9,6 +9,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const { sequelize } = require('./models');
 const SocketIO = require('./socket');
+const { Chatlog } = require('./models');
 
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
@@ -65,11 +66,12 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 // };
 // http.createServer(app).listen(3000);
 // https.createServer(options, app).listen(443);
+const httpServer = http.createServer(app);
 
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`listening at http://localhost:${port}`);
 });
-const httpServer = http.createServer(app);
+
 SocketIO(httpServer, app);
 
 module.exports = app;
