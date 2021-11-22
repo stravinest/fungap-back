@@ -2,7 +2,7 @@ const { sequelize, Sequelize } = require('../models');
 
 //전체 게임 조회 로그인
 exports.gameAllLogin = async function (user_id) {
-  const query = `select t1.game_id, t1.game_title,t1.like_count, t2.nickname,t2.participaition_count t2.like_state from
+  const query = `select t1.game_id, t1.game_title,t1.like_count, t2.nickname, t2.participation_count, t2.like_state from
   (SELECT g.game_id,g.game_title,count(l.game_id) as like_count
    
     FROM games AS g
@@ -38,7 +38,7 @@ exports.gameAllLogin = async function (user_id) {
 
 //전체게임 조회 비로그인
 exports.gameAll = async function () {
-  const query = `select t1.game_id, t1.game_title,t1.like_count, t2.nickname,t2.participaition_count t2.like_state from
+  const query = `select t1.game_id, t1.game_title,t1.like_count, t2.nickname, t2.participation_count, t2.like_state from
   (SELECT g.game_id,g.game_title,count(l.game_id) as like_count
    
     FROM games AS g
@@ -71,9 +71,11 @@ exports.gameAll = async function () {
 };
 
 //상세 게임 조회 로그인
-exports.gameAllLogin = async function (user_id) {
-  const query = `select t1.game_id, t1.game_title,t1.like_count, t2.nickname,t2.participaition_count t2.like_state from
-  (SELECT g.game_id,g.game_title,count(l.game_id) as like_count
+exports.gameDetailLogin = async function (user_id, game_id) {
+  const query = `select t1.game_id, t1.game_title,t1.game_desc, t1.like_count, t1.createdAt, t2.nickname, t2.participation_count, t2.like_state,
+  t2.nickname,t2.user_image,t2.user_mbti 
+  
+  from (SELECT g.game_id,g.game_desc,g.game_title,g.createdAt,count(l.game_id) as like_count
    
     FROM games AS g
     left OUTER JOIN game_likes AS l
@@ -83,12 +85,18 @@ exports.gameAllLogin = async function (user_id) {
     ORDER BY g.createdAt DESC) as t1
     join
     
-  (select g.game_id,a.nickname, count(c.game_id) as participation_count,
+  (select g.game_id,a.nickname,a.user_image,a.user_mbti,count(c.game_id) as participation_count,
   
   case l.game_id
   when g.game_id then 'true'
   else 'false'
-  end as like_state
+  end as like_state,
+
+  case c.game_id
+  when g.game_id then c.game_quest
+  else 'false'
+  end as game_state
+  
   FROM games AS g
   JOIN users AS a
   ON (g.user_id = a.user_id AND a.user_delete_code=0)
@@ -98,7 +106,9 @@ exports.gameAllLogin = async function (user_id) {
   on g.game_id = c.game_id
   group by g.game_id
   ORDER BY g.createdAt DESC) as t2
-  on t1.game_id = t2.game_id`;
+  on t1.game_id = t2.game_id
+  WHERE  t1.game_id=${game_id}
+  `;
 
   return await sequelize.query(query, {
     type: Sequelize.QueryTypes.SELECT,
@@ -107,9 +117,11 @@ exports.gameAllLogin = async function (user_id) {
 };
 
 //상세게임 조회 비로그인
-exports.gameAll = async function () {
-  const query = `select t1.game_id, t1.game_title,t1.like_count, t2.nickname,t2.participaition_count t2.like_state from
-  (SELECT g.game_id,g.game_title,count(l.game_id) as like_count
+exports.gameDetail = async function (game_id) {
+  const query = `select t1.game_id, t1.game_title,t1.game_desc, t1.like_count, t1.createdAt, t2.nickname, t2.participation_count, t2.like_state,
+  t2.nickname,t2.user_image,t2.user_mbti 
+  
+  from (SELECT g.game_id,g.game_desc,g.game_title,g.createdAt,count(l.game_id) as like_count
    
     FROM games AS g
     left OUTER JOIN game_likes AS l
@@ -119,12 +131,18 @@ exports.gameAll = async function () {
     ORDER BY g.createdAt DESC) as t1
     join
     
-  (select g.game_id,a.nickname, count(c.game_id) as participation_count,
+  (select g.game_id,a.nickname,a.user_image,a.user_mbti,count(c.game_id) as participation_count,
   
   case g.game_id
-  when '말안됨' then 'true'
+  when '말안되는값' then 'true'
   else 'false'
-  end as like_state
+  end as like_state,
+
+  case c.game_id
+  when g.game_id then c.game_quest
+  else 'false'
+  end as game_state
+  
   FROM games AS g
   JOIN users AS a
   ON (g.user_id = a.user_id AND a.user_delete_code=0)
@@ -132,10 +150,100 @@ exports.gameAll = async function () {
   on g.game_id = c.game_id
   group by g.game_id
   ORDER BY g.createdAt DESC) as t2
-  on t1.game_id = t2.game_id`;
+  on t1.game_id = t2.game_id
+  WHERE  t1.game_id=${game_id}
+  `;
 
   return await sequelize.query(query, {
     type: Sequelize.QueryTypes.SELECT,
   });
   // return new_board_list;
+};
+
+//상세게임 조회 quest1  전체 카운트
+exports.gameQuest1All = async function (game_id) {
+  const query = `SELECT g.game_quest1,count(g.game_id) as count
+  
+  FROM games AS g
+  left OUTER JOIN game_counts AS c
+  ON g.game_id = c.game_id
+  WHERE g.game_delete_code = 0 and c.game_quest = 1 and g.game_id = ${game_id}
+  GROUP BY g.game_id
+  ORDER BY g.createdAt DESC
+  
+  `;
+
+  return await sequelize.query(query, {
+    type: Sequelize.QueryTypes.SELECT,
+  });
+  // return new_board_list;
+};
+
+//상세게임 조회 quest1
+exports.gameQuest1 = async function (game_id) {
+  const query = `SELECT c.user_mbti,count(c.user_mbti) as count
+  
+  FROM game_counts AS c
+  left OUTER JOIN games AS g
+  ON c.game_id = g.game_id
+  WHERE g.game_delete_code = 0 and c.game_quest = 1 and c.game_id = ${game_id}
+  GROUP BY c.user_mbti
+  ORDER BY g.createdAt DESC
+  
+  `;
+
+  return await sequelize.query(query, {
+    type: Sequelize.QueryTypes.SELECT,
+  });
+  // return new_board_list;
+};
+
+//상세게임 조회 quest2  전체 카운트
+exports.gameQuest2All = async function (game_id) {
+  const query = `SELECT g.game_quest2,count(g.game_id) as count
+  
+  FROM games AS g
+  left OUTER JOIN game_counts AS c
+  ON g.game_id = c.game_id
+  WHERE g.game_delete_code = 0 and c.game_quest = 2 and g.game_id = ${game_id}
+  GROUP BY g.game_id
+  ORDER BY g.createdAt DESC`;
+
+  return await sequelize.query(query, {
+    type: Sequelize.QueryTypes.SELECT,
+  });
+  // return new_board_list;
+};
+
+//상세게임 조회 quest2
+exports.gameQuest2 = async function (game_id) {
+  const query = `SELECT c.user_mbti,g.game_title,count(c.user_mbti) as count
+  
+  FROM game_counts AS c
+  left OUTER JOIN games AS g
+  ON c.game_id = g.game_id
+  WHERE g.game_delete_code = 0 and c.game_quest = 2 and c.game_id = ${game_id}
+  GROUP BY c.user_mbti
+  ORDER BY g.createdAt DESC
+  
+  `;
+
+  return await sequelize.query(query, {
+    type: Sequelize.QueryTypes.SELECT,
+  });
+  // return new_board_list;
+};
+
+exports.gameCommentsAll = async function (game_id) {
+  const queryComment = `
+    SELECT u.user_image,u.user_id,c.game_id,u.user_mbti,u.nickname,c.game_comment,c.game_comment_id
+    FROM game_comments AS c
+    left OUTER JOIN users AS u
+    ON c.user_id = u.user_id
+    WHERE (c.game_comment_delete_code = 0 ANd c.game_id=${game_id})
+    ORDER BY c.createdAt DESC`;
+
+  return await sequelize.query(queryComment, {
+    type: Sequelize.QueryTypes.SELECT,
+  });
 };

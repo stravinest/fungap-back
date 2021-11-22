@@ -1,11 +1,18 @@
+const { Game_count, User, Game_like, Game } = require('../models');
 const {
-  Game_count,
-  User,
-  Game_like,
-  Game,
-  Game_comment,
-} = require('../models');
-const { gameAllLogin, gameAll } = require('../utils/getGameQuery');
+  gameAllLogin,
+  gameAll,
+
+  gameDetailLogin,
+  gameDetail,
+
+  gameQuest1,
+  gameQuest1All,
+  gameQuest2,
+  gameQuest2All,
+
+  gameCommentsAll,
+} = require('../utils/getGameQuery');
 const { Op } = require('sequelize');
 
 //전체게임조회
@@ -34,20 +41,80 @@ const getGameAll = async (req, res) => {
 const getGameDetail = async (req, res) => {
   try {
     const user_id = req.userId;
+    const { game_id } = req.params;
     console.log('유저로그인', user_id);
 
     if (user_id) {
-      const new_board_list = await GameDetailLogin(user_id);
-      const popularity_board_list = await PopBoardHomeLogin(user_id);
+      const game_array = await gameDetailLogin(user_id, game_id);
+      const game = game_array[0];
+
+      const game_quest1_mbti = await gameQuest1(game_id);
+      const game_quest1_all = await gameQuest1All(game_id);
+      // console.log(game_quest1);
+      const mbti = new Object();
+      for (let i = 0; i < game_quest1_mbti.length; i++) {
+        mbti[game_quest1_mbti[i].user_mbti] = game_quest1_mbti[i].count;
+      }
+      const game_quest1 = {
+        ...mbti,
+        ...game_quest1_all[0],
+      };
+
+      const game_quest2_mbti = await gameQuest2(game_id);
+      const game_quest2_all = await gameQuest2All(game_id);
+      console.log(game_quest2_mbti);
+      console.log(game_quest2_all);
+
+      const mbti2 = new Object();
+      for (let i = 0; i < game_quest2_mbti.length; i++) {
+        mbti2[game_quest2_mbti[i].user_mbti] = game_quest2_mbti[i].count;
+      }
+      const game_quest2 = {
+        ...mbti2,
+        ...game_quest2_all[0],
+      };
+
+      const comments = await gameCommentsAll(game_id);
+
       res
         .status(200)
-        .json({ result: 'success', new_board_list, popularity_board_list });
+        .json({ result: 'success', game, game_quest1, game_quest2, comments });
     } else {
-      const new_board_list = await GameDetail();
-      const popularity_board_list = await PopBoardHome();
+      //비로그인시
+      const game_array = await gameDetail(game_id);
+      const game = game_array[0];
+
+      const game_quest1_mbti = await gameQuest1(game_id);
+      const game_quest1_all = await gameQuest2All(game_id);
+
+      const mbti = new Object();
+      for (let i = 0; i < game_quest1_mbti.length; i++) {
+        mbti[game_quest1_mbti[i].user_mbti] = game_quest1_mbti[i].count;
+      }
+      const game_quest1 = {
+        ...mbti,
+        ...game_quest1_all[0],
+      };
+
+      const game_quest2_mbti = await gameQuest2(game_id);
+      const game_quest2_all = await gameQuest2All(game_id);
+      console.log(game_quest2_mbti);
+      console.log(game_quest2_all);
+
+      const mbti2 = new Object();
+      for (let i = 0; i < game_quest2_mbti.length; i++) {
+        mbti2[game_quest2_mbti[i].user_mbti] = game_quest2_mbti[i].count;
+      }
+      const game_quest2 = {
+        ...mbti2,
+        ...game_quest2_all[0],
+      };
+
+      const comments = await gameCommentsAll(game_id);
+
       res
         .status(201)
-        .json({ result: 'success', new_board_list, popularity_board_list });
+        .json({ result: 'success', game, game_quest1, game_quest2, comments });
     }
   } catch (error) {
     console.error(error);
