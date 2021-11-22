@@ -5,6 +5,12 @@ const {
   Game,
   Game_comment,
 } = require('../models');
+const {
+  PopBoardHome,
+  NewBoardHome,
+  NewBoardHomeLogin,
+  PopBoardHomeLogin,
+} = require('../utils/getQuery');
 const { Op } = require('sequelize');
 const { getComments } = require('../utils/getGameComments');
 
