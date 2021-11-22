@@ -72,10 +72,10 @@ exports.gameAll = async function () {
 
 //상세 게임 조회 로그인
 exports.gameDetailLogin = async function (user_id, game_id) {
-  const query = `select t1.game_id, t1.game_title,t1.game_desc, t1.like_count, t1.createdAt, t2.nickname, t2.participation_count, t2.like_state,
+  const query = `select t1.game_id, t1.game_title,t1.game_desc,t1.game_quest1,t1.game_quest2, t1.like_count, t1.createdAt, t2.nickname, t2.participation_count, t2.like_state,
   t2.nickname,t2.user_image,t2.user_mbti 
   
-  from (SELECT g.game_id,g.game_desc,g.game_title,g.createdAt,count(l.game_id) as like_count
+  from (SELECT g.game_id,g.game_desc,g.game_quest1,g.game_quest2,g.game_title,g.createdAt,count(l.game_id) as like_count
    
     FROM games AS g
     left OUTER JOIN game_likes AS l
@@ -118,10 +118,10 @@ exports.gameDetailLogin = async function (user_id, game_id) {
 
 //상세게임 조회 비로그인
 exports.gameDetail = async function (game_id) {
-  const query = `select t1.game_id, t1.game_title,t1.game_desc, t1.like_count, t1.createdAt, t2.nickname, t2.participation_count, t2.like_state,
+  const query = `select t1.game_id, t1.game_title,t1.game_desc,t1.game_quest1,t1.game_quest2, t1.like_count, t1.createdAt, t2.nickname, t2.participation_count, t2.like_state,
   t2.nickname,t2.user_image,t2.user_mbti 
   
-  from (SELECT g.game_id,g.game_desc,g.game_title,g.createdAt,count(l.game_id) as like_count
+  from (SELECT g.game_id,g.game_desc,g.game_quest1,g.game_quest2,g.game_title,g.createdAt,count(l.game_id) as like_count
    
     FROM games AS g
     left OUTER JOIN game_likes AS l
@@ -162,7 +162,7 @@ exports.gameDetail = async function (game_id) {
 
 //상세게임 조회 quest1  전체 카운트
 exports.gameQuest1All = async function (game_id) {
-  const query = `SELECT g.game_quest1,count(g.game_id) as count
+  const query = `SELECT count(g.game_id) as count
   
   FROM games AS g
   left OUTER JOIN game_counts AS c
@@ -200,7 +200,7 @@ exports.gameQuest1 = async function (game_id) {
 
 //상세게임 조회 quest2  전체 카운트
 exports.gameQuest2All = async function (game_id) {
-  const query = `SELECT g.game_quest2,count(g.game_id) as count
+  const query = `SELECT count(g.game_id) as count
   
   FROM games AS g
   left OUTER JOIN game_counts AS c
