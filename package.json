@@ -42,6 +42,8 @@
     "request-ip": "^2.1.3",
     "sequelize": "^6.8.0",
     "sequelize-cli": "^6.2.0",
+    "socket.io": "^4.4.0",
+    "socket.io-sequelize": "^1.0.1",
     "swagger-autogen": "^2.12.6",
     "swagger-ui-express": "^4.1.6"
   }
