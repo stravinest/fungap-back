@@ -72,7 +72,7 @@ exports.gameAll = async function () {
 
 //상세 게임 조회 로그인
 exports.gameDetailLogin = async function (user_id, game_id) {
-  const query = `select t1.game_id, t1.game_title,t1.game_desc,t1.game_quest1,t1.game_quest2, t1.like_count, t1.createdAt, t2.nickname, t2.participation_count, t2.like_state,
+  const query = `select t1.game_id, t1.game_title,t1.game_desc,t1.game_quest1,t1.game_quest2, t1.like_count, t1.createdAt,t2.game_state, t2.nickname, t2.participation_count, t2.like_state,
   t2.nickname,t2.user_image,t2.user_mbti 
   
   from (SELECT g.game_id,g.game_desc,g.game_quest1,g.game_quest2,g.game_title,g.createdAt,count(l.game_id) as like_count
@@ -118,7 +118,7 @@ exports.gameDetailLogin = async function (user_id, game_id) {
 
 //상세게임 조회 비로그인
 exports.gameDetail = async function (game_id) {
-  const query = `select t1.game_id, t1.game_title,t1.game_desc,t1.game_quest1,t1.game_quest2, t1.like_count, t1.createdAt, t2.nickname, t2.participation_count, t2.like_state,
+  const query = `select t1.game_id, t1.game_title,t1.game_desc,t1.game_quest1,t1.game_quest2, t1.like_count, t1.createdAt,t2.game_state, t2.nickname, t2.participation_count, t2.like_state,
   t2.nickname,t2.user_image,t2.user_mbti 
   
   from (SELECT g.game_id,g.game_desc,g.game_quest1,g.game_quest2,g.game_title,g.createdAt,count(l.game_id) as like_count
@@ -139,7 +139,7 @@ exports.gameDetail = async function (game_id) {
   end as like_state,
 
   case c.game_id
-  when g.game_id then c.game_quest
+  when '말안되는값' then c.game_quest
   else 'false'
   end as game_state
   

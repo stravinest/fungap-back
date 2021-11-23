@@ -1,39 +1,30 @@
 const express = require('express');
 const router = express.Router();
-
 const { authenticateJWT } = require('../middlewares/authenticateJWT');
 const { checkAuthority } = require('../middlewares/checkAuthority');
-const {
-  getBoard,
-  writeBoard,
-  editBoard,
-  deleteBoard,
-  detailBoard,
-  getUser,
-  getComment
-} = require('../controllers/admin');
+const { adminController } = require('../controllers');
 
-router.get('/board', authenticateJWT, checkAuthority, getBoard);
-router.post('/board/write', authenticateJWT, checkAuthority, writeBoard);
+router.get('/board', authenticateJWT, checkAuthority, adminController.getBoardFunc);
+router.post('/board/write', authenticateJWT, checkAuthority, adminController.writeBoardFunc);
 router.patch(
   '/board/:board_id/edit',
   authenticateJWT,
   checkAuthority,
-  editBoard
+  adminController.editBoardFunc
 );
 router.delete(
   '/board/:board_id/delete',
   authenticateJWT,
   checkAuthority,
-  deleteBoard
+  adminController.deleteBoardFunc
 );
 router.get(
   '/board/:board_id/detail',
   authenticateJWT,
   checkAuthority,
-  detailBoard
+  adminController.detailBoardFunc
 );
-router.get('/user', authenticateJWT, checkAuthority, getUser);
-router.post('/user/:user_id/comment', authenticateJWT, checkAuthority, getComment);
+router.get('/user', authenticateJWT, checkAuthority, adminController.getUserFunc);
+router.post('/user/:user_id/comment', authenticateJWT, checkAuthority, adminController.getCommentFunc);
 
 module.exports = router;

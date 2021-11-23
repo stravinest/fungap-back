@@ -267,10 +267,44 @@ const selectGame = async (req, res) => {
     const user_id = req.userId;
     const { game_id } = req.params;
     const { game_quest } = req.body;
+
+    //독립적임 promise all 해주자
+    const isGame = await Game_count.findOne({
+      where: { user_id: user_id, game_id: game_id },
+    });
+
     const isUser = await User.findOne({
       //내가 쓴 game 인지 확인
       where: { user_id: user_id },
     });
+
+    if (isGame) {
+      //만약 이미 투표를 했었더라면
+      if (isGame.game_quest == game_quest) {
+        //똑같은 투표가 있을때
+        await Game_count.destroy({
+          where: { user_id: user_id, game_id: game_id, game_quest: game_quest },
+        });
+        res
+          .status(200)
+          .json({ result: 'success', errormessage: '기존투표 제거' });
+      } else {
+        //다른 투표를 했을때
+        await Game_count.update(
+          {
+            game_quest: game_quest,
+          },
+          {
+            where: { user_id: user_id, game_id: game_id },
+          }
+        );
+        res
+          .status(200)
+          .json({ result: 'success', errormessage: '기존투표 제거' });
+      }
+      return;
+    }
+
     if (!isUser) {
       res
         .status(400)
