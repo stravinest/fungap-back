@@ -6,6 +6,7 @@ const mypageController = require('./mypage-controller');
 const mbtiController = require('./mbti-controller');
 const gameController = require('./game-controller');
 const gameCommController = require('./game-comment-controller');
+const adminController = require('./admin-controller')
 // const univBoardController = require('./univ-board-controller');
 // const utilController = require('./util-controller');
 
@@ -18,6 +19,7 @@ module.exports = {
   mbtiController,
   gameController,
   gameCommController,
+  adminController,
   // freeBoardController,
   // univBoardController,
   // utilController,
