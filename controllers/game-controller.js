@@ -14,6 +14,7 @@ const {
   gameCommentsAll,
 } = require('../utils/getGameQuery');
 const { Op } = require('sequelize');
+const { getComments } = require('../utils/getGameComments');
 
 //전체게임조회
 const getGameAll = async (req, res) => {
@@ -50,6 +51,7 @@ const getGameDetail = async (req, res) => {
 
       const game_quest1_mbti = await gameQuest1(game_id);
       const game_quest1_all = await gameQuest1All(game_id);
+
       if (!game_quest1_all) {
         console.log('여기');
       }
@@ -75,7 +77,7 @@ const getGameDetail = async (req, res) => {
         ...game_quest2_all[0],
       };
       console.log(game_quest2_all);
-      const comments = await gameCommentsAll(game_id);
+      const comments = await getComments(game_id);
 
       res
         .status(200)
@@ -87,7 +89,7 @@ const getGameDetail = async (req, res) => {
 
       const game_quest1_mbti = await gameQuest1(game_id);
       const game_quest1_all = await gameQuest2All(game_id);
-
+      console.log('게임퀘스트', game_quest1_mbti);
       const mbti = new Object();
       for (let i = 0; i < game_quest1_mbti.length; i++) {
         mbti[game_quest1_mbti[i].user_mbti] = game_quest1_mbti[i].count;
@@ -110,7 +112,7 @@ const getGameDetail = async (req, res) => {
         ...game_quest2_all[0],
       };
 
-      const comments = await gameCommentsAll(game_id);
+      const comments = await getComments(game_id);
 
       res
         .status(201)
