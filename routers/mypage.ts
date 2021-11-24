@@ -17,4 +17,4 @@ router.delete('/delete', authenticateJWT, mypageController.deleteUserInfo);
 
 router.get('/liked', authenticateJWT, mypageController.likedBoardList);
 
-module.exports = router;
+export default router;
