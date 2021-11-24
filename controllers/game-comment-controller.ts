@@ -32,9 +32,9 @@ const writeComment = async (req:Request, res:Response) => {
   }
 };
 //댓글삭제
-const deleteComment = async (req, res) => {
+const deleteComment = async (req:Request, res:Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     const { game_id, game_comment_id } = req.params;
     const isComment = await Game_comment.findOne({
       //내가 쓴 comment 인지 확인
@@ -85,9 +85,9 @@ const deleteComment = async (req, res) => {
   }
 };
 //댓글수정
-const editComment = async (req, res) => {
+const editComment = async (req:Request, res:Response) => {
   try {
-    const user_id = req.userId; //임의로 user_id 1이 로그인 하였음
+    const user_id = res.locals.userId; //임의로 user_id 1이 로그인 하였음
     const { game_id, game_comment_id } = req.params;
     const { comment } = req.body;
     console.log(game_id, game_comment_id);

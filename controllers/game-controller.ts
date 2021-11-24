@@ -42,30 +42,37 @@ const getGameDetail = async (req:Request, res:Response) => {
     const user_id = res.locals.userId;
     const { game_id } = req.params;
     console.log('유저로그인', user_id);
+    type Objtype={
+      [index:string]:string|number
+    }
 
     if (user_id) {
       const game_array = await gameDetailLogin(Number(user_id), Number(game_id));
       const game = game_array[0];
       // let game_quest1_mbti: Game_quest1[];
-      const game_quest1_mbti: Array<Game_quest1> = await gameQuest1(Number(game_id));
+      const game_quest1_mbti:any = await gameQuest1(Number(game_id));
       const game_quest1_all = await gameQuest1All(Number(game_id));
       if (!game_quest1_all) {
         console.log('여기');
       }
       console.log(game_quest1_all[0]);
-      const mbti = new Object();
+
+      const mbti:Objtype={};
       for (let i = 0; i < game_quest1_mbti.length; i++) {
-        mbti[game_quest1_mbti[i].user_mbti] = game_quest1_mbti[i].count;
+        if( game_quest1_mbti[i].user_mbti !==undefined &&  game_quest1_mbti[i].count !==undefined){
+          mbti[game_quest1_mbti[i].user_mbti] = game_quest1_mbti[i].count;
+        }
+        
       }
       const game_quest1 = {
         ...mbti,
         ...game_quest1_all[0],
       };
 
-      const game_quest2_mbti:Array<Game_quest1> = await gameQuest2(Number(game_id));
+      const game_quest2_mbti:any = await gameQuest2(Number(game_id));
       const game_quest2_all = await gameQuest2All(Number(game_id));
 
-      const mbti2 = new Object();
+      const mbti2 :Objtype={};
       for (let i = 0; i < game_quest2_mbti.length; i++) {
         mbti2[game_quest2_mbti[i].user_mbti] = game_quest2_mbti[i].count;
       }
@@ -84,10 +91,10 @@ const getGameDetail = async (req:Request, res:Response) => {
       const game_array = await gameDetail(Number(game_id));
       const game = game_array[0];
 
-      const game_quest1_mbti:Array<Game_quest1> = await gameQuest1(Number(game_id));
+      const game_quest1_mbti:any = await gameQuest1(Number(game_id));
       const game_quest1_all = await gameQuest2All(Number(game_id));
 
-      const mbti = new Object();
+      const mbti :Objtype={};
       for (let i = 0; i < game_quest1_mbti.length; i++) {
         mbti[game_quest1_mbti[i].user_mbti] = game_quest1_mbti[i].count;
       }
@@ -96,11 +103,11 @@ const getGameDetail = async (req:Request, res:Response) => {
         ...game_quest1_all[0],
       };
 
-      const game_quest2_mbti:Array<Game_quest1> = await gameQuest2(Number(game_id));
+      const game_quest2_mbti:any = await gameQuest2(Number(game_id));
       const game_quest2_all = await gameQuest2All(Number(game_id));
       console.log(game_quest2_all[0]);
 
-      const mbti2 = new Object();
+      const mbti2 :Objtype={};
       for (let i = 0; i < game_quest2_mbti.length; i++) {
         mbti2[game_quest2_mbti[i].user_mbti] = game_quest2_mbti[i].count;
       }

@@ -17,7 +17,7 @@ const getNewAuth = async function (refresh_token: string) {
       provider: info.provider,
     };
     console.log(basicInfo);
-    const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET, {
+    const accessToken = jwt.sign(basicInfo, process.env.JWT_SECRET!, {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,
     });
     return {

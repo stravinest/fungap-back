@@ -7,8 +7,8 @@ import { Request, Response, NextFunction } from 'express';
 const client = new Client({
   node: process.env.elastic_node,
   auth: {
-    username: process.env.elastic_username,
-    password: process.env.elastic_password,
+    username: process.env.elastic_username!,
+    password: process.env.elastic_password!,
    // log: 'trace',
   },
 });
@@ -41,7 +41,7 @@ const homeSearchFunc = async (req:Request, res:Response) => {
     }
 
     const search_board_list = board_list.body.hits.hits.map(
-      (board) => board._source
+      (board:any) => board._source
     );
 
     res.json({ result: 'success', search_board_list: search_board_list });
@@ -53,4 +53,4 @@ const homeSearchFunc = async (req:Request, res:Response) => {
   }
 };
 
-export{ homeSearchFunc}
+export{ homeSearchFunc};
