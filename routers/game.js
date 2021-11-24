@@ -7,8 +7,18 @@ const { authenticateJWTall } = require('../middlewares/authenticateJWTall');
 //전체게임조회
 router.get('/', authenticateJWTall, gameController.getGameAll);
 
+router.get('/view', authenticateJWTall, gameController.getGameAllView);
+
+router.get('/popularity', authenticateJWTall, gameController.getGameAllPop);
+
 //게임 상세조회
 router.get('/:game_id', authenticateJWTall, gameController.getGameDetail);
+//게임 상세 댓글 조회
+router.get(
+  '/:game_id/comment',
+  authenticateJWTall,
+  gameController.getGameComment
+);
 
 //game 생성
 router.post('/write', authenticateJWTall, gameController.writeGame);

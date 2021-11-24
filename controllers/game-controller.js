@@ -2,6 +2,10 @@ const { Game_count, User, Game_like, Game } = require('../models');
 const {
   gameAllLogin,
   gameAll,
+  gameAllViewLogin,
+  gameAllView,
+  gameAllPopLogin,
+  gameAllPop,
 
   gameDetailLogin,
   gameDetail,
@@ -16,7 +20,7 @@ const {
 const { Op } = require('sequelize');
 const { getComments } = require('../utils/getGameComments');
 
-//전체게임조회
+//전체게임조회(최신순)
 const getGameAll = async (req, res) => {
   try {
     const user_id = req.userId;
@@ -37,6 +41,48 @@ const getGameAll = async (req, res) => {
     });
   }
 };
+//전체게임조회(조회수순)
+const getGameAllView = async (req, res) => {
+  try {
+    const user_id = req.userId;
+    console.log('유저로그인', user_id);
+
+    if (user_id) {
+      const game_list = await gameAllViewLogin(user_id);
+      res.status(200).json({ result: 'success', game_list });
+    } else {
+      const game_list = await gameAllView();
+      res.status(201).json({ result: 'success', game_list });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(400).json(() => {
+      result: 'fail';
+      errormesssage: '게시글 목록을 불러오는데 실패하였습니다.';
+    });
+  }
+};
+//전체게임조회(인기순)
+const getGameAllPop = async (req, res) => {
+  try {
+    const user_id = req.userId;
+    console.log('유저로그인', user_id);
+
+    if (user_id) {
+      const game_list = await gameAllPopLogin(user_id);
+      res.status(200).json({ result: 'success', game_list });
+    } else {
+      const game_list = await gameAllPop();
+      res.status(201).json({ result: 'success', game_list });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(400).json(() => {
+      result: 'fail';
+      errormesssage: '게시글 목록을 불러오는데 실패하였습니다.';
+    });
+  }
+};
 
 //세부게임조회
 const getGameDetail = async (req, res) => {
@@ -44,6 +90,14 @@ const getGameDetail = async (req, res) => {
     const user_id = req.userId;
     const { game_id } = req.params;
     console.log('유저로그인', user_id);
+
+    if (req.cookies['f' + game_id] == undefined) {
+      res.cookie('f' + game_id, getUserIP(req), {
+        maxAge: 720000, //12분
+        // maxAge: 1200000,
+      });
+      await Game.increment({ game_view_count: +1 }, { where: { game_id } });
+    }
 
     if (user_id) {
       const game_array = await gameDetailLogin(user_id, game_id);
@@ -77,11 +131,10 @@ const getGameDetail = async (req, res) => {
         ...game_quest2_all[0],
       };
       console.log(game_quest2_all);
-      const comments = await getComments(game_id);
 
       res
         .status(200)
-        .json({ result: 'success', game, game_quest1, game_quest2, comments });
+        .json({ result: 'success', game, game_quest1, game_quest2 });
     } else {
       //비로그인시
       const game_array = await gameDetail(game_id);
@@ -112,17 +165,37 @@ const getGameDetail = async (req, res) => {
         ...game_quest2_all[0],
       };
 
-      const comments = await getComments(game_id);
-
       res
         .status(201)
-        .json({ result: 'success', game, game_quest1, game_quest2, comments });
+        .json({ result: 'success', game, game_quest1, game_quest2 });
     }
   } catch (error) {
     console.error(error);
     res.status(400).json(() => {
       result: 'fail';
       errormesssage: '게시글 목록을 불러오는데 실패하였습니다.';
+    });
+  }
+};
+
+function getUserIP(req) {
+  console.log(req.headers);
+  const addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  return addr;
+}
+
+//게임댓글 조회
+const getGameComment = async (req, res) => {
+  try {
+    const { game_id } = req.params;
+    const comments = await getComments(game_id);
+    console.log(comments);
+    res.status(200).json({ result: 'success', comments });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      result: 'fail',
+      errormessage: '게시글이 없거나 댓글 조회 할수 없습니다.',
     });
   }
 };
@@ -399,11 +472,12 @@ const likeGame = async (req, res) => {
 module.exports = {
   getGameAll,
   getGameDetail,
-
+  getGameAllView,
+  getGameAllPop,
+  getGameComment,
   writeGame,
   editGame,
   deleteGame,
   selectGame,
-
   likeGame,
 };
