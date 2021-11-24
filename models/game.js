@@ -38,6 +38,7 @@ module.exports = class Game extends Sequelize.Model {
         game_view_count: {
           type: Sequelize.INTEGER,
           allowNull: false,
+          defaultValue: 0,
         },
       },
       {
