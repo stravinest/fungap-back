@@ -236,8 +236,8 @@ exports.gameDetailLogin = async function (user_id, game_id) {
   else 'false'
   end as like_state,
 
-  case c.game_id
-  when g.game_id then c.game_quest
+  case c.user_id
+  when ${user_id} then c.game_quest
   else 'false'
   end as game_state
   
@@ -247,7 +247,7 @@ exports.gameDetailLogin = async function (user_id, game_id) {
   left outer join game_likes as l
   on g.game_id = l.game_id and l.user_id = ${user_id}
   left outer join game_counts as c
-  on g.game_id = c.game_id and c.user_id = ${user_id}
+  on g.game_id = c.game_id 
   group by g.game_id
   ORDER BY g.createdAt DESC) as t2
   on t1.game_id = t2.game_id
