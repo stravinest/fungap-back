@@ -1,10 +1,10 @@
-const { Game_comment } = require('../models');
-const { getComments } = require('../utils/getGameComments');
-
+import { Game_comment } from '../models';
+import { getComments } from '../utils/getGameComments';
+import { Request, Response, NextFunction } from 'express';
 //댓글등록
-const writeComment = async (req, res) => {
+const writeComment = async (req:Request, res:Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     const { game_id } = req.params;
     const { comment } = req.body;
 
@@ -20,7 +20,7 @@ const writeComment = async (req, res) => {
       game_comment: comment,
     });
 
-    const comments = await getComments(game_id);
+    const comments = await getComments(Number(game_id));
     console.log(comments);
     res.status(200).json({ result: 'success', comments });
   } catch (error) {

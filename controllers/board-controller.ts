@@ -323,7 +323,7 @@ const changeLike = async (req:Request, res:Response) => {
     });
   }
 };
-module.exports = {
+export {
   getDetailBoard,
   getBoardHome,
   getSituationBoardView,

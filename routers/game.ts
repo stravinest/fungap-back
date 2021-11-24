@@ -1,7 +1,7 @@
 import * as express from 'express';
 const router = express.Router(); // 라우터라고 선언한다.
 import { gameController, gameCommController } from '../controllers';
-import { authenticateJWTall } from '../middlewares/authenticateJWTall';
+import  authenticateJWTall  from '../middlewares/authenticateJWTall';
 
 ///games/
 //전체게임조회

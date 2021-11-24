@@ -5,8 +5,8 @@ import * as userController from './user-controller';
 import * as mypageController from './mypage-controller';
 import * as mbtiController from './mbti-controller';
 import * as chatController from './chat-controller';
-// const gameController = require('./game-controller');
-// const gameCommController = require('./game-comment-controller');
+import * as gameController from'./game-controller';
+import * as gameCommController from'./game-comment-controller';
 // const adminController = require('./admin-controller');
 
 export{
@@ -17,7 +17,7 @@ export{
   mypageController,
   mbtiController,
   chatController,
-  // gameController,
-  // gameCommController,
+  gameController,
+  gameCommController,
   // adminController,
 };

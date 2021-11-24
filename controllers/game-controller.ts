@@ -13,6 +13,7 @@ import {
 import { Op } from 'sequelize';
 import { Request, Response, NextFunction } from 'express';
 import { Game_quest1 } from '../interface/game';
+
 //전체게임조회
 const getGameAll = async (req:Request, res:Response) => {
   try {
@@ -45,8 +46,8 @@ const getGameDetail = async (req:Request, res:Response) => {
     if (user_id) {
       const game_array = await gameDetailLogin(Number(user_id), Number(game_id));
       const game = game_array[0];
-
-      const game_quest1_mbti:{user_mbti:string,count:number}[] = await gameQuest1(Number(game_id));
+      // let game_quest1_mbti: Game_quest1[];
+      const game_quest1_mbti: Array<Game_quest1> = await gameQuest1(Number(game_id));
       const game_quest1_all = await gameQuest1All(Number(game_id));
       if (!game_quest1_all) {
         console.log('여기');
@@ -61,8 +62,8 @@ const getGameDetail = async (req:Request, res:Response) => {
         ...game_quest1_all[0],
       };
 
-      const game_quest2_mbti = await gameQuest2(game_id);
-      const game_quest2_all = await gameQuest2All(game_id);
+      const game_quest2_mbti:Array<Game_quest1> = await gameQuest2(Number(game_id));
+      const game_quest2_all = await gameQuest2All(Number(game_id));
 
       const mbti2 = new Object();
       for (let i = 0; i < game_quest2_mbti.length; i++) {
@@ -73,18 +74,18 @@ const getGameDetail = async (req:Request, res:Response) => {
         ...game_quest2_all[0],
       };
       console.log(game_quest2_all);
-      const comments = await gameCommentsAll(game_id);
+      const comments = await gameCommentsAll(Number(game_id));
 
       res
         .status(200)
         .json({ result: 'success', game, game_quest1, game_quest2, comments });
     } else {
       //비로그인시
-      const game_array = await gameDetail(game_id);
+      const game_array = await gameDetail(Number(game_id));
       const game = game_array[0];
 
-      const game_quest1_mbti = await gameQuest1(game_id);
-      const game_quest1_all = await gameQuest2All(game_id);
+      const game_quest1_mbti:Array<Game_quest1> = await gameQuest1(Number(game_id));
+      const game_quest1_all = await gameQuest2All(Number(game_id));
 
       const mbti = new Object();
       for (let i = 0; i < game_quest1_mbti.length; i++) {
@@ -95,8 +96,8 @@ const getGameDetail = async (req:Request, res:Response) => {
         ...game_quest1_all[0],
       };
 
-      const game_quest2_mbti = await gameQuest2(game_id);
-      const game_quest2_all = await gameQuest2All(game_id);
+      const game_quest2_mbti:Array<Game_quest1> = await gameQuest2(Number(game_id));
+      const game_quest2_all = await gameQuest2All(Number(game_id));
       console.log(game_quest2_all[0]);
 
       const mbti2 = new Object();
@@ -108,7 +109,7 @@ const getGameDetail = async (req:Request, res:Response) => {
         ...game_quest2_all[0],
       };
 
-      const comments = await gameCommentsAll(game_id);
+      const comments = await gameCommentsAll(Number(game_id));
 
       res
         .status(201)
@@ -124,9 +125,9 @@ const getGameDetail = async (req:Request, res:Response) => {
 };
 
 //게임등록
-const writeGame = async (req, res) => {
+const writeGame = async (req:Request, res:Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     const { game_title, game_desc, game_quest1, game_quest2 } = req.body;
 
     if (game_title && game_desc && game_quest1 && game_quest2) {
@@ -155,9 +156,9 @@ const writeGame = async (req, res) => {
 };
 
 //게임수정
-const editGame = async (req, res) => {
+const editGame = async (req:Request, res:Response) => {
   try {
-    const user_id = req.userId; //임의로 user_id 1이 로그인 하였음
+    const user_id = res.locals.userId; //임의로 user_id 1이 로그인 하였음
     const { game_title, game_desc, game_quest1, game_quest2 } = req.body;
     const { game_id } = req.params;
 
@@ -392,7 +393,7 @@ const likeGame = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   getGameAll,
   getGameDetail,
 
