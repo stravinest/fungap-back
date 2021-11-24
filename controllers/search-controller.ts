@@ -2,23 +2,23 @@ import { sequelize } from '../models';
 import * as Sequelize from 'sequelize';
 import { Client } from '@elastic/elasticsearch';
 import { errors } from '@elastic/elasticsearch';
-import { IClinet } from '../interface/search';
+import { Request, Response, NextFunction } from 'express';
 
 const client = new Client({
   node: process.env.elastic_node,
   auth: {
     username: process.env.elastic_username,
     password: process.env.elastic_password,
-    log: 'trace',
+   // log: 'trace',
   },
 });
 
-const homeSearchFunc = async (req, res) => {
+const homeSearchFunc = async (req:Request, res:Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     const { keyword } = req.query;
-    console.log(keyword);
-    const keywords = keyword.split(' ');
+    
+    const keywords = String(keyword).split(' ');
 
     const board_list = await client.search({
       index: 'fungapsearch',
@@ -53,4 +53,4 @@ const homeSearchFunc = async (req, res) => {
   }
 };
 
-module.exports = homeSearchFunc;
+export{ homeSearchFunc}

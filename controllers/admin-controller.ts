@@ -1,15 +1,10 @@
-const {
-  User,
-  Board,
-  Sequelize,
-  sequelize,
-  Comment,
-  Like,
-} = require('../models');
+import { User, Board, sequelize, Comment, Like } from '../models';
+import * as Sequelize from 'sequelize';
+import { Request, Response } from 'express';
 
-const writeBoardFunc = async (req, res) => {
+const writeBoardFunc = async (req:Request, res:Response) => {
   try {
-    const userId = req.userId;
+    const userId = res.locals.userId;
     const { board_title, board_image, board_desc, board_content } = req.body;
 
     await Board.create({
@@ -29,9 +24,9 @@ const writeBoardFunc = async (req, res) => {
   }
 };
 
-const getUserFunc = async (req, res) => {
+const getUserFunc = async (req:Request, res:Response) => {
   try {
-    const userId = req.userId;
+    const userId = res.locals.userId;
     const users = await User.findAll({});
     const userCount = await User.count({});
 
@@ -43,9 +38,9 @@ const getUserFunc = async (req, res) => {
   }
 };
 
-const getCommentFunc = async (req, res) => {
+const getCommentFunc = async (req:Request, res:Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
 
     const users = await User.findOne({
       where: user_id,
@@ -59,12 +54,12 @@ const getCommentFunc = async (req, res) => {
       '-----------------------------------------------------------------------------'
     );
     // console.log(users.dataValues)
-    console.log(await users.getLikes({ where: { like_id: 1 } }));
+    // console.log(await users.getLikes({ where: { like_id: 1 } }));
     console.log(
       '-----------------------------------------------------------------------------'
     );
     // console.log(await users.getLikes({ where: { [Op.in]: user_id } }));
-    console.log(await users.countComments(), '요기다 욘석아!');
+    // console.log(await users.countComments(), '요기다 욘석아!');
     const userCount = await User.count({});
 
     res.json({ result: 'success', users, userCount });
@@ -76,9 +71,9 @@ const getCommentFunc = async (req, res) => {
   }
 };
 
-const getBoardFunc = async (req, res) => {
+const getBoardFunc = async (req:Request, res:Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
 
     const query = `
       select t1.board_id, t1.board_title, t1.board_image,t1.board_desc, t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
@@ -119,9 +114,9 @@ const getBoardFunc = async (req, res) => {
   }
 };
 
-const editBoardFunc = async (req, res) => {
+const editBoardFunc = async (req:Request, res:Response) => {
   try {
-    const userId = req.userId;
+    const userId = res.locals.userId;
     const { board_id } = req.params;
     const { board_title, board_image, board_desc, board_content } = req.body;
 
@@ -139,9 +134,9 @@ const editBoardFunc = async (req, res) => {
   }
 };
 
-const detailBoardFunc = async (req, res) => {
+const detailBoardFunc = async (req:Request, res:Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     const { board_id } = req.params;
 
     const query = `
@@ -180,11 +175,9 @@ const detailBoardFunc = async (req, res) => {
       on t1.board_id = t2.board_id AND t1.board_id = t3.board_id 
       WHERE t1.board_id = ${board_id}`;
     console.log(Date.now());
-    const beforetime = Date.now();
-    const board =
-      (await sequelize.query(query, {
-        type: Sequelize.QueryTypes.SELECT,
-      })) + (await console.log(Date.now() - beforetime));
+    const board = await sequelize.query(query, {
+      type: Sequelize.QueryTypes.SELECT,
+    });
 
     res.json({ result: 'success', board });
   } catch (err) {
@@ -195,9 +188,9 @@ const detailBoardFunc = async (req, res) => {
   }
 };
 
-const deleteBoardFunc = async (req, res) => {
+const deleteBoardFunc = async (req:Request, res:Response) => {
   try {
-    const userId = req.userId;
+    const userId = res.locals.userId;
     const board_id = req.params;
 
     await Board.update({ board_delete_code: 1 }, { where: board_id });
@@ -211,7 +204,7 @@ const deleteBoardFunc = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   getBoardFunc,
   writeBoardFunc,
   editBoardFunc,

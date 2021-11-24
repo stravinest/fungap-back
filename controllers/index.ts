@@ -7,7 +7,7 @@ import * as mbtiController from './mbti-controller';
 import * as chatController from './chat-controller';
 import * as gameController from'./game-controller';
 import * as gameCommController from'./game-comment-controller';
-// const adminController = require('./admin-controller');
+import * as adminController from './admin-controller';
 
 export{
   authController,
@@ -19,5 +19,5 @@ export{
   chatController,
   gameController,
   gameCommController,
-  // adminController,
+  adminController,
 };

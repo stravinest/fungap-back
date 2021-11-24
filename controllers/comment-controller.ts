@@ -25,8 +25,6 @@ const getComment = async (req: Request, res: Response) => {
 
       return;
     }
-    console.log('resutl는', comments);
-    console.log(comments[0].dataValues);
 
     res.status(200).json({ result: 'success', comments });
   } catch (error) {

@@ -46,7 +46,7 @@ const deleteComment = async (req, res) => {
     });
     if (isComment) {
       console.log(isComment);
-      if (isComment.comment_delete_code !== 1) {
+      if (isComment.game_comment_delete_code !== 1) {
         //삭제 된게 아니면
         // //내가 쓴 comment 이면 수정가능
         await Game_comment.update(
@@ -102,7 +102,7 @@ const editComment = async (req, res) => {
     if (isComment) {
       //내가 쓴게 맞으면
       console.log(isComment);
-      if (isComment.comment_delete_code !== 1) {
+      if (isComment.game_comment_delete_code !== 1) {
         //삭제 된게 아니면
 
         await Game_comment.update(
@@ -137,7 +137,7 @@ const editComment = async (req, res) => {
     });
   }
 };
-module.exports = {
+export {
   deleteComment,
   writeComment,
   editComment,

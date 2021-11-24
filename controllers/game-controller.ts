@@ -213,9 +213,9 @@ const editGame = async (req:Request, res:Response) => {
 };
 
 //게임삭제
-const deleteGame = async (req, res) => {
+const deleteGame = async (req:Request, res:Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     const { game_id } = req.params;
     const isGame = await Game.findOne({
       //내가 쓴 game 인지 확인
@@ -261,9 +261,9 @@ const deleteGame = async (req, res) => {
 };
 
 //게임참여 선택!
-const selectGame = async (req, res) => {
+const selectGame = async (req:Request, res:Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     const { game_id } = req.params;
     const { game_quest } = req.body;
 
@@ -341,9 +341,9 @@ const selectGame = async (req, res) => {
   }
 };
 
-const likeGame = async (req, res) => {
+const likeGame = async (req:Request, res:Response) => {
   try {
-    const user_id = req.userId;
+    const user_id = res.locals.userId;
     const { game_id } = req.params;
     console.log('like user', user_id);
     if (user_id) {

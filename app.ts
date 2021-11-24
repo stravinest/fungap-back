@@ -1,4 +1,4 @@
-import * as express from 'express'; // express를 쓴다
+import express from 'express'; // express를 쓴다
 import { Request, Response } from 'express';
 
 import * as fs from 'fs';
@@ -12,12 +12,12 @@ dotenv.config({
 const app = express();
 
 import { sequelize } from './models';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 
 app.use(cookieParser());
 
 const port = process.env.EXPRESS_PORT;
-import * as cors from 'cors';
+import cors from 'cors';
 
 let colsOptions = {
   origin: [

@@ -7,7 +7,7 @@ import { loginSchema } from '../validators/login_validator';
 import * as ejs from 'ejs';
 import * as path from 'path';
 
-let appDir = path.dirname(require.main.filename);
+let appDir = path.dirname(require.main!.filename);
 
 //이메일 발송
 const sendEmail = async (req: Request, res: Response) => {
@@ -64,7 +64,7 @@ const sendEmail = async (req: Request, res: Response) => {
 //비밀번호 변경
 const changePassword = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = await loginSchema.validateAsync(req.body);
     const userCheck = await User.findOne({
       where: {
         [Op.and]: { user_delete_code: 0, email: email },

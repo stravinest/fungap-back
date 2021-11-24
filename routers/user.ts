@@ -1,5 +1,4 @@
 import * as express from 'express';
-// import * as Validator from '../middlewares/validator';
 import { userController } from '../controllers';
 import { getKakaoUser } from '../middlewares/getKakaoUser';
 import { getGoogleUser } from '../middlewares/getGoogleUser';

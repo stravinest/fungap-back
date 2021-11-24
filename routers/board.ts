@@ -1,7 +1,7 @@
 import * as express from 'express';
 import { boardController } from '../controllers';
 import authenticateJWTall from '../middlewares/authenticateJWTall';
-import homeSearch from '../controllers/search-controller';
+import {homeSearchFunc} from '../controllers/search-controller';
 const router = express.Router(); // 라우터라고 선언한다.
 
 ///board/;
@@ -26,6 +26,6 @@ router.get('/:board_id', authenticateJWTall, boardController.getDetailBoard);
 router.post('/:board_id/like', authenticateJWTall, boardController.changeLike);
 
 //홈 게시글 검색
-router.post('/search', authenticateJWTall, homeSearch);
+router.post('/search', authenticateJWTall, homeSearchFunc);
 
 export default router;
