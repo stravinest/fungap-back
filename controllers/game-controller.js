@@ -141,12 +141,14 @@ const getGameDetail = async (req, res) => {
       const game = game_array[0];
 
       const game_quest1_mbti = await gameQuest1(game_id);
-      const game_quest1_all = await gameQuest2All(game_id);
+      const game_quest1_all = await gameQuest1All(game_id);
       console.log('게임퀘스트', game_quest1_mbti);
+
       const mbti = new Object();
       for (let i = 0; i < game_quest1_mbti.length; i++) {
         mbti[game_quest1_mbti[i].user_mbti] = game_quest1_mbti[i].count;
       }
+      console.log(mbti);
       const game_quest1 = {
         ...mbti,
         ...game_quest1_all[0],
