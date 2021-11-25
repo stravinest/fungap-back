@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from 'express';
 import * as exp from 'constants';
 
 //유저 정보 조회
-const getUserInfo = async (req:Request, res:Response) => {
+const getUserInfo = async (req: Request, res: Response) => {
   try {
     const userId = res.locals.userInfo.userId;
     const provider = res.locals.userInfo.provider;
@@ -30,7 +30,7 @@ const getUserInfo = async (req:Request, res:Response) => {
 };
 
 //유저 정보 수정
-const patchUserInfo = async (req:Request, res:Response) => {
+const patchUserInfo = async (req: Request, res: Response) => {
   try {
     const userId = res.locals.userInfo.userId;
     const provider = res.locals.userInfo.provider;
@@ -68,7 +68,7 @@ const patchUserInfo = async (req:Request, res:Response) => {
 };
 
 //유저 탈퇴
-const deleteUserInfo = async (req:Request, res:Response) => {
+const deleteUserInfo = async (req: Request, res: Response) => {
   try {
     const userId = res.locals.userInfo.userId;
     const provider = res.locals.userInfo.provider;
@@ -117,9 +117,8 @@ const deleteUserInfo = async (req:Request, res:Response) => {
   }
 };
 
-const likedBoardList = async (req:Request, res:Response) => {
+const likedBoardList = async (req: Request, res: Response) => {
   try {
-    
     const userId = res.locals.userInfo.userId;
 
     console.log(userId);
@@ -157,9 +156,4 @@ const likedBoardList = async (req:Request, res:Response) => {
   }
 };
 
-export {
-  getUserInfo,
-  patchUserInfo,
-  deleteUserInfo,
-  likedBoardList,
-};
+export { getUserInfo, patchUserInfo, deleteUserInfo, likedBoardList };

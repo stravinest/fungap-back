@@ -8,7 +8,7 @@ import * as path from 'path';
 let appDir = path.dirname(require.main!.filename);
 
 //이메일 발송
-const sendEmail = async (req:Request, res:Response) => {
+const sendEmail = async (req: Request, res: Response) => {
   const { email } = req.body;
   const existUserId = await User.findOne({ where: { email } });
   if (!existUserId) {
@@ -60,7 +60,7 @@ const sendEmail = async (req:Request, res:Response) => {
 };
 
 //비밀번호 변경
-const changePassword = async (req:Request, res:Response) => {
+const changePassword = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     const userCheck = await User.findOne({
@@ -93,7 +93,4 @@ const changePassword = async (req:Request, res:Response) => {
   }
 };
 
-export{
-  sendEmail,
-  changePassword,
-};
+export { sendEmail, changePassword };

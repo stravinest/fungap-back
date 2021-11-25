@@ -10,6 +10,7 @@ import Mbti_relationship, {
 import Game, { associate as associateGame } from './game';
 import Game_count, { associate as associateGame_count } from './game_count';
 import Game_like, { associate as associateGame_like } from './game_like';
+import Badword, { associate as associateBadword } from './badword';
 import Game_comment, {
   associate as associateGame_comment,
 } from './game_comment';
@@ -31,6 +32,7 @@ export { Game };
 export { Game_count };
 export { Game_like };
 export { Game_comment };
+export { Badword };
 
 export * from './sequelize';
 

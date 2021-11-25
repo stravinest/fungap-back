@@ -2,7 +2,8 @@ import { User, Chatlog, sequelize } from '../models';
 import * as Sequelize from 'sequelize';
 import { Request, Response } from 'express';
 
-const getChatlog = async (req:Request, res:Response) => {
+//채팅로그 불러오기
+const getChatlog = async (req: Request, res: Response) => {
   try {
     const { roomname } = req.query;
     console.log(roomname);
@@ -20,8 +21,8 @@ const getChatlog = async (req:Request, res:Response) => {
     //roomName의 타입 집합
     const roomNames = ['I', 'E', 'F', 'T'];
 
-    //promiseall 결과 배열 담는 곳
-    let resultPromiseall:any;
+    //promiseall 결과 배열이 될 변수
+    let resultPromiseall: any;
 
     //promiseall 돌릴 promise들 담는 배열
     let targetRoomNameSequelizeQuerys = [];
@@ -50,6 +51,8 @@ const getChatlog = async (req:Request, res:Response) => {
     //현재의 roomName 타입별 채팅로그의 수
     console.log(resultPromiseall);
     let resultPromiseallIndex = 0;
+
+    //채팅방 별로 채팅로그를 조회한 결과가 100개가 넘으면 100개 이외는 다 삭제
     for await (let value of resultPromiseall) {
       if (value[0].count > 100) {
         const query = `DELETE FROM database_final_project.chatlogs

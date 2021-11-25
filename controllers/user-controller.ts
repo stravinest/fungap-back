@@ -12,7 +12,7 @@ import { Request, Response, NextFunction } from 'express';
 import { IResUserinfo } from '../interface/user';
 
 //카카오
-const auth = async (req:Request, res:Response, next:NextFunction) => {
+const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const profile = res.locals.kakao;
     const [accessToken, refreshToken, basicInfo]: any = await jwtKakaoCreate(
@@ -21,7 +21,7 @@ const auth = async (req:Request, res:Response, next:NextFunction) => {
 
     const token = loginUser(accessToken, refreshToken);
     console.log(token);
-    const user:IResUserinfo = {
+    const user: IResUserinfo = {
       user_image: basicInfo.user_image,
       nickname: basicInfo.nickname,
       user_mbti: basicInfo.user_mbti,
@@ -40,15 +40,15 @@ const auth = async (req:Request, res:Response, next:NextFunction) => {
 };
 
 //구글
-const authGoogle = async (req:Request, res:Response, next:NextFunction) => {
+const authGoogle = async (req: Request, res: Response, next: NextFunction) => {
   try {
     console.log(res.locals.google);
     const profile = res.locals.google;
-    const [accessToken, refreshToken, basicInfo]:any = await jwtGoogleCreate(
+    const [accessToken, refreshToken, basicInfo]: any = await jwtGoogleCreate(
       profile
     );
     const token = loginUser(accessToken, refreshToken);
-    const user:IResUserinfo = {
+    const user: IResUserinfo = {
       user_image: basicInfo.user_image,
       nickname: basicInfo.nickname,
       user_mbti: basicInfo.user_mbti,
@@ -67,15 +67,15 @@ const authGoogle = async (req:Request, res:Response, next:NextFunction) => {
 };
 
 //네이버
-const authNaver = async (req:Request, res:Response, next:NextFunction) => {
+const authNaver = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const profile = res.locals.naver;
 
-    const [accessToken, refreshToken, basicInfo]:any = await jwtNaverCreate(
+    const [accessToken, refreshToken, basicInfo]: any = await jwtNaverCreate(
       profile
     );
     const token = loginUser(accessToken, refreshToken);
-    const user:IResUserinfo = {
+    const user: IResUserinfo = {
       user_image: basicInfo.user_image,
       nickname: basicInfo.nickname,
       user_mbti: basicInfo.user_mbti,
@@ -94,7 +94,7 @@ const authNaver = async (req:Request, res:Response, next:NextFunction) => {
 };
 
 //회원가입
-const signup = async (req:Request, res:Response) => {
+const signup = async (req: Request, res: Response) => {
   try {
     const { nickname, email, user_mbti, password, confirm_password } = req.body;
     const existUserId = await User.findOne({
@@ -137,10 +137,10 @@ const signup = async (req:Request, res:Response) => {
   }
 };
 //로컬로그인
-const login = async (req:Request, res:Response) => {
+const login = async (req: Request, res: Response) => {
   let { email, password } = req.body;
   try {
-    const userCheck:any = await User.findOne({
+    const userCheck: any = await User.findOne({
       where: {
         [Op.and]: { user_delete_code: 0, email: email },
       },
@@ -160,10 +160,10 @@ const login = async (req:Request, res:Response) => {
 
     if (authenticate === true) {
       console.log('비밀번호 맞으면 실행');
-      const [accessToken, refreshToken]:any = await jwtLocalCreate(userCheck);
+      const [accessToken, refreshToken]: any = await jwtLocalCreate(userCheck);
       const token = loginUser(accessToken, refreshToken);
       console.log(userCheck);
-      const user:IResUserinfo = {
+      const user: IResUserinfo = {
         user_image: userCheck.user_image,
         nickname: userCheck.nickname,
         user_mbti: userCheck.user_mbti,
@@ -193,7 +193,7 @@ const login = async (req:Request, res:Response) => {
 };
 
 //이메일 중복체크
-const email_check = async (req:Request, res:Response) => {
+const email_check = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
     const existUserId = await User.findOne({ where: { email } });
@@ -219,7 +219,7 @@ const email_check = async (req:Request, res:Response) => {
 };
 
 //닉네임 중복체크
-const nickname_check = async (req:Request, res:Response) => {
+const nickname_check = async (req: Request, res: Response) => {
   try {
     const { nickname } = req.body;
     const existUserId = await User.findOne({ where: { nickname } });

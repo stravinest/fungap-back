@@ -3,7 +3,7 @@ import { getComments } from '../utils/getComments';
 import { Request, Response, NextFunction } from 'express';
 
 //댓글조회
-const getComment = async (req:Request, res:Response) => {
+const getComment = async (req: Request, res: Response) => {
   try {
     const { board_id } = req.params;
     console.log(board_id);
@@ -37,7 +37,7 @@ const getComment = async (req:Request, res:Response) => {
   }
 };
 //댓글등록
-const postComment = async (req:Request, res:Response) => {
+const postComment = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId; //임의로 user_id 1이 로그인 하였음
     const { board_id } = req.params;
@@ -67,7 +67,7 @@ const postComment = async (req:Request, res:Response) => {
   }
 };
 //댓글삭제
-const deleteComment = async (req:Request, res:Response) => {
+const deleteComment = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     const { board_id, comment_id } = req.params;
@@ -116,7 +116,7 @@ const deleteComment = async (req:Request, res:Response) => {
   }
 };
 //댓글수정
-const patchComment = async (req:Request, res:Response) => {
+const patchComment = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId; //임의로 user_id 1이 로그인 하였음
     const { board_id, comment_id } = req.params;
@@ -164,9 +164,4 @@ const patchComment = async (req:Request, res:Response) => {
     });
   }
 };
-export {
-  deleteComment,
-  postComment,
-  getComment,
-  patchComment,
-};
+export { deleteComment, postComment, getComment, patchComment };
