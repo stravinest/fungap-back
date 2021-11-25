@@ -23,7 +23,7 @@ import {
 import { string } from 'joi';
 
 //홈화면 조회
-const getBoardHome = async (req:Request, res:Response) => {
+const getBoardHome = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     console.log('유저로그인', user_id);
@@ -50,7 +50,7 @@ const getBoardHome = async (req:Request, res:Response) => {
   }
 };
 //통합
-const getSituationBoardConfirm = async (req:Request, res:Response) => {
+const getSituationBoardConfirm = async (req: Request, res: Response) => {
   try {
     const { page, sort } = req.query;
     const user_id = res.locals.userId;
@@ -122,7 +122,7 @@ const getSituationBoardConfirm = async (req:Request, res:Response) => {
 };
 
 //상황별 페이지 게시글 전체 조회(최신순)
-const getSituationBoard = async (req:Request, res:Response) => {
+const getSituationBoard = async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
     const user_id = res.locals.userId;
@@ -166,7 +166,7 @@ const getSituationBoard = async (req:Request, res:Response) => {
   }
 };
 //상황별 페이지 게시글 전체 조회(인기순)
-const getSituationBoardPop = async (req:Request, res:Response) => {
+const getSituationBoardPop = async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
     const user_id = res.locals.userId;
@@ -194,7 +194,7 @@ const getSituationBoardPop = async (req:Request, res:Response) => {
   }
 };
 //상황별 페이지 게시글 전체 조회(조회순)
-const getSituationBoardView = async (req:Request, res:Response) => {
+const getSituationBoardView = async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
     const user_id = res.locals.userId;
@@ -221,7 +221,7 @@ const getSituationBoardView = async (req:Request, res:Response) => {
 };
 
 // 게시글 디테일페이지 조회
-const getDetailBoard = async (req:Request, res:Response) => {
+const getDetailBoard = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     console.log('유저로그인', user_id);
@@ -240,7 +240,7 @@ const getDetailBoard = async (req:Request, res:Response) => {
       //로그인
       // const beforetime = await Date.now();
       // await console.log(Date.now());
-      const result = await detailBoardLogin(user_id,Number(board_id));
+      const result = await detailBoardLogin(user_id, Number(board_id));
       // const comments =
       //   (await detailCommentsAll(board_id)) +
       //   (await console.log(Date.now() - beforetime));
@@ -265,14 +265,14 @@ const getDetailBoard = async (req:Request, res:Response) => {
   }
 };
 
-function getUserIP(req:Request) {
+function getUserIP(req: Request) {
   console.log(req.headers);
   const addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   return addr;
 }
 
 //좋아요 /좋아요 취소
-const changeLike = async (req:Request, res:Response) => {
+const changeLike = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     const { board_id } = req.params;
