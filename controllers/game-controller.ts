@@ -13,10 +13,10 @@ import {
   gameQuest2,
   gameQuest2All,
   gameCommentsAll,
-} from '../utils/getGameQuery';
+} from '../utils/gameQuery';
 import { Op } from 'sequelize';
 import { Request, Response, NextFunction } from 'express';
-import { getComments } from '../utils/getGameComments';
+import { getComments } from '../utils/gameCommentQuery';
 
 //전체게임조회(최신순)
 const getGameAll = async (req: Request, res: Response) => {
