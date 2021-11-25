@@ -35,7 +35,7 @@ export default (httpServer: http.Server) => {
     badword: string;
   }
 
-  //비속어가 있는지 체크(간단하게 단어만 찾는 형태)
+  //비속어가 있는지 체크
   function checkBadword(badwordobjectlist: Ibadwordobjectlist[], msg: string) {
     //비속어만 따로 담을 배열 선언
     let badwordlist = [];
@@ -69,7 +69,7 @@ export default (httpServer: http.Server) => {
   let roomFUserList: IChatRoomUserList[] = [];
   let roomTUserList: IChatRoomUserList[] = [];
 
-  //roomName에 맞는 리스트 리턴
+  //roomName에 맞는 유저리스트 리턴
   function findRoomUserList(roomName: string) {
     switch (roomName) {
       case 'I':
@@ -126,6 +126,32 @@ export default (httpServer: http.Server) => {
     }
   }
 
+  //룸네임에 맞는 유저리스트에 유저 추가
+  function pushUserlist(roomName: string, nickName: string, userId: number) {
+    switch (roomName) {
+      case 'I':
+        if (!roomIUserList.find((arr) => arr.userId === userId)) {
+          roomIUserList.push({ nickName: nickName, userId: userId });
+        }
+        break;
+      case 'E':
+        if (!roomEUserList.find((arr) => arr.userId === userId)) {
+          roomEUserList.push({ nickName: nickName, userId: userId });
+        }
+        break;
+      case 'F':
+        if (!roomFUserList.find((arr) => arr.userId === userId)) {
+          roomFUserList.push({ nickName: nickName, userId: userId });
+        }
+        break;
+      case 'T':
+        if (!roomTUserList.find((arr) => arr.userId === userId)) {
+          roomTUserList.push({ nickName: nickName, userId: userId });
+        }
+        break;
+    }
+  }
+
   //처음 소켓서버에 접속하는 이벤트, 소켓을 하나씩 받는다.
   io.on('connection', (socket) => {
     //소켓에서의 미들웨어 느낌  감시자
@@ -140,29 +166,8 @@ export default (httpServer: http.Server) => {
       //roomName 방에 접속시킴
       socket.join(roomName);
 
-      //roomName에 맞는 유저리스트배열에 push
-      switch (roomName) {
-        case 'I':
-          if (!roomIUserList.find((arr) => arr.userId === userId)) {
-            roomIUserList.push({ nickName: nickName, userId: userId });
-          }
-          break;
-        case 'E':
-          if (!roomEUserList.find((arr) => arr.userId === userId)) {
-            roomEUserList.push({ nickName: nickName, userId: userId });
-          }
-          break;
-        case 'F':
-          if (!roomFUserList.find((arr) => arr.userId === userId)) {
-            roomFUserList.push({ nickName: nickName, userId: userId });
-          }
-          break;
-        case 'T':
-          if (!roomTUserList.find((arr) => arr.userId === userId)) {
-            roomTUserList.push({ nickName: nickName, userId: userId });
-          }
-          break;
-      }
+      //룸네임에 맞는 유저리스트에 유저 추가
+      pushUserlist(roomName, nickName, userId);
 
       //방에 접속함을 알리는 이벤트
       io.sockets
@@ -207,6 +212,8 @@ export default (httpServer: http.Server) => {
       let targetRoomNameSequelizeQuerys = [];
 
       let resultPromiseall: any = undefined;
+
+      //promise.all 돌릴 배열 생성 (유저아이디별 유저이미지 가져오기)
       if (userList!.length > 0) {
         for (let i = 0; i < userList!.length; i++) {
           const targetUserId = userList![i].userId;
@@ -230,8 +237,10 @@ export default (httpServer: http.Server) => {
       await Promise.all(targetRoomNameSequelizeQuerys).then((values) => {
         resultPromiseall = values;
       });
+
       console.log(resultPromiseall);
 
+      //유저 수와 유저이미지 전송
       socket.emit(
         'current_usercount',
         resultPromiseall,
@@ -261,25 +270,19 @@ export default (httpServer: http.Server) => {
         const userImageData = await sequelize.query(query, {
           type: Sequelize.QueryTypes.SELECT,
         });
+
         //메세지를 방의 모든 소켓들(자신포함)에게 전달
         io.sockets
           .to(roomName)
-          .emit(
-            'receive_message',
-            roomName,
-            nickName,
-            userId,
-            msg,
-            userImageData
-          );
+          .emit('receive_data', roomName, nickName, userId, msg, userImageData);
       } catch (err) {
         console.error(err);
       }
     });
 
-    //알림기능
-    socket.on('notice_new_post', (postId) => {
-      socket.broadcast.emit('notice_new_post');
-    });
+    // //알림기능
+    // socket.on('notice_new_post', () => {
+    //   socket.broadcast.emit('notice_new_post');
+    // });
   });
 };
