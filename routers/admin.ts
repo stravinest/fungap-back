@@ -4,8 +4,18 @@ import { checkAuthority } from '../middlewares/checkAuthority';
 import { adminController } from '../controllers';
 const router = express.Router();
 
-router.get('/board', authenticateJWT, checkAuthority, adminController.getBoardFunc);
-router.post('/board/write', authenticateJWT, checkAuthority, adminController.writeBoardFunc);
+router.get(
+  '/board',
+  authenticateJWT,
+  checkAuthority,
+  adminController.getBoardFunc
+);
+router.post(
+  '/board/write',
+  authenticateJWT,
+  checkAuthority,
+  adminController.writeBoardFunc
+);
 router.patch(
   '/board/:board_id/edit',
   authenticateJWT,
@@ -24,7 +34,17 @@ router.get(
   checkAuthority,
   adminController.detailBoardFunc
 );
-router.get('/user', authenticateJWT, checkAuthority, adminController.getUserFunc);
-router.post('/user/:user_id/comment', authenticateJWT, checkAuthority, adminController.getCommentFunc);
+router.get(
+  '/user',
+  authenticateJWT,
+  checkAuthority,
+  adminController.getUserFunc
+);
+router.post(
+  '/user/:user_id/comment',
+  authenticateJWT,
+  checkAuthority,
+  adminController.getCommentFunc
+);
 
 export default router;

@@ -1,4 +1,4 @@
-import {Validator} from '../middlewares/validator';
+import { Validator } from '../middlewares/validator';
 import * as express from 'express';
 import { userController } from '../controllers';
 import { getKakaoUser } from '../middlewares/getKakaoUser';

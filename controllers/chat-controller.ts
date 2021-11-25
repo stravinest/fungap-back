@@ -2,7 +2,10 @@ import { User, Chatlog, sequelize } from '../models';
 import * as Sequelize from 'sequelize';
 import { Request, Response } from 'express';
 
+<<<<<<< HEAD
 //채팅로그 불러오기
+=======
+>>>>>>> 0c2774bc804b05db6b1a7cbabf12bf46d4b83ed0
 const getChatlog = async (req: Request, res: Response) => {
   try {
     const { roomname } = req.query;
@@ -21,7 +24,11 @@ const getChatlog = async (req: Request, res: Response) => {
     //roomName의 타입 집합
     const roomNames = ['I', 'E', 'F', 'T'];
 
+<<<<<<< HEAD
     //promiseall 결과 배열이 될 변수
+=======
+    //promiseall 결과 배열 담는 곳
+>>>>>>> 0c2774bc804b05db6b1a7cbabf12bf46d4b83ed0
     let resultPromiseall: any;
 
     //promiseall 돌릴 promise들 담는 배열

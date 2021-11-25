@@ -16,5 +16,5 @@ router.patch(
 router.delete('/delete', authenticateJWT, mypageController.deleteUserInfo);
 
 router.get('/liked', authenticateJWT, mypageController.likedBoardList);
- 
+
 export default router;
