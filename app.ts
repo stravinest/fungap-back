@@ -1,12 +1,27 @@
 import * as express from 'express'; // express를 쓴다
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import * as http from 'http';
 import * as dotenv from 'dotenv';
 import socketIO from './socket';
+import  Logger  from './config/logger';
+
 dotenv.config({
   path: './env/.env',
 });
 const app = express();
+
+import morganMiddleware from'./config/morganMiddleware';
+app.use(morganMiddleware); // 콘솔창에 통신결과 나오게 해주는 것
+
+app.get("/logger", (_, res) => {
+  Logger.error("This is an error log");
+  Logger.warn("This is a warn log");
+  Logger.info("This is a info log");
+  Logger.http("This is a http log");
+  Logger.debug("This is a debug log");
+
+  res.send("Hello world");
+});
 
 import { sequelize } from './models';
 import * as cookieParser from 'cookie-parser';
@@ -42,7 +57,7 @@ app.set('view engine', 'ejs');
 sequelize
   .sync({ force: false })
   .then(() => {
-    console.log('데이터베이스 연결 성공');
+    Logger.info('데이터베이스 연결 성공');
   })
   .catch((err) => {
     console.error(err);
@@ -59,7 +74,7 @@ Router.get('/', (req: Request, res: Response) => {
 const httpServer = http.createServer(app);
 
 httpServer.listen(port, () => {
-  console.log(`listening at http://localhost:${port}`);
+  Logger.debug(`listening at http://localhost:${port}`);
 });
 
 socketIO(httpServer);

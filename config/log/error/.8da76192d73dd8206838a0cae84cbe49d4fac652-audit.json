@@ -1,0 +1,14 @@
+{
+    "keep": {
+        "days": false,
+        "amount": 30
+    },
+    "auditLog": "C:\\Users\\strav\\Desktop\\항해99\\Node\\fungap-back\\config\\log\\error\\.8da76192d73dd8206838a0cae84cbe49d4fac652-audit.json",
+    "files": [
+        {
+            "date": 1637820408697,
+            "name": "C:\\Users\\strav\\Desktop\\항해99\\Node\\fungap-back\\config\\log\\error\\2021-11-25.error.log",
+            "hash": "89d5c7c0d5106943dde9ac487559d856"
+        }
+    ]
+}
