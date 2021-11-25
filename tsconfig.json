@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    // "strictNullChecks": false,
     "strict": true,
     "target": "ES6",
     "lib": ["ES2020", "ES6"],
     "moduleResolution": "node",
     "typeRoots": ["./types"],
-    
+    "module": "commonjs",
+    "outDir": "dist",
+    "sourceMap": true
   }
 }
