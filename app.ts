@@ -1,9 +1,6 @@
 import * as express from 'express'; // express를 쓴다
 import { Request, Response } from 'express';
-
-import * as fs from 'fs';
 import * as http from 'http';
-import * as https from 'https';
 import * as dotenv from 'dotenv';
 import socketIO from './socket';
 dotenv.config({

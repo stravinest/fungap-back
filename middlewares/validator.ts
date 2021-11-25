@@ -52,6 +52,11 @@ export function Validator(validator:string) {
         console.log('검사완료');
         next();
       }
+      res.status(401).send({
+        result: 'fail',
+        errorMessage: 'validator 오류'
+      });
+      return;
       
     } catch (err:any) {
       if (err.isJoi)
