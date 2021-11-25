@@ -98,10 +98,24 @@ const getGameDetail = async (req:Request, res:Response) => {
       });
       await Game.increment({ game_view_count: +1 }, { where: { game_id } });
     }
+    
+     const isGame =await Game.findOne({
+       where:{game_id:game_id}
+     })
+
+     if(!isGame || isGame.game_delete_code==1){
+
+      res.status(400).json({
+        result: 'fail',
+        errormessage: '게임이 없거나  조회 할수 없습니다.',
+      });
+      return;
+     }
 
     if (user_id) {
       const game_array = await gameDetailLogin(Number(user_id), Number(game_id));
       const game = game_array[0];
+      console.log(game)
 
       const game_quest1_mbti:any = await gameQuest1(Number(game_id));
       const game_quest1_all = await gameQuest1All(Number(game_id));

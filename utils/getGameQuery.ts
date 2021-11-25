@@ -251,7 +251,7 @@ export const gameDetailLogin = async function (
   left outer join game_likes as l
   on g.game_id = l.game_id and l.user_id = ${user_id}
   left outer join game_counts as c
-  on g.game_id = c.game_id 
+  on g.game_id = c.game_id and c.user_id = ${user_id}
   group by g.game_id
   ORDER BY g.createdAt DESC) as t2
   on t1.game_id = t2.game_id
