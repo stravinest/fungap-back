@@ -78,3 +78,13 @@ export interface LocalProfile {
     [key: string]: any;
   };
 }
+
+export interface verifytoken {
+  email: string;
+  user_mbti: string;
+  user_authority: string;
+  provider: string;
+  user_id: number;
+  iat: number;
+  exp: number;
+}

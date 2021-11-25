@@ -6,13 +6,14 @@ import * as http from 'http';
 import * as https from 'https';
 import * as dotenv from 'dotenv';
 import socketIO from './socket';
-
+import * as Sequelize from 'sequelize';
 dotenv.config();
 const app = express();
 
 import { sequelize } from './models';
 
 import * as cookieParser from 'cookie-parser';
+import { Badword } from './models';
 
 app.use(cookieParser());
 

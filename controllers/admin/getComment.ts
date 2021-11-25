@@ -1,5 +1,4 @@
 import { User, Comment, Like } from '../../models';
-import { Op } from 'sequelize';
 import { Request, Response } from 'express';
 
 const getCommentFunc = async (req: Request, res: Response) => {

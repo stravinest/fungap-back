@@ -4,7 +4,7 @@ import { Op } from 'sequelize';
 import { KakaoProfile } from '../../interface/socialLogin';
 import { IBasicinfo } from '../../interface/socialLogin';
 
-export const jwtKakaoCreate = async (profile: KakaoProfile) => {
+export const jwtKakaoCreate = async (profile: KakaoProfile): Promise<any> => {
   const basicInfo: IBasicinfo = {
     email: profile.data?.kakao_account?.email || '',
     nickname: profile.data?.properties.nickname,

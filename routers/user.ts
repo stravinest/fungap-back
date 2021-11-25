@@ -1,5 +1,5 @@
 import * as express from 'express';
-import request = require('request');
+import * as request from 'request';
 import { userController } from '../controllers';
 import { getKakaoUser } from '../middlewares/getKakaoUser';
 import { getGoogleUser } from '../middlewares/getGoogleUser';

@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { string } from 'joi';
 import * as Sequelize from 'sequelize';
 import { sequelize } from '../../models';
 

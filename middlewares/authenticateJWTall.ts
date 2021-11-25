@@ -97,9 +97,9 @@ const authenticateJWTall = async (
 function verifyToken(token: string) {
   try {
     return jwt.verify(token, process.env.JWT_SECRET!);
-  } catch (error: any) {
-    //애니는 용납못해 다시봐~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return error.message;
+  } catch (err: any) {
+    console.error(err);
+    return err.message;
   }
 }
 

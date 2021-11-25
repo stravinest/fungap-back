@@ -67,7 +67,7 @@ const authenticateJWT = async (
       console.log('둘다 만료되지 않은 토큰입니다.굳굳');
 
       res.locals.loginUser = loginUser(accessToken, refreshToken);
-      res.locals.userId = iAccessToken.user_id;
+      res.locals.userId = iAccessToken!.user_id;
       res.locals.userInfo = {
         userId: iAccessToken.user_id,
         email: iAccessToken.email,
@@ -90,10 +90,11 @@ const authenticateJWT = async (
 function verifyToken(token: string) {
   try {
     return jwt.verify(token, process.env.JWT_SECRET!);
-  } catch (error: any) {
-    //애니는 용납 못해@@@@@@@@ 에러핸들러 상의해서 만들고 에러 타입스 라이브러리 알아보기@@@@@@@@
-    console.error(error);
-    return error.message;
+  } catch (err: any) {
+    if (err instanceof Error) {
+      console.error(err.message);
+    }
+    return err.message;
   }
 }
 

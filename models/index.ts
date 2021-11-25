@@ -3,7 +3,8 @@ import Board, { associate as associateBoard } from './board';
 import Celebrity, { associate as associateCelebrity } from './celebrity';
 import Comment, { associate as associateComment } from './comment';
 import Like, { associate as associateLike } from './like';
-import Chatlog from './chatlog';
+import Badword, { associate as associateBadword } from './badword';
+import Chatlog, { associate as associateChatlog } from './chatlog';
 import Mbti_relationship, {
   associate as associateMbti_relationship,
 } from './mbti_relationship';
@@ -26,6 +27,7 @@ export { Obtion };
 export { Job_recommendation };
 export { Mbti_relationship };
 export { Chatlog };
+export { Badword };
 
 export * from './sequelize';
 
@@ -39,6 +41,7 @@ const db = {
   Job_recommendation,
   Obtion,
   Chatlog,
+  Badword,
 };
 
 export type dbType = typeof db;
@@ -51,3 +54,4 @@ associateLike(db);
 associateMbti_relationship(db);
 associateJob_recommendation(db);
 associateObtion(db);
+associateChatlog(db);

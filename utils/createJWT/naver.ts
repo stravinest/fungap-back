@@ -3,7 +3,7 @@ import { User } from '../../models';
 import { Op } from 'sequelize';
 import { NaverProfile, IBasicinfo } from '../../interface/socialLogin';
 
-export const jwtNaverCreate = async (profile: NaverProfile) => {
+export const jwtNaverCreate = async (profile: NaverProfile): Promise<any> => {
   const basicInfo: IBasicinfo = {
     email: profile?.response?.email,
     nickname: profile?.response?.nickname,

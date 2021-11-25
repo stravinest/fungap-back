@@ -3,7 +3,7 @@ import { User } from '../../models';
 import { Op } from 'sequelize';
 import { GoogleProfile } from '../../interface/socialLogin';
 
-export const jwtGoogleCreate = async (profile: GoogleProfile) => {
+export const jwtGoogleCreate = async (profile: GoogleProfile): Promise<any> => {
   const basicInfo: object = {
     email: profile?.email || '',
     nickname: profile?.name || '',

@@ -12,11 +12,12 @@ import { Request, Response, NextFunction } from 'express';
 import { loginSchema } from '../validators/login_validator';
 import { signupSchema } from '../validators/signup_validator';
 import { IResUserinfo } from '../interface/user';
+
 //카카오
 const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const profile = res.locals.kakao;
-    const [accessToken, refreshToken, basicInfo]: any = await jwtKakaoCreate(
+    const [accessToken, refreshToken, basicInfo] = await jwtKakaoCreate(
       profile
     );
 
@@ -45,7 +46,7 @@ const authGoogle = async (req: Request, res: Response, next: NextFunction) => {
   try {
     console.log(res.locals.google);
     const profile = res.locals.google;
-    const [accessToken, refreshToken, basicInfo]: any = await jwtGoogleCreate(
+    const [accessToken, refreshToken, basicInfo] = await jwtGoogleCreate(
       profile
     );
     const token = loginUser(accessToken, refreshToken);
@@ -72,7 +73,7 @@ const authNaver = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const profile = res.locals.naver;
 
-    const [accessToken, refreshToken, basicInfo]: any = await jwtNaverCreate(
+    const [accessToken, refreshToken, basicInfo] = await jwtNaverCreate(
       profile
     );
     const token = loginUser(accessToken, refreshToken);
@@ -161,7 +162,7 @@ const login = async (req: Request, res: Response) => {
 
     if (authenticate === true) {
       console.log('비밀번호 맞으면 실행');
-      const [accessToken, refreshToken]: any = await jwtLocalCreate(userCheck);
+      const [accessToken, refreshToken] = await jwtLocalCreate(userCheck);
       const token = loginUser(accessToken, refreshToken);
       console.log(userCheck);
       const user: IResUserinfo = {

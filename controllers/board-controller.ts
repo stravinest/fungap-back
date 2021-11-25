@@ -20,7 +20,6 @@ import {
   detailBoard, //비로그인 상세 게시글
   detailBoardLogin,
 } from '../utils/getQuery';
-import { Reqbodystring, ReqQuery } from '../interface/request';
 
 //홈화면 조회
 const getBoardHome = async (req: Request, res: Response) => {

@@ -1,6 +1,5 @@
 import { User, Board, Comment, Like, sequelize } from '../../models';
 import * as Sequelize from 'sequelize';
-import { Op } from 'sequelize/types';
 import { Request, Response } from 'express';
 
 const detailBoardFunc = async (req: Request, res: Response) => {

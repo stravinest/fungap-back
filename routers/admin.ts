@@ -1,7 +1,6 @@
 import * as express from 'express';
 import authenticateJWT from '../middlewares/authenticateJWT';
 import { checkAuthority } from '../middlewares/checkAuthority';
-
 import {
   getBoard,
   writeBoard,

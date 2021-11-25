@@ -3,7 +3,7 @@ import { User } from '../../models';
 import { Op } from 'sequelize';
 import { LocalProfile, IBasicinfo } from '../../interface/socialLogin';
 
-export const jwtLocalCreate = async (profile: LocalProfile) => {
+export const jwtLocalCreate = async (profile: LocalProfile): Promise<any> => {
   const basicInfo: IBasicinfo = {
     user_id: profile?.dataValues?.user_id,
     email: profile?.dataValues?.email,
