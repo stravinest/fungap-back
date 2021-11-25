@@ -3,7 +3,7 @@ import { sequelize } from '../models';
 import * as Sequelize from 'sequelize';
 import { Op } from 'sequelize';
 import { getPageNum } from '../utils/getPageNum';
-import { getComments } from '../utils/getComments';
+import { getComments } from '../utils/boardCommentQuery';
 import { Request, Response, NextFunction } from 'express';
 import {
   PopBoardHome,
@@ -19,7 +19,7 @@ import {
   detailCommentsAll, //로그인비로그인시 댓글
   detailBoard, //비로그인 상세 게시글
   detailBoardLogin,
-} from '../utils/getQuery';
+} from '../utils/boardQuery';
 import { string } from 'joi';
 
 //홈화면 조회

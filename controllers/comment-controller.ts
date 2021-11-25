@@ -1,5 +1,5 @@
 import { Board, Comment } from '../models';
-import { getComments } from '../utils/getComments';
+import { getComments } from '../utils/boardCommentQuery';
 import { Request, Response, NextFunction } from 'express';
 
 //댓글조회

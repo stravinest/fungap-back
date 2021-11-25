@@ -1,5 +1,5 @@
 import { Game_comment } from '../models';
-import { getComments } from '../utils/getGameComments';
+import { getComments } from '../utils/gameCommentQuery';
 import { Request, Response, NextFunction } from 'express';
 
 //댓글등록

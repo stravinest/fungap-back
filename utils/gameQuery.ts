@@ -267,7 +267,7 @@ export const gameDetailLogin = async function (
 };
 
 //상세게임 조회 비로그인
-export const gameDetail = async function (game_id:number) {
+export const gameDetail = async function (game_id: number) {
   const query = `select t1.game_id,t1.game_view_count, t1.game_title,t1.game_desc,t1.game_quest1,t1.game_quest2, t1.like_count, t1.createdAt,t2.game_state, t2.nickname, t2.participation_count, t2.like_state,
   t2.nickname,t2.user_image,t2.user_mbti 
   
@@ -311,7 +311,7 @@ export const gameDetail = async function (game_id:number) {
 };
 
 //상세게임 조회 quest1  전체 카운트
-export const gameQuest1All = async function (game_id:number) {
+export const gameQuest1All = async function (game_id: number) {
   const query = `SELECT count(g.game_id) as count
   
   FROM games AS g
@@ -330,7 +330,7 @@ export const gameQuest1All = async function (game_id:number) {
 };
 
 //상세게임 조회 quest1
-export const gameQuest1 = async function (game_id:number) {
+export const gameQuest1 = async function (game_id: number) {
   const query = `SELECT c.user_mbti,count(c.user_mbti) as count
   
   FROM game_counts AS c
@@ -349,7 +349,7 @@ export const gameQuest1 = async function (game_id:number) {
 };
 
 //상세게임 조회 quest2  전체 카운트
-export const gameQuest2All = async function (game_id:number) {
+export const gameQuest2All = async function (game_id: number) {
   const query = `SELECT count(g.game_id) as count
   
   FROM games AS g
@@ -366,7 +366,7 @@ export const gameQuest2All = async function (game_id:number) {
 };
 
 //상세게임 조회 quest2
-export const gameQuest2 = async function (game_id:number) {
+export const gameQuest2 = async function (game_id: number) {
   const query = `SELECT c.user_mbti,g.game_title,count(c.user_mbti) as count
   
   FROM game_counts AS c
@@ -384,7 +384,7 @@ export const gameQuest2 = async function (game_id:number) {
   // return new_board_list;
 };
 
-export const gameCommentsAll = async function (game_id:number) {
+export const gameCommentsAll = async function (game_id: number) {
   const queryComment = `
     SELECT u.user_image,u.user_id,c.game_id,u.user_mbti,u.nickname,c.game_comment,c.game_comment_id
     FROM game_comments AS c
