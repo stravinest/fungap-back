@@ -13,7 +13,7 @@ const client = new Client({
   },
 });
 
-const homeSearchFunc = async (req:Request, res:Response) => {
+const homeSearchFunc = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     const { keyword } = req.query;
@@ -41,7 +41,7 @@ const homeSearchFunc = async (req:Request, res:Response) => {
     }
 
     const search_board_list = board_list.body.hits.hits.map(
-      (board:any) => board._source
+      (board: any) => board._source
     );
 
     res.json({ result: 'success', search_board_list: search_board_list });
@@ -53,4 +53,4 @@ const homeSearchFunc = async (req:Request, res:Response) => {
   }
 };
 
-export {homeSearchFunc};
+export { homeSearchFunc };

@@ -3,7 +3,7 @@ import { getComments } from '../utils/getGameComments';
 import { Request, Response, NextFunction } from 'express';
 
 //댓글등록
-const writeComment = async (req:Request, res:Response) => {
+const writeComment = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     const { game_id } = req.params;
@@ -33,7 +33,7 @@ const writeComment = async (req:Request, res:Response) => {
   }
 };
 //댓글삭제
-const deleteComment = async (req:Request, res:Response) => {
+const deleteComment = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     const { game_id, game_comment_id } = req.params;
@@ -86,7 +86,7 @@ const deleteComment = async (req:Request, res:Response) => {
   }
 };
 //댓글수정
-const editComment = async (req:Request, res:Response) => {
+const editComment = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId; //임의로 user_id 1이 로그인 하였음
     const { game_id, game_comment_id } = req.params;
@@ -138,8 +138,4 @@ const editComment = async (req:Request, res:Response) => {
     });
   }
 };
-export {
-  deleteComment,
-  writeComment,
-  editComment,
-};
+export { deleteComment, writeComment, editComment };

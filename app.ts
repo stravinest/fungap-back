@@ -3,24 +3,24 @@ import { Request, Response, NextFunction } from 'express';
 import * as http from 'http';
 import * as dotenv from 'dotenv';
 import socketIO from './socket';
-import  Logger  from './config/logger';
+import Logger from './config/logger';
 
 dotenv.config({
   path: './env/.env',
 });
 const app = express();
 
-import morganMiddleware from'./config/morganMiddleware';
+import morganMiddleware from './config/morganMiddleware';
 app.use(morganMiddleware); // 콘솔창에 통신결과 나오게 해주는 것
 
-app.get("/logger", (_, res) => {
-  Logger.error("This is an error log");
-  Logger.warn("This is a warn log");
-  Logger.info("This is a info log");
-  Logger.http("This is a http log");
-  Logger.debug("This is a debug log");
+app.get('/logger', (_, res) => {
+  Logger.error('This is an error log');
+  Logger.warn('This is a warn log');
+  Logger.info('This is a info log');
+  Logger.http('This is a http log');
+  Logger.debug('This is a debug log');
 
-  res.send("Hello world");
+  res.send('Hello world');
 });
 
 import { sequelize } from './models';

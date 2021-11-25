@@ -2,7 +2,7 @@ import { User, Board, sequelize, Comment, Like } from '../models';
 import * as Sequelize from 'sequelize';
 import { Request, Response } from 'express';
 
-const writeBoardFunc = async (req:Request, res:Response) => {
+const writeBoardFunc = async (req: Request, res: Response) => {
   try {
     const userId = res.locals.userId;
     const { board_title, board_image, board_desc, board_content } = req.body;
@@ -24,7 +24,7 @@ const writeBoardFunc = async (req:Request, res:Response) => {
   }
 };
 
-const getUserFunc = async (req:Request, res:Response) => {
+const getUserFunc = async (req: Request, res: Response) => {
   try {
     const userId = res.locals.userId;
     const users = await User.findAll({});
@@ -38,7 +38,7 @@ const getUserFunc = async (req:Request, res:Response) => {
   }
 };
 
-const getCommentFunc = async (req:Request, res:Response) => {
+const getCommentFunc = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
 
@@ -54,8 +54,7 @@ const getCommentFunc = async (req:Request, res:Response) => {
       '-----------------------------------------------------------------------------'
     );
     // console.log(users.dataValues)
-    
-    
+
     // console.log(await users.getLikes({ where: { [Op.in]: user_id } }));
     // console.log(await users.countComments(), '요기다 욘석아!');
     const userCount = await User.count({});
@@ -69,7 +68,7 @@ const getCommentFunc = async (req:Request, res:Response) => {
   }
 };
 
-const getBoardFunc = async (req:Request, res:Response) => {
+const getBoardFunc = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
 
@@ -112,7 +111,7 @@ const getBoardFunc = async (req:Request, res:Response) => {
   }
 };
 
-const editBoardFunc = async (req:Request, res:Response) => {
+const editBoardFunc = async (req: Request, res: Response) => {
   try {
     const userId = res.locals.userId;
     const { board_id } = req.params;
@@ -132,7 +131,7 @@ const editBoardFunc = async (req:Request, res:Response) => {
   }
 };
 
-const detailBoardFunc = async (req:Request, res:Response) => {
+const detailBoardFunc = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     const { board_id } = req.params;
@@ -185,7 +184,7 @@ const detailBoardFunc = async (req:Request, res:Response) => {
   }
 };
 
-const deleteBoardFunc = async (req:Request, res:Response) => {
+const deleteBoardFunc = async (req: Request, res: Response) => {
   try {
     const userId = res.locals.userId;
     const board_id = req.params;

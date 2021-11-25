@@ -2,7 +2,7 @@ import { User, Chatlog, sequelize } from '../models';
 import * as Sequelize from 'sequelize';
 import { Request, Response } from 'express';
 
-const getChatlog = async (req:Request, res:Response) => {
+const getChatlog = async (req: Request, res: Response) => {
   try {
     const { roomname } = req.query;
     console.log(roomname);
@@ -21,7 +21,7 @@ const getChatlog = async (req:Request, res:Response) => {
     const roomNames = ['I', 'E', 'F', 'T'];
 
     //promiseall 결과 배열 담는 곳
-    let resultPromiseall:any;
+    let resultPromiseall: any;
 
     //promiseall 돌릴 promise들 담는 배열
     let targetRoomNameSequelizeQuerys = [];

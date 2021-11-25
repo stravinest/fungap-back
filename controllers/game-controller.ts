@@ -19,7 +19,7 @@ import { Request, Response, NextFunction } from 'express';
 import { getComments } from '../utils/getGameComments';
 
 //전체게임조회(최신순)
-const getGameAll = async (req:Request, res:Response) => {
+const getGameAll = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     console.log('유저로그인', user_id);
@@ -40,7 +40,7 @@ const getGameAll = async (req:Request, res:Response) => {
   }
 };
 //전체게임조회(조회수순)
-const getGameAllView = async (req:Request, res:Response) => {
+const getGameAllView = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     console.log('유저로그인', user_id);
@@ -61,7 +61,7 @@ const getGameAllView = async (req:Request, res:Response) => {
   }
 };
 //전체게임조회(인기순)
-const getGameAllPop = async (req:Request, res:Response) => {
+const getGameAllPop = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     console.log('유저로그인', user_id);
@@ -83,14 +83,14 @@ const getGameAllPop = async (req:Request, res:Response) => {
 };
 
 //세부게임조회
-const getGameDetail = async (req:Request, res:Response) => {
+const getGameDetail = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     const { game_id } = req.params;
     console.log('유저로그인', user_id);
-    type Objtype={
-      [index:string]:string|number
-    }
+    type Objtype = {
+      [index: string]: string | number;
+    };
     if (req.cookies['f' + game_id] == undefined) {
       res.cookie('f' + game_id, getUserIP(req), {
         maxAge: 720000, //12분
@@ -98,33 +98,35 @@ const getGameDetail = async (req:Request, res:Response) => {
       });
       await Game.increment({ game_view_count: +1 }, { where: { game_id } });
     }
-    
-     const isGame =await Game.findOne({
-       where:{game_id:game_id}
-     })
 
-     if(!isGame || isGame.game_delete_code==1){
+    const isGame = await Game.findOne({
+      where: { game_id: game_id },
+    });
 
+    if (!isGame || isGame.game_delete_code == 1) {
       res.status(400).json({
         result: 'fail',
         errormessage: '게임이 없거나  조회 할수 없습니다.',
       });
       return;
-     }
+    }
 
     if (user_id) {
-      const game_array = await gameDetailLogin(Number(user_id), Number(game_id));
+      const game_array = await gameDetailLogin(
+        Number(user_id),
+        Number(game_id)
+      );
       const game = game_array[0];
-      console.log(game)
+      console.log(game);
 
-      const game_quest1_mbti:any = await gameQuest1(Number(game_id));
+      const game_quest1_mbti: any = await gameQuest1(Number(game_id));
       const game_quest1_all = await gameQuest1All(Number(game_id));
 
       if (!game_quest1_all) {
         console.log('여기');
       }
       console.log(game_quest1_all[0]);
-      const mbti:Objtype={};
+      const mbti: Objtype = {};
       for (let i = 0; i < game_quest1_mbti.length; i++) {
         mbti[game_quest1_mbti[i].user_mbti] = game_quest1_mbti[i].count;
       }
@@ -133,10 +135,10 @@ const getGameDetail = async (req:Request, res:Response) => {
         ...game_quest1_all[0],
       };
 
-      const game_quest2_mbti:any = await gameQuest2(Number(game_id));
+      const game_quest2_mbti: any = await gameQuest2(Number(game_id));
       const game_quest2_all = await gameQuest2All(Number(game_id));
 
-      const mbti2 :Objtype={};
+      const mbti2: Objtype = {};
       for (let i = 0; i < game_quest2_mbti.length; i++) {
         mbti2[game_quest2_mbti[i].user_mbti] = game_quest2_mbti[i].count;
       }
@@ -154,11 +156,11 @@ const getGameDetail = async (req:Request, res:Response) => {
       const game_array = await gameDetail(Number(game_id));
       const game = game_array[0];
 
-      const game_quest1_mbti:any = await gameQuest1(Number(game_id));
+      const game_quest1_mbti: any = await gameQuest1(Number(game_id));
       const game_quest1_all = await gameQuest1All(Number(game_id));
       console.log('게임퀘스트', game_quest1_mbti);
 
-      const mbti :Objtype={};
+      const mbti: Objtype = {};
       for (let i = 0; i < game_quest1_mbti.length; i++) {
         mbti[game_quest1_mbti[i].user_mbti] = game_quest1_mbti[i].count;
       }
@@ -168,11 +170,11 @@ const getGameDetail = async (req:Request, res:Response) => {
         ...game_quest1_all[0],
       };
 
-      const game_quest2_mbti:any = await gameQuest2(Number(game_id));
+      const game_quest2_mbti: any = await gameQuest2(Number(game_id));
       const game_quest2_all = await gameQuest2All(Number(game_id));
       console.log(game_quest2_all[0]);
 
-      const mbti2 :Objtype={};
+      const mbti2: Objtype = {};
       for (let i = 0; i < game_quest2_mbti.length; i++) {
         mbti2[game_quest2_mbti[i].user_mbti] = game_quest2_mbti[i].count;
       }
@@ -194,14 +196,14 @@ const getGameDetail = async (req:Request, res:Response) => {
   }
 };
 
-function getUserIP(req:Request) {
+function getUserIP(req: Request) {
   console.log(req.headers);
   const addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   return addr;
 }
 
 //게임댓글 조회
-const getGameComment = async (req:Request, res:Response) => {
+const getGameComment = async (req: Request, res: Response) => {
   try {
     const { game_id } = req.params;
     const comments = await getComments(Number(game_id));
@@ -217,7 +219,7 @@ const getGameComment = async (req:Request, res:Response) => {
 };
 
 //게임등록
-const writeGame = async (req:Request, res:Response) => {
+const writeGame = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     const { game_title, game_desc, game_quest1, game_quest2 } = req.body;
@@ -248,7 +250,7 @@ const writeGame = async (req:Request, res:Response) => {
 };
 
 //게임수정
-const editGame = async (req:Request, res:Response) => {
+const editGame = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId; //임의로 user_id 1이 로그인 하였음
     const { game_title, game_desc, game_quest1, game_quest2 } = req.body;
@@ -305,7 +307,7 @@ const editGame = async (req:Request, res:Response) => {
 };
 
 //게임삭제
-const deleteGame = async (req:Request, res:Response) => {
+const deleteGame = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     const { game_id } = req.params;
@@ -353,7 +355,7 @@ const deleteGame = async (req:Request, res:Response) => {
 };
 
 //게임참여 선택!
-const selectGame = async (req:Request, res:Response) => {
+const selectGame = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     const { game_id } = req.params;
@@ -433,7 +435,7 @@ const selectGame = async (req:Request, res:Response) => {
   }
 };
 
-const likeGame = async (req:Request, res:Response) => {
+const likeGame = async (req: Request, res: Response) => {
   try {
     const user_id = res.locals.userId;
     const { game_id } = req.params;
@@ -485,7 +487,7 @@ const likeGame = async (req:Request, res:Response) => {
   }
 };
 
-export{
+export {
   getGameAll,
   getGameDetail,
   getGameAllView,
