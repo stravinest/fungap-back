@@ -233,7 +233,7 @@ export const gameDetailLogin = async function (
     ORDER BY g.createdAt DESC) as t1
     join
     
-  (select g.game_id,a.nickname,a.user_image,a.user_mbti,count(c.game_id) as participation_count,
+  (select g.game_id,a.nickname,a.user_image,a.user_mbti,count(p.game_id) as participation_count,
   
   case l.game_id
   when g.game_id then 'true'
@@ -252,6 +252,8 @@ export const gameDetailLogin = async function (
   on g.game_id = l.game_id and l.user_id = ${user_id}
   left outer join game_counts as c
   on g.game_id = c.game_id and c.user_id = ${user_id}
+  left outer join game_counts as p
+  on g.game_id = p.game_id
   group by g.game_id
   ORDER BY g.createdAt DESC) as t2
   on t1.game_id = t2.game_id
