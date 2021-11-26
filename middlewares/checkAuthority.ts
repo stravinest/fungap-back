@@ -13,7 +13,7 @@ export const checkAuthority = async (
 
     if (userInfo?.user_authority == 'public') {
       return res
-        .status(403)
+        .status(409)
         .json({ result: 'fail', error: '접근 권한이 없습니다.' });
     }
     next();
