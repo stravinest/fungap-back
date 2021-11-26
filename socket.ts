@@ -10,8 +10,12 @@ export default (httpServer: http.Server) => {
     cors: { origin: '*', credentials: true },
   });
 
-  let badwords: any;
+  interface Ibadwordobjectlist {
+    id: number;
+    badword: string;
+  }
 
+  //비속어 목록 불러오기
   const getBadwords = async () => {
     try {
       const badwordlist = await sequelize.query(
@@ -21,17 +25,11 @@ export default (httpServer: http.Server) => {
         }
       );
       console.log('비속어 필터링 DB 불러오기 완료');
-      badwords = badwordlist;
+      return badwordlist;
     } catch (err) {
       console.error(err);
     }
   };
-  getBadwords();
-
-  interface Ibadwordobjectlist {
-    id: number;
-    badword: string;
-  }
 
   //비속어가 있는지 체크
   function checkBadword(badwordobjectlist: Ibadwordobjectlist[], msg: string) {
@@ -68,7 +66,7 @@ export default (httpServer: http.Server) => {
   let roomTUserList: IChatRoomUserList[] = [];
 
   //roomName에 맞는 유저리스트 리턴
-  function findRoomUserList(roomName: string) {
+  function findChatroomUserList(roomName: string) {
     switch (roomName) {
       case 'I':
         return roomIUserList;
@@ -150,6 +148,35 @@ export default (httpServer: http.Server) => {
     }
   }
 
+  // 비속어 필터링에서 비속어 목록 불러오기
+  let badwords: any = getBadwords();
+
+  const getUserImage = async (userList: IChatRoomUserList[] | undefined) => {
+    let targetRoomNameSequelizeQuerys: any[] = [];
+    //promise.all 돌릴 배열 생성 (유저아이디별 유저이미지 가져오기)
+    if (userList!.length > 0) {
+      for (let i = 0; i < userList!.length; i++) {
+        const targetUserId = userList![i].userId;
+        const targetNickName = userList![i].nickName;
+        const targetRoomNameSequelizeQuery = new Promise((resolve, reject) => {
+          resolve(
+            sequelize.query(
+              `SELECT nickname, user_image FROM database_final_project.users where user_id = ${targetUserId} and nickname = '${targetNickName}'`,
+              {
+                type: Sequelize.QueryTypes.SELECT,
+              }
+            )
+          );
+        });
+        targetRoomNameSequelizeQuerys.push(targetRoomNameSequelizeQuery);
+      }
+    }
+
+    await Promise.all(targetRoomNameSequelizeQuerys).then((values) => {
+      return values;
+    });
+  };
+
   //처음 소켓서버에 접속하는 이벤트, 소켓을 하나씩 받는다.
   io.on('connection', (socket) => {
     //소켓에서의 미들웨어 느낌  감시자
@@ -157,15 +184,32 @@ export default (httpServer: http.Server) => {
       console.log(`소켓 이벤트명: ${event}`);
     });
 
-    //방에 들어가는 이벤트
-    socket.on('join_room', (roomName, nickName, userId) => {
-      console.log(roomName, nickName, userId);
-
+    socket.on('join_room', (roomName) => {
       //roomName 방에 접속시킴
       socket.join(roomName);
+    });
+
+    socket.on('left_room', (roomName) => {
+      socket.leave(roomName);
+    });
+
+    //채팅방에 들어가는 이벤트
+    socket.on('join_chat', async (roomName, nickName, userId) => {
+      console.log(roomName, nickName, userId);
 
       //룸네임에 맞는 유저리스트에 유저 추가
       pushUserlist(roomName, nickName, userId);
+
+      //채팅방 안의 유저리스트 불러오기
+      let userList = findChatroomUserList(roomName);
+
+      //채팅방 안의 유저들의 유저닉네임과 이미지를 받아오기
+      let resultPromiseall = getUserImage(userList);
+
+      //현재 채팅방에 있는 유저닉네임과 유저이미지 유저 수 보내주기
+      io.sockets
+        .to(roomName)
+        .emit('current_usercount', resultPromiseall, countRoomUser(roomName));
 
       //방에 접속함을 알리는 이벤트
       io.sockets
@@ -173,7 +217,7 @@ export default (httpServer: http.Server) => {
         .emit(
           'notice_user_join',
           nickName,
-          findRoomUserList(roomName),
+          findChatroomUserList(roomName),
           countRoomUser(roomName)
         );
     });
@@ -188,62 +232,48 @@ export default (httpServer: http.Server) => {
     });
 
     //유저가 룸 떠났을 때 발생하는 이벤트
-    socket.on('user_left', (roomName, nickName, userId) => {
+    socket.on('user_left', async (roomName, nickName, userId) => {
       // 유저리스트에서의 유저 위치번호
       let index = -1;
 
       //roomName에 맞는 유저리스트에서 삭제
       spliceUserList(roomName, nickName, userId, index);
 
-      //방의 모든유저(자신포함)에게 유저 왔음을 알림
+      //채팅방 안의 유저리스트 불러오기
+      let userList = findChatroomUserList(roomName);
+
+      //promiseall 돌릴 배열 선언
+      let targetRoomNameSequelizeQuerys: any[] = [];
+
+      //채팅방 안의 유저들의 유저닉네임과 이미지를 받아오기
+      let resultPromiseall = getUserImage(userList);
+
+      //현재 채팅방에 있는 유저닉네임과 유저이미지 유저 수 보내주기
+      io.sockets
+        .to(roomName)
+        .emit('current_usercount', resultPromiseall, countRoomUser(roomName));
+
+      //채팅방의 모든유저(자신포함)에게 유저 왔음을 알림
       io.sockets
         .to(roomName)
         .emit('notice_user_left', roomName, nickName, userId);
-
-      socket.leave(roomName);
     });
 
     //유저 목록 보내는 이벤트
     socket.on('current_usercount', async (roomName) => {
-      let userList = findRoomUserList(roomName);
+      //채팅방 안의 유저리스트 불러오기
+      let userList = findChatroomUserList(roomName);
 
-      let targetRoomNameSequelizeQuerys = [];
+      //promiseall 돌릴 배열 선언
+      let targetRoomNameSequelizeQuerys: any[] = [];
 
-      let resultPromiseall: any = undefined;
+      //채팅방 안의 유저들의 유저닉네임과 이미지를 받아오기
+      let resultPromiseall = getUserImage(userList);
 
-      //promise.all 돌릴 배열 생성 (유저아이디별 유저이미지 가져오기)
-      if (userList!.length > 0) {
-        for (let i = 0; i < userList!.length; i++) {
-          const targetUserId = userList![i].userId;
-          const targetNickName = userList![i].nickName;
-          const targetRoomNameSequelizeQuery = new Promise(
-            (resolve, reject) => {
-              resolve(
-                sequelize.query(
-                  `SELECT nickname, user_image FROM database_final_project.users where user_id = ${targetUserId} and nickname = '${targetNickName}'`,
-                  {
-                    type: Sequelize.QueryTypes.SELECT,
-                  }
-                )
-              );
-            }
-          );
-          targetRoomNameSequelizeQuerys.push(targetRoomNameSequelizeQuery);
-        }
-      }
-
-      await Promise.all(targetRoomNameSequelizeQuerys).then((values) => {
-        resultPromiseall = values;
-      });
-
-      console.log(resultPromiseall);
-
-      //유저 수와 유저이미지 전송
-      socket.emit(
-        'current_usercount',
-        resultPromiseall,
-        countRoomUser(roomName)
-      );
+      //현재 채팅방에 있는 유저닉네임과 유저이미지 유저 수 보내주기
+      io.sockets
+        .to(roomName)
+        .emit('current_usercount', resultPromiseall, countRoomUser(roomName));
     });
 
     //메세지 보내는 이벤트

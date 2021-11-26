@@ -13,10 +13,11 @@ import {
   gameQuest2,
   gameQuest2All,
   gameCommentsAll,
-} from '../utils/getGameQuery';
+} from '../utils/gameQuery';
 import { Op } from 'sequelize';
 import { Request, Response, NextFunction } from 'express';
-import { getComments } from '../utils/getGameComments';
+import { getComments } from '../utils/gameCommentQuery';
+import { Game_quest } from '../interface/game';
 
 //전체게임조회(최신순)
 const getGameAll = async (req: Request, res: Response) => {
@@ -88,9 +89,11 @@ const getGameDetail = async (req: Request, res: Response) => {
     const user_id = res.locals.userId;
     const { game_id } = req.params;
     console.log('유저로그인', user_id);
-    type Objtype = {
-      [index: string]: string | number;
-    };
+
+    //타입지정 새로 객체 생성
+    type Objtype = Record<string, string | number>;
+
+    //조회수 세팅
     if (req.cookies['f' + game_id] == undefined) {
       res.cookie('f' + game_id, getUserIP(req), {
         maxAge: 720000, //12분
@@ -111,87 +114,98 @@ const getGameDetail = async (req: Request, res: Response) => {
       return;
     }
 
+    //로그인시
     if (user_id) {
       const game_array = await gameDetailLogin(
         Number(user_id),
         Number(game_id)
       );
-      const game = game_array[0];
-      console.log(game);
+      const game = game_array[0]; //game 로그인시 완성
 
-      const game_quest1_mbti: any = await gameQuest1(Number(game_id));
+      const game_quest1_mbti: Game_quest[] = await gameQuest1(Number(game_id));
       const game_quest1_all = await gameQuest1All(Number(game_id));
 
-      if (!game_quest1_all) {
-        console.log('여기');
-      }
-      console.log(game_quest1_all[0]);
-      const mbti: Objtype = {};
+      const mbti: Objtype = {}; //새로 만들 객체
       for (let i = 0; i < game_quest1_mbti.length; i++) {
-        mbti[game_quest1_mbti[i].user_mbti] = game_quest1_mbti[i].count;
+        const game_var = game_quest1_mbti[i]; //game_var에 넣어서 돌려줘야 댐
+        if (game_var.user_mbti !== undefined && game_var.count !== undefined) {
+          mbti[game_var.user_mbti] = game_var.count;
+        }
       }
       const game_quest1 = {
+        //game_quest1 로그인시 완성
         ...mbti,
         ...game_quest1_all[0],
       };
 
-      const game_quest2_mbti: any = await gameQuest2(Number(game_id));
+      const game_quest2_mbti: Game_quest[] = await gameQuest2(Number(game_id));
       const game_quest2_all = await gameQuest2All(Number(game_id));
 
       const mbti2: Objtype = {};
       for (let i = 0; i < game_quest2_mbti.length; i++) {
-        mbti2[game_quest2_mbti[i].user_mbti] = game_quest2_mbti[i].count;
+        const game_var = game_quest2_mbti[i];
+
+        if (game_var.user_mbti !== undefined && game_var.count !== undefined) {
+          mbti2[game_var.user_mbti] = game_var.count;
+        }
       }
       const game_quest2 = {
+        //game_quest2 로그인시 완성
         ...mbti2,
         ...game_quest2_all[0],
       };
-      console.log(game_quest2_all);
 
       res
         .status(200)
         .json({ result: 'success', game, game_quest1, game_quest2 });
-    } else {
-      //비로그인시
-      const game_array = await gameDetail(Number(game_id));
-      const game = game_array[0];
 
-      const game_quest1_mbti: any = await gameQuest1(Number(game_id));
+      //비로그인시
+    } else {
+      const game_array = await gameDetail(Number(game_id));
+      const game = game_array[0]; //비로그인시 game 완성
+
+      const game_quest1_mbti: Game_quest[] = await gameQuest1(Number(game_id));
       const game_quest1_all = await gameQuest1All(Number(game_id));
-      console.log('게임퀘스트', game_quest1_mbti);
 
       const mbti: Objtype = {};
       for (let i = 0; i < game_quest1_mbti.length; i++) {
-        mbti[game_quest1_mbti[i].user_mbti] = game_quest1_mbti[i].count;
+        const game_var = game_quest1_mbti[i];
+        if (game_var.user_mbti !== undefined && game_var.count !== undefined) {
+          mbti[game_var.user_mbti] = game_var.count;
+        }
       }
-      console.log(mbti);
       const game_quest1 = {
+        //비로그인시 game_quest1 완성
         ...mbti,
         ...game_quest1_all[0],
       };
 
-      const game_quest2_mbti: any = await gameQuest2(Number(game_id));
+      const game_quest2_mbti: Game_quest[] = await gameQuest2(Number(game_id));
       const game_quest2_all = await gameQuest2All(Number(game_id));
-      console.log(game_quest2_all[0]);
 
       const mbti2: Objtype = {};
       for (let i = 0; i < game_quest2_mbti.length; i++) {
-        mbti2[game_quest2_mbti[i].user_mbti] = game_quest2_mbti[i].count;
+        const game_var = game_quest2_mbti[i];
+
+        if (game_var.user_mbti !== undefined && game_var.count !== undefined) {
+          mbti2[game_var.user_mbti] = game_var.count;
+        }
       }
       const game_quest2 = {
+        //비로그인시 game_quest2 완성
         ...mbti2,
         ...game_quest2_all[0],
       };
 
       res
-        .status(201)
+        .status(200)
         .json({ result: 'success', game, game_quest1, game_quest2 });
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json(() => {
-      result: 'fail';
-      errormesssage: '게시글 목록을 불러오는데 실패하였습니다.';
+    res.status(400).json({
+      result: 'fail',
+      errormesssage: '게시글 목록을 불러오는데 실패하였습니다.',
     });
   }
 };

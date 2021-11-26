@@ -10,6 +10,7 @@ import mbtiRouter from './mbti';
 import commRouter from './comment';
 import chatRouter from './chat';
 import gameRouter from './game';
+import allContentRouter from './allcontent';
 
 router.use('/user', [userRouter]);
 router.use('/auth', [authRouter]);
@@ -20,5 +21,6 @@ router.use('/board', [boardRouter]);
 router.use('/comment', [commRouter]);
 router.use('/mbti', [mbtiRouter]);
 router.use('/chat', [chatRouter]);
+router.use('/allcontent', [allContentRouter]);
 
 export default router;

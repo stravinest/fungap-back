@@ -1,5 +1,5 @@
 import * as winston from 'winston';
-
+import * as winstonDaily from 'winston-daily-rotate-file';
 const levels = {
   error: 0,
   warn: 1,
