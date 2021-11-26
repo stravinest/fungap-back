@@ -56,7 +56,7 @@ export function Validator(validator: string) {
         });
         return;
       }
-    } catch (err: any) {
+    } catch (err:any) {
       if (err.isJoi)
         res.status(401).send({
           result: 'fail',
