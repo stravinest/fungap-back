@@ -6,7 +6,7 @@ import socketIO from './socket';
 import Logger from './config/logger';
 
 dotenv.config({
-  path: './env/.env',
+  path: './share/.env',
 });
 const app = express();
 
