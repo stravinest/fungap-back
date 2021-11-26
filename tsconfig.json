@@ -6,7 +6,7 @@
     "moduleResolution": "node",
     "typeRoots": ["./types"],
     "module": "commonjs",
-    // "outDir": "dist",
+    "outDir": "dist",
     "sourceMap": true
   }
 }
