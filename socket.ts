@@ -4,10 +4,20 @@ import { IChatRoomUserList } from './interface/chat';
 import * as http from 'http';
 import * as Sequelize from 'sequelize';
 
-export default (httpServer: http.Server) => {
+export default async (httpServer: http.Server) => {
   const io = new Server(httpServer, {
     path: '/socket.io/',
-    cors: { origin: '*', credentials: true },
+    cors: {
+      origin: [
+        'http://localhost:3000', // 접근 권한을 부여하는 도메
+        'http://fungap.shop',
+        'https://localhost:3000',
+        'https://fungap.shop',
+        'http://velog-clone.shop',
+        'https://velog-clone.shop',
+      ],
+      credentials: true,
+    },
   });
 
   interface Ibadwordobjectlist {
@@ -149,10 +159,11 @@ export default (httpServer: http.Server) => {
   }
 
   // 비속어 필터링에서 비속어 목록 불러오기
-  let badwords: any = getBadwords();
+  let badwords: any = await getBadwords();
 
   const getUserImage = async (userList: IChatRoomUserList[] | undefined) => {
     let targetRoomNameSequelizeQuerys: any[] = [];
+    let resultPromiseall;
     //promise.all 돌릴 배열 생성 (유저아이디별 유저이미지 가져오기)
     if (userList!.length > 0) {
       for (let i = 0; i < userList!.length; i++) {
@@ -173,8 +184,10 @@ export default (httpServer: http.Server) => {
     }
 
     await Promise.all(targetRoomNameSequelizeQuerys).then((values) => {
-      return values;
+      resultPromiseall = values;
     });
+
+    return resultPromiseall;
   };
 
   //처음 소켓서버에 접속하는 이벤트, 소켓을 하나씩 받는다.
@@ -203,9 +216,12 @@ export default (httpServer: http.Server) => {
       //채팅방 안의 유저리스트 불러오기
       let userList = findChatroomUserList(roomName);
 
-      //채팅방 안의 유저들의 유저닉네임과 이미지를 받아오기
-      let resultPromiseall = getUserImage(userList);
+      console.log(userList);
 
+      //채팅방 안의 유저들의 유저닉네임과 이미지를 받아오기
+      let resultPromiseall = await getUserImage(userList);
+
+      console.log(resultPromiseall);
       //현재 채팅방에 있는 유저닉네임과 유저이미지 유저 수 보내주기
       io.sockets
         .to(roomName)
@@ -242,11 +258,8 @@ export default (httpServer: http.Server) => {
       //채팅방 안의 유저리스트 불러오기
       let userList = findChatroomUserList(roomName);
 
-      //promiseall 돌릴 배열 선언
-      let targetRoomNameSequelizeQuerys: any[] = [];
-
       //채팅방 안의 유저들의 유저닉네임과 이미지를 받아오기
-      let resultPromiseall = getUserImage(userList);
+      let resultPromiseall = await getUserImage(userList);
 
       //현재 채팅방에 있는 유저닉네임과 유저이미지 유저 수 보내주기
       io.sockets
@@ -264,11 +277,8 @@ export default (httpServer: http.Server) => {
       //채팅방 안의 유저리스트 불러오기
       let userList = findChatroomUserList(roomName);
 
-      //promiseall 돌릴 배열 선언
-      let targetRoomNameSequelizeQuerys: any[] = [];
-
       //채팅방 안의 유저들의 유저닉네임과 이미지를 받아오기
-      let resultPromiseall = getUserImage(userList);
+      let resultPromiseall = await getUserImage(userList);
 
       //현재 채팅방에 있는 유저닉네임과 유저이미지 유저 수 보내주기
       io.sockets
@@ -295,14 +305,16 @@ export default (httpServer: http.Server) => {
       WHERE user_id = ${userId}`;
 
         //유저 이미지 불러오기
-        const userImageData = await sequelize.query(query, {
+        const userImageData: any = await sequelize.query(query, {
           type: Sequelize.QueryTypes.SELECT,
         });
+
+        const userImage = userImageData[0].user_image;
 
         //메세지를 방의 모든 소켓들(자신포함)에게 전달
         io.sockets
           .to(roomName)
-          .emit('receive_data', roomName, nickName, userId, msg, userImageData);
+          .emit('receive_message', roomName, nickName, userId, msg, userImage);
       } catch (err) {
         console.error(err);
       }
