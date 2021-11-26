@@ -6,7 +6,8 @@ import {
   deleteUser,
   deleteUserComment,
   deleteUserLike,
-  selectlikedBoardList,
+  selectLikedBoardList,
+  selectMyGameList,
 } from '../utils/mypageQuery';
 
 //유저 정보 조회
@@ -27,7 +28,7 @@ const getUserInfo = async (req: Request, res: Response) => {
       },
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(400).json({
       errorMessage: '알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.',
     });
@@ -65,7 +66,7 @@ const patchUserInfo = async (req: Request, res: Response) => {
       },
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(400).json({
       errorMessage: '알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.',
     });
@@ -95,7 +96,7 @@ const deleteUserInfo = async (req: Request, res: Response) => {
       result: 'success',
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(400).json({
       errorMessage: '알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.',
     });
@@ -107,18 +108,39 @@ const likedBoardList = async (req: Request, res: Response) => {
   try {
     const userId = res.locals.userInfo.userId;
 
-    const likedBoardList = selectlikedBoardList(userId);
+    const likedBoardList = selectLikedBoardList(userId);
 
     res.status(200).json({
       result: 'success',
       likedBoardList,
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(400).json({
       errorMessage: '알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.',
     });
   }
 };
 
-export { getUserInfo, patchUserInfo, deleteUserInfo, likedBoardList };
+const getMyGameList = async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+
+    const myGameList = selectMyGameList;
+
+    res.status(200).json({
+      result: 'success',
+      myGameList,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export {
+  getUserInfo,
+  patchUserInfo,
+  deleteUserInfo,
+  likedBoardList,
+  getMyGameList,
+};
