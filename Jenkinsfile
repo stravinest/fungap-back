@@ -42,13 +42,14 @@ node {
 
        stage('image pull') {
 
-           sh(script: 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136')
-
-           sh(script: 'sudo -s')
-
-           sh(script: 'sudo docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}') 
-
-           sh(script: 'sudo docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
+           sh(script: 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136 <<EOF	
+                       sudo docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}  
+                       sudo docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}    
+                       sudo docker tag ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER} localhost:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}
+                       sudo docker push localhost:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}')
+                                                   
+           
+      //      sh(script: 'sudo docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
 
        //    sh(script: 'sudo docker tag ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER} 127.0.0.1:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}')
            
@@ -57,30 +58,30 @@ node {
            
        }
 
-       stage('manager') {
-           sh(script: 'sudo docker container exec -it e67276335f18 sh') 
+      //  stage('manager') {
+      //      sh(script: 'sudo docker container exec -it e67276335f18 sh') 
 
-           sh(script: 'sudo docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}') 
+      //      sh(script: 'sudo docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}') 
 
-           sh(script: 'sudo docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
+      //      sh(script: 'sudo docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
 
-      //      sh(script: 'sudo docker container exec -it manager sh') 
+      // //      sh(script: 'sudo docker container exec -it manager sh') 
           
-      //      sh(script: 'sudo docker container exec -it worker01 docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
+      // //      sh(script: 'sudo docker container exec -it worker01 docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
           
-      //      sh(script: 'sudo docker container exec -it worker02 docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
+      // //      sh(script: 'sudo docker container exec -it worker02 docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
 
          
           
            
-       }
+      //  }
 
-       stage('update') {
+      //  stage('update') {
 
-            //  sh(script: 'sudo docker container exec -it manager docker service update --image ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER} fungap') 
+      //        sh(script: 'sudo docker container exec -it manager docker service update --image ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER} fungap') 
 
            
-       }
+      //  }
 
     } 
 
