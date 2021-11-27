@@ -28,7 +28,7 @@ node {
 
       stage('Tag') {
 
-            sh(script: '''sudo docker tag ${DOCKER_USER_ID}/fungap ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}''') }
+            sh(script: 'sudo docker tag ${DOCKER_USER_ID}/fungap ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') }
 
       stage('Push') {
 
@@ -40,11 +40,31 @@ node {
 
       }
 
-      // stage('Deploy') {
+       stage('image pull') {
 
-      //     sh(script: 'docker-compose up -d production') 
+           sh(script: 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136') 
 
-      // }
+           sh(script: 'sudo docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
+
+           sh(script: 'sudo docker tag ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}  localhost:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}   ') 
+           
+       }
+
+       stage('registry') {
+
+           sh(script: 'sudo docker container exec -it manager docker image pull registry:5000/stravinest/fungap:${BUILD_NUMBER}') 
+          
+           sh(script: 'sudo docker container exec -it worker01 docker image pull registry:5000/stravinest/fungap:${BUILD_NUMBER}') 
+          
+           sh(script: 'sudo docker container exec -it worker02 docker image pull registry:5000/stravinest/fungap:${BUILD_NUMBER}') 
+           
+       }
+
+       stage('update') {
+
+           sh(script: 'sudo docker container exec -it manager docker service update --image registry:5000/stravinest/fungap:${BUILD_NUMBER} fungap') 
+           
+       }
 
     } 
 
