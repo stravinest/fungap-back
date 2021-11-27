@@ -22,7 +22,7 @@ const getChatlog = async (req: Request, res: Response) => {
     const roomNames = ['I', 'E', 'F', 'T'];
 
     //promiseall 결과 배열이 될 변수
-    let resultPromiseall: any;
+    let resultPromiseall;
 
     //promiseall 돌릴 promise들 담는 배열
     let targetRoomNameSequelizeQuerys = [];

@@ -37,6 +37,8 @@ let colsOptions = {
     'http://fungap.shop',
     'https://localhost:3000',
     'https://fungap.shop',
+    'http://velog-clone.shop',
+    'https://velog-clone.shop',
   ],
   credentials: true, // 응답 헤더에 Access-Control-Allow-Credentials 추가
   // exposedHeaders: [Set - Cookie],
