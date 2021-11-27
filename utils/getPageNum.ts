@@ -3,7 +3,7 @@ export const getPageNum = async function (
   allboard_list: object[]
 ) {
   console.log(page);
-  const perPage = 5;
+  const perPage = 7;
   const allPage = parseInt(page, 10) * perPage;
   const pageNum = parseInt(page, 10);
   console.log(pageNum);
