@@ -8,6 +8,7 @@ const getChatlog = async (req: Request, res: Response) => {
     const { roomname } = req.query;
     console.log(roomname);
 
+    //오래된 챗(10일 지난)을 지우는 쿼리문
     const deleteOldChatlogQuery = `DELETE c FROM users AS u
     LEFT OUTER JOIN chatlogs AS c
     ON (u.user_id = c.user_id)
@@ -18,11 +19,12 @@ const getChatlog = async (req: Request, res: Response) => {
       type: Sequelize.QueryTypes.DELETE,
     });
 
-    //roomName의 타입 집합
+    ///채팅이 100개 이상 쌓이면 오래된 순으로 지우는 기능
+    //roomName의 집합
     const roomNames = ['I', 'E', 'F', 'T'];
 
     //promiseall 결과 배열이 될 변수
-    let resultPromiseall;
+    let resultPromiseall: any;
 
     //promiseall 돌릴 promise들 담는 배열
     let targetRoomNameSequelizeQuerys = [];
@@ -53,16 +55,18 @@ const getChatlog = async (req: Request, res: Response) => {
     let resultPromiseallIndex = 0;
 
     //채팅방 별로 채팅로그를 조회한 결과가 100개가 넘으면 100개 이외는 다 삭제
-    for await (let value of resultPromiseall) {
-      if (value[0].count > 100) {
-        const query = `DELETE FROM database_final_project.chatlogs
-        where room_name = '${roomNames[resultPromiseallIndex]}'
-        limit ${value[0].count - 100}`;
-        await sequelize.query(query, {
-          type: Sequelize.QueryTypes.DELETE,
-        });
+    if (resultPromiseall) {
+      for await (let value of resultPromiseall) {
+        if (value[0].count > 100) {
+          const query = `DELETE FROM database_final_project.chatlogs
+          where room_name = '${roomNames[resultPromiseallIndex]}'
+          limit ${value[0].count - 100}`;
+          await sequelize.query(query, {
+            type: Sequelize.QueryTypes.DELETE,
+          });
+        }
+        resultPromiseallIndex++;
       }
-      resultPromiseallIndex++;
     }
 
     const selectChatlogQuery = `SELECT c.chat_id, c.room_name, u.user_id, u.nickname as name, u.user_image as userImage, c.message , c.createdAt
