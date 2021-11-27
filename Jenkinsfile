@@ -44,7 +44,7 @@ node {
 
            sh(script: 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136')
 
-           sh(script:'sudo systemctl daemon-reload')
+           sh(script: 'sudo -s')
 
            sh(script: 'sudo docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}') 
 
@@ -57,22 +57,28 @@ node {
            
        }
 
-       stage('registry') {
-           sh(script: 'sudo docker container exec -it manager docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
-          
-           sh(script: 'sudo docker container exec -it worker01 docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
-          
-           sh(script: 'sudo docker container exec -it worker02 docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
+       stage('manager') {
+           sh(script: 'sudo docker container exec -it e67276335f18 sh') 
 
-           sh(script: 'sudo docker container exec -it manager docker service update --image ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER} fungap') 
+           sh(script: 'sudo docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}') 
 
+           sh(script: 'sudo docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
+
+      //      sh(script: 'sudo docker container exec -it manager sh') 
+          
+      //      sh(script: 'sudo docker container exec -it worker01 docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
+          
+      //      sh(script: 'sudo docker container exec -it worker02 docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
+
+         
           
            
        }
 
        stage('update') {
 
-           
+            //  sh(script: 'sudo docker container exec -it manager docker service update --image ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER} fungap') 
+
            
        }
 
