@@ -42,7 +42,7 @@ node {
 
        stage('image pull') {
 
-           sh(script: 'sudo ssh -i ~/.ssh/id_rsa_pub jenkins@34.64.75.136') 
+           sh(script: 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136') 
 
            sh(script: 'sudo docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
 
