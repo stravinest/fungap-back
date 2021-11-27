@@ -46,9 +46,9 @@ node {
 
            sh(script: 'sudo docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
 
-           sh(script: 'sudo docker tag ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER} 34.64.75.136:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}')
+           sh(script: 'sudo docker tag ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER} localhost:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}')
            
-           sh(script: 'sudo docker push 34.64.75.136:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}')
+           sh(script: 'sudo docker push localhost:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}')
 
 
            
