@@ -3,6 +3,7 @@ import { Chatlog, sequelize } from './models';
 import { IChatRoomUserList } from './interface/chat';
 import * as http from 'http';
 import * as Sequelize from 'sequelize';
+import { Ibadwordobjectlist } from './interface/chat';
 
 export default async (httpServer: http.Server) => {
   const io = new Server(httpServer, {
@@ -19,11 +20,6 @@ export default async (httpServer: http.Server) => {
       credentials: true,
     },
   });
-
-  interface Ibadwordobjectlist {
-    id: number;
-    badword: string;
-  }
 
   //비속어 목록 불러오기
   const getBadwords = async () => {
