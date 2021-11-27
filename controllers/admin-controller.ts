@@ -4,9 +4,9 @@ import { Request, Response } from 'express';
 
 const writeBoardFunc = async (req: Request, res: Response) => {
   try {
-    const userId = res.locals.userId;
-    const { board_title, board_image, board_desc, board_content } = req.body;
-
+    const userId :number= res.locals.userId;
+    const {board_title, board_image, board_desc, board_content} :Board= req.body;
+    
     await Board.create({
       user_id: userId,
       board_title,
@@ -26,7 +26,6 @@ const writeBoardFunc = async (req: Request, res: Response) => {
 
 const getUserFunc = async (req: Request, res: Response) => {
   try {
-    const userId = res.locals.userId;
     const users = await User.findAll({});
     const userCount = await User.count({});
 
@@ -40,10 +39,10 @@ const getUserFunc = async (req: Request, res: Response) => {
 
 const getCommentFunc = async (req: Request, res: Response) => {
   try {
-    const user_id = res.locals.userId;
+    const user_id :number= res.locals.userId;
 
     const users = await User.findOne({
-      where: user_id,
+      where: { user_id : user_id },
       include: [{ model: Comment }, { model: Like }],
     });
     console.log(
@@ -70,7 +69,7 @@ const getCommentFunc = async (req: Request, res: Response) => {
 
 const getBoardFunc = async (req: Request, res: Response) => {
   try {
-    const user_id = res.locals.userId;
+    const user_id :number= res.locals.userId;
 
     const query = `
       select t1.board_id, t1.board_title, t1.board_image,t1.board_desc, t1.board_content, t1.view_count, t1.like_count, t2.comment_count, t2.like_state from
@@ -113,9 +112,8 @@ const getBoardFunc = async (req: Request, res: Response) => {
 
 const editBoardFunc = async (req: Request, res: Response) => {
   try {
-    const userId = res.locals.userId;
     const { board_id } = req.params;
-    const { board_title, board_image, board_desc, board_content } = req.body;
+    const { board_title, board_image, board_desc, board_content } :Board= req.body;
 
     await Board.update(
       { board_title, board_image, board_desc, board_content },
@@ -133,7 +131,7 @@ const editBoardFunc = async (req: Request, res: Response) => {
 
 const detailBoardFunc = async (req: Request, res: Response) => {
   try {
-    const user_id = res.locals.userId;
+    const user_id :number= res.locals.userId;
     const { board_id } = req.params;
 
     const query = `
@@ -186,7 +184,6 @@ const detailBoardFunc = async (req: Request, res: Response) => {
 
 const deleteBoardFunc = async (req: Request, res: Response) => {
   try {
-    const userId = res.locals.userId;
     const board_id = req.params;
 
     await Board.update({ board_delete_code: 1 }, { where: board_id });
