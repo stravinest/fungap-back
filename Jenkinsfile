@@ -32,17 +32,17 @@ node {
 
       stage('Push') {
 
-            sh(script: 'sudo docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}') 
+            // sh(script: 'sudo docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}') 
 
-             sh(script: 'sudo docker push ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
+            //  sh(script: 'sudo docker push ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
 
-            sh(script: 'sudo docker push ${DOCKER_USER_ID}/fungap:latest')
+            // sh(script: 'sudo docker push ${DOCKER_USER_ID}/fungap:latest')
 
       }
 
        stage('image pull') {
 
-           sh(script: 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136') 
+           sh(script: 'sudo ssh -i ~/.ssh/id_rsa_pub jenkins@34.64.75.136') 
 
            sh(script: 'sudo docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
 
