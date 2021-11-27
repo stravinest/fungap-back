@@ -1,5 +1,5 @@
 #!/bin/sh
-ssh ubuntu@15.164.225.3 <<EOF
+sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136 <<EOF
     cd ~/fungap-back
     sudo -s	
     git pull origin main
