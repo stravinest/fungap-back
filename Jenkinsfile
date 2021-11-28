@@ -39,7 +39,9 @@ node {
 
        stage('image pull') {          
                    script{
-                          sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136'
+                          sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136 <<EOF
+                                    sudo docker ps
+                              EOF'
                           sh 'sudo docker ps'
 
                    }
