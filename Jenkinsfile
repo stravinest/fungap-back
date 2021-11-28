@@ -42,6 +42,8 @@ node {
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
                               sudo docker ps'
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
+                              sudo docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}'    
+                          sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
                               sudo docker pull stravinest/fungap:28'
                          
                    }
