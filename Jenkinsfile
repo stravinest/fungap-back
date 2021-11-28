@@ -16,13 +16,10 @@ node {
 
      }
 
-      // stage('Unit Test') {
-
-      // }
 
       stage('Build') {
 
-            // sh(script: 'sudo docker-compose build app')
+            sh(script: 'sudo docker-compose build app')
 
       }
 
