@@ -19,14 +19,14 @@ node {
 
       stage('Build') {
 
-            sh(script: 'sudo docker-compose build app')
+            // sh(script: 'sudo docker-compose build app')
 
       }
 
       stage('Tag') {
 
             // sh(script: 'sudo docker tag ${DOCKER_USER_ID}/fungap ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') }
-
+      }
       stage('Push') {
 
             // sh(script: 'sudo docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}') 
