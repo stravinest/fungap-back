@@ -40,10 +40,9 @@ node {
        stage('image pull') {          
                    script{
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
-                              sudo docker ps\
+                              sudo docker ps'
+                          sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
                               sudo docker pull stravinest/fungap:28'
-                        //  sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
-                             
                          
                    }
                  
