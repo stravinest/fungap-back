@@ -74,7 +74,7 @@ node {
       //  }
 
 } 
-
+}
 
 // Pipeline Script 작성
 
