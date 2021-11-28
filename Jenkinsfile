@@ -41,15 +41,13 @@ node {
        stage('image pull') {          
                    script{
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
-                              sudo docker ps'
-                          sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
                               sudo docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}'    
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
                               sudo docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}'
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
                               sudo docker tag ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER} localhost:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}'
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
-                              sudo docker push localhost:5000/ ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}'
+                              sudo docker push localhost:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}'
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
                               sudo docker container exec -it manager docker image pull registry:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}'
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
