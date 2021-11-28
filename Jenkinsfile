@@ -38,7 +38,6 @@ node {
       }
 
        stage('image pull') {          
-             steps{
                    script{
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136'
                           sh 'sudo docker ps'
@@ -46,7 +45,7 @@ node {
                    }
                  
 
-             }    
+                
            
             
 
