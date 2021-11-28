@@ -49,13 +49,13 @@ node {
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
                               sudo docker push localhost:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}'
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
-                              sudo winpty docker container exec -it manager docker image pull registry:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}'
+                              sudo docker container exec -it manager docker image pull registry:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}'
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
-                              sudo winpty docker container exec -it worker01 docker image pull registry:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}'
+                              sudo docker container exec -it worker01 docker image pull registry:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}'
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
-                              sudo winpty docker container exec -it worker02 docker image pull registry:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}'
+                              sudo docker container exec -it worker02 docker image pull registry:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}'
                           sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136\
-                              sudo winpty docker container exec -it manager docker service update --image registry:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER} fungap'
+                              sudo docker container exec -it manager docker service update --image registry:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER} fungap'
 
                          
                    }
