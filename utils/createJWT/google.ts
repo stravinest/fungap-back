@@ -10,8 +10,7 @@ export const jwtGoogleCreate = async (profile: GoogleProfile) => {
     user_image: profile?.picture || '',
     provider: 'google',
     user_mbti: '',
-    user_authority: '',
-    user_id: Number.MAX_SAFE_INTEGER,
+   
   };
 
   const snsId = profile?.sub;
