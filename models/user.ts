@@ -4,7 +4,7 @@ import { sequelize } from './sequelize';
 import { dbType } from '.';
 
 class User extends Model {
-  public user_id!: number; 
+  public user_id?: number; 
   public email!: string;
   public nickname!: string;
   public user_image!: string;
