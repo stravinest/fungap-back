@@ -22,27 +22,36 @@ node {
 
       stage('Build') {
 
-            sh(script: 'sudo docker-compose build app')
+            // sh(script: 'sudo docker-compose build app')
 
       }
 
       stage('Tag') {
 
-            sh(script: 'sudo docker tag ${DOCKER_USER_ID}/fungap ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') }
+            // sh(script: 'sudo docker tag ${DOCKER_USER_ID}/fungap ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') }
 
       stage('Push') {
 
-            sh(script: 'sudo docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}') 
+            // sh(script: 'sudo docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}') 
 
-            sh(script: 'sudo docker push ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
+            // sh(script: 'sudo docker push ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
 
-            sh(script: 'sudo docker push ${DOCKER_USER_ID}/fungap:latest')
+            // sh(script: 'sudo docker push ${DOCKER_USER_ID}/fungap:latest')
 
       }
 
-       stage('image pull') {              
+       stage('image pull') {          
+             steps{
+                   script{
+                          sh 'sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136'
+                          sh 'sudo docker ps'
+
+                   }
+                 
+
+             }    
            
-      //      sh(script: 'sudo docker pull ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}') 
+            
 
        //    sh(script: 'sudo docker tag ${DOCKER_USER_ID}/fungap:${BUILD_NUMBER} 127.0.0.1:5000/${DOCKER_USER_ID}/fungap:${BUILD_NUMBER}')
            
