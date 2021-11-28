@@ -11,8 +11,7 @@ export const jwtKakaoCreate = async (profile: KakaoProfile) => {
     user_image: profile.data?.properties?.profile_image,
     user_mbti: '',
     provider: 'kakao',
-    user_authority: '',
-    user_id: Number.MAX_SAFE_INTEGER,
+  
   };
 
   const snsId: string = profile.data?.id || profile.id;

@@ -1,8 +1,6 @@
-import { sequelize } from '../models';
-import * as Sequelize from 'sequelize';
-import { Client } from '@elastic/elasticsearch';
+import { Client, RequestParams } from '@elastic/elasticsearch';
 import { errors } from '@elastic/elasticsearch';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 const client = new Client({
   node: 'http://34.64.168.183:9200',
@@ -15,10 +13,13 @@ const client = new Client({
 
 const homeSearchFunc = async (req: Request, res: Response) => {
   try {
-    const user_id = res.locals.userId;
+    const user_id: number = res.locals.userId;
     const { keyword } = req.query;
-    console.log(keyword);
-    const keywords = String(keyword).split(' ');
+    let keywords: string[] = [];
+    if (keyword && typeof keyword === 'string') {
+      console.log(keyword);
+      keywords = String(keyword).split(' ');
+    }
 
     const board_list = await client.search({
       index: 'fungapsearch',
@@ -43,6 +44,14 @@ const homeSearchFunc = async (req: Request, res: Response) => {
     const search_board_list = board_list.body.hits.hits.map(
       (board: any) => board._source
     );
+
+    await client.index({
+      index: 'search-logs',
+      body: {
+        keywords: `${keywords}`,
+        timestamp: new Date(),
+      },
+    });
 
     res.json({ result: 'success', search_board_list: search_board_list });
   } catch (err) {

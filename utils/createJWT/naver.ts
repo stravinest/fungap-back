@@ -10,8 +10,7 @@ export const jwtNaverCreate = async (profile: NaverProfile) => {
     user_image: profile?.response?.profile_image,
     user_mbti: '',
     provider: 'naver',
-    user_authority: '',
-    user_id: Number.MAX_SAFE_INTEGER,
+  
   };
 
   const snsId: string = profile?.response?.id;
