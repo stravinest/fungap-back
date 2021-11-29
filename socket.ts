@@ -66,6 +66,7 @@ export default async (httpServer: http.Server) => {
   function countRoomUser(roomName: string): number {
     return io.sockets.adapter.rooms.get(roomName)!.size;
   }
+
   let roomIUserList: IChatRoomUserList[] = [];
   let roomEUserList: IChatRoomUserList[] = [];
   let roomFUserList: IChatRoomUserList[] = [];
@@ -85,7 +86,7 @@ export default async (httpServer: http.Server) => {
     }
   }
 
-  //유저가 나가면 유저리스트에서 빼는 함수
+  //유저가 채팅방 나가면 유저리스트에서 빼는 함수
   function spliceUserList(
     roomName: string,
     nickName: string,
@@ -99,7 +100,10 @@ export default async (httpServer: http.Server) => {
           roomIUseridList.push(roomIUserList[i].userId);
         }
         index = roomIUseridList.indexOf(userId);
-        roomIUserList.splice(index, 1);
+        if (index !== -1) {
+          roomIUserList.splice(index, 1);
+        }
+
         break;
       case 'E':
         let roomEUseridList = [];
@@ -107,7 +111,10 @@ export default async (httpServer: http.Server) => {
           roomEUseridList.push(roomEUserList[i].userId);
         }
         index = roomEUseridList.indexOf(userId);
-        roomEUserList.splice(index, 1);
+        if (index !== -1) {
+          roomEUserList.splice(index, 1);
+        }
+
         break;
       case 'F':
         let roomFUseridList = [];
@@ -115,7 +122,10 @@ export default async (httpServer: http.Server) => {
           roomFUseridList.push(roomFUserList[i].userId);
         }
         index = roomFUseridList.indexOf(userId);
-        roomFUserList.splice(index, 1);
+        if (index !== -1) {
+          roomFUserList.splice(index, 1);
+        }
+
         break;
       case 'T':
         let roomTUseridList = [];
@@ -123,32 +133,83 @@ export default async (httpServer: http.Server) => {
           roomTUseridList.push(roomTUserList[i].userId);
         }
         index = roomTUseridList.indexOf(userId);
-        roomTUserList.splice(index, 1);
+        if (index !== -1) {
+          roomTUserList.splice(index, 1);
+        }
+
         break;
     }
   }
 
+  // 유저가 io 연결 끊으면 끊어지기전에 모든 유저리스트에서 삭제하는 함수
+  function deleteDisconnectUserList(index: number, sid: string) {
+    //I방 삭제
+    let roomIUseridList = [];
+    for (let i = 0; i < roomIUserList.length; i++) {
+      roomIUseridList.push(roomIUserList[i].sid);
+    }
+    index = roomIUseridList.indexOf(sid);
+    if (index !== -1) {
+      roomIUserList.splice(index, 1);
+    }
+
+    //E방 삭제
+    let roomEUseridList = [];
+    for (let i = 0; i < roomEUserList.length; i++) {
+      roomEUseridList.push(roomEUserList[i].sid);
+    }
+    index = roomEUseridList.indexOf(sid);
+    if (index !== -1) {
+      roomEUserList.splice(index, 1);
+    }
+
+    //F방 삭제
+    let roomFUseridList = [];
+    for (let i = 0; i < roomFUserList.length; i++) {
+      roomFUseridList.push(roomFUserList[i].sid);
+    }
+    index = roomFUseridList.indexOf(sid);
+    if (index !== -1) {
+      roomFUserList.splice(index, 1);
+    }
+
+    //T방 삭제
+    let roomTUseridList = [];
+    for (let i = 0; i < roomTUserList.length; i++) {
+      roomTUseridList.push(roomTUserList[i].sid);
+    }
+    index = roomTUseridList.indexOf(sid);
+    if (index !== -1) {
+      roomTUserList.splice(index, 1);
+    }
+  }
+
   //룸네임에 맞는 유저리스트에 유저 추가
-  function pushUserlist(roomName: string, nickName: string, userId: number) {
+  function pushUserlist(
+    roomName: string,
+    nickName: string,
+    userId: number,
+    sid: string
+  ) {
     switch (roomName) {
       case 'I':
         if (!roomIUserList.find((arr) => arr.userId === userId)) {
-          roomIUserList.push({ nickName: nickName, userId: userId });
+          roomIUserList.push({ nickName: nickName, userId: userId, sid: sid });
         }
         break;
       case 'E':
         if (!roomEUserList.find((arr) => arr.userId === userId)) {
-          roomEUserList.push({ nickName: nickName, userId: userId });
+          roomEUserList.push({ nickName: nickName, userId: userId, sid: sid });
         }
         break;
       case 'F':
         if (!roomFUserList.find((arr) => arr.userId === userId)) {
-          roomFUserList.push({ nickName: nickName, userId: userId });
+          roomFUserList.push({ nickName: nickName, userId: userId, sid: sid });
         }
         break;
       case 'T':
         if (!roomTUserList.find((arr) => arr.userId === userId)) {
-          roomTUserList.push({ nickName: nickName, userId: userId });
+          roomTUserList.push({ nickName: nickName, userId: userId, sid: sid });
         }
         break;
     }
@@ -157,6 +218,7 @@ export default async (httpServer: http.Server) => {
   // 비속어 필터링에서 비속어 목록 불러오기
   let badwords: any = await getBadwords();
 
+  //유저 이미지 불러오는 함수
   const getUserImage = async (userList: IChatRoomUserList[] | undefined) => {
     let targetRoomNameSequelizeQuerys: any[] = [];
     let resultPromiseall;
@@ -168,7 +230,7 @@ export default async (httpServer: http.Server) => {
         const targetRoomNameSequelizeQuery = new Promise((resolve, reject) => {
           resolve(
             sequelize.query(
-              `SELECT nickname, user_image FROM database_final_project.users where user_id = ${targetUserId} and nickname = '${targetNickName}'`,
+              `SELECT nickname, user_image, user_mbti FROM database_final_project.users where user_id = ${targetUserId} and nickname = '${targetNickName}'`,
               {
                 type: Sequelize.QueryTypes.SELECT,
               }
@@ -206,8 +268,10 @@ export default async (httpServer: http.Server) => {
     socket.on('join_chat', async (roomName, nickName, userId) => {
       console.log(roomName, nickName, userId);
 
+      const sid = socket.id;
+
       //룸네임에 맞는 유저리스트에 유저 추가
-      pushUserlist(roomName, nickName, userId);
+      pushUserlist(roomName, nickName, userId, sid);
 
       //채팅방 안의 유저리스트 불러오기
       let userList = findChatroomUserList(roomName);
@@ -235,12 +299,72 @@ export default async (httpServer: http.Server) => {
     });
 
     //연결을 끊기 직전 발생하는 이벤트
-    socket.on('disconnecting', (reason) => {
-      socket.rooms.forEach((room) =>
-        socket
-          .to(room)
-          .emit('notice_user_disconnect', room, countRoomUser(room) - 1)
-      );
+    socket.on('disconnecting', async (reason) => {
+      let index = -1;
+      const sid = socket.id;
+      deleteDisconnectUserList(index, sid);
+
+      //I채팅방에 조인되어 있었는지 확인
+      if (socket.rooms.has('I')) {
+        //I채팅방 안의 유저리스트 불러오기
+        const userIList = findChatroomUserList('I');
+
+        //I채팅방 안의 유저들의 유저닉네임과 이미지를 받아오기
+        const roomIUserinfo = await getUserImage(userIList);
+
+        //I방에 유저 나갔음을 전달
+        io.sockets
+          .to('I')
+          .emit('current_usercount', roomIUserinfo, countRoomUser('I'));
+      }
+
+      //E채팅방에 조인되어 있었는지 확인
+      if (socket.rooms.has('E')) {
+        //E채팅방 안의 유저리스트 불러오기
+        const userEList = findChatroomUserList('E');
+
+        //E채팅방 안의 유저들의 유저닉네임과 이미지를 받아오기
+        const roomEUserinfo = await getUserImage(userEList);
+
+        //E방에 유저 나갔음을 전달
+        io.sockets
+          .to('E')
+          .emit('current_usercount', roomEUserinfo, countRoomUser('E'));
+      }
+
+      //F채팅방에 조인되어 있었는지 확인
+      if (socket.rooms.has('F')) {
+        //F채팅방 안의 유저리스트 불러오기
+        const userFList = findChatroomUserList('F');
+
+        //F채팅방 안의 유저들의 유저닉네임과 이미지를 받아오기
+        const roomFUserinfo = await getUserImage(userFList);
+
+        //F방에 유저 나갔음을 전달
+        io.sockets
+          .to('F')
+          .emit('current_usercount', roomFUserinfo, countRoomUser('F'));
+      }
+
+      //T채팅방에 조인되어 있었는지 확인
+      if (socket.rooms.has('T')) {
+        //T채팅방 안의 유저리스트 불러오기
+        const userTList = findChatroomUserList('T');
+
+        //T채팅방 안의 유저들의 유저닉네임과 이미지를 받아오기
+        const roomTUserinfo = await getUserImage(userTList);
+
+        //T방에 유저 나갔음을 전달
+        io.sockets
+          .to('T')
+          .emit('current_usercount', roomTUserinfo, countRoomUser('T'));
+      }
+
+      // socket.rooms.forEach((room) =>
+      //   socket
+      //     .to(room)
+      //     .emit('notice_user_disconnect', room, countRoomUser(room) - 1)
+      // );
     });
 
     //유저가 룸 떠났을 때 발생하는 이벤트
@@ -297,7 +421,7 @@ export default async (httpServer: http.Server) => {
           });
         }
 
-        const query = `SELECT user_image FROM users
+        const query = `SELECT user_image, user_mbti FROM users
       WHERE user_id = ${userId}`;
 
         //유저 이미지 불러오기
@@ -306,11 +430,20 @@ export default async (httpServer: http.Server) => {
         });
 
         const userImage = userImageData[0].user_image;
+        const userMbti = userImageData[0].user_mbti;
 
         //메세지를 방의 모든 소켓들(자신포함)에게 전달
         io.sockets
           .to(roomName)
-          .emit('receive_message', roomName, nickName, userId, msg, userImage);
+          .emit(
+            'receive_message',
+            roomName,
+            nickName,
+            userId,
+            msg,
+            userImage,
+            userMbti
+          );
       } catch (err) {
         console.error(err);
       }

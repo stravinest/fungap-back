@@ -17,4 +17,6 @@ router.delete('/delete', authenticateJWT, mypageController.deleteUserInfo);
 
 router.get('/liked', authenticateJWT, mypageController.likedBoardList);
 
+router.get('mygame', authenticateJWT, mypageController.getMyGameList);
+
 export default router;
