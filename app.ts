@@ -4,6 +4,7 @@ import * as http from 'http';
 import * as dotenv from 'dotenv';
 import socketIO from './socket';
 import Logger from './config/logger';
+import * as helmet from 'helmet'
 
 dotenv.config({
   path: './env/.env',
@@ -12,7 +13,7 @@ const app = express();
 
 import morganMiddleware from './config/morganMiddleware';
 app.use(morganMiddleware); // 콘솔창에 통신결과 나오게 해주는 것
-
+app.use(helmet());
 app.get('/logger', (_, res) => {
   Logger.error('This is an error log');
   Logger.warn('This is a warn log');
