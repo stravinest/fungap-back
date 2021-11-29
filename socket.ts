@@ -64,7 +64,7 @@ export default async (httpServer: http.Server) => {
 
   //방의 유저수 알려주는 함수 (소켓 아이디 수 찾는 함수)
   function countRoomUser(roomName: string): number {
-    return io.sockets.adapter.rooms.get(roomName)!.size;
+    return io.sockets.adapter.rooms.get(roomName)!.size || 0;
   }
 
   let roomIUserList: IChatRoomUserList[] = [];
