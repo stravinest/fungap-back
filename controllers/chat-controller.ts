@@ -69,7 +69,7 @@ const getChatlog = async (req: Request, res: Response) => {
       }
     }
 
-    const selectChatlogQuery = `SELECT c.chat_id, c.room_name, u.user_id, u.nickname as name, u.user_image as userImage, c.message , c.createdAt
+    const selectChatlogQuery = `SELECT c.chat_id, c.room_name, u.user_id, u.nickname as name, u.user_image as userImage, u.user_mbti as userMbti, c.message , c.createdAt
     FROM users AS u
     LEFT OUTER JOIN chatlogs AS c
     ON (u.user_id = c.user_id)
