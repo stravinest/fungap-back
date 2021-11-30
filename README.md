@@ -84,8 +84,7 @@
   
   ![image](https://user-images.githubusercontent.com/88120776/143990487-e8fc48c0-4235-4ab7-802f-f4d11ec77013.png)
   
-  ### 아래 docker-compose.yml 파일로 docker manager,worker01,worker02,registry생성 
-  ### 후에 manager 에서 docker swarm init 후 join토큰으로 간단하게 dockerswarm 서버 환경을 구축 할 수 있습니다.
+  ### 아래 docker-compose.yml 파일로 docker manager,worker01,worker02,registry생성, 후에 manager 에서 docker swarm init 후 join토큰으로 간단하게 dockerswarm 서버 환경을 구축 할 수 있습니다.
 ```
   version: "3"
 services:
