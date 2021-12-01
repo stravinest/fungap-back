@@ -1,0 +1,26 @@
+config:
+  target: 'http://localhost:3000'
+  phases:
+    - duration: 10
+      arrivalRate: 10
+scenarios:
+  - name: 'Connect, join Room and send message'
+    engine: 'socketio'
+    flow:
+      - emit:
+          channel: 'join_room'
+          data: 'I'
+
+      - think: 7
+      - loop:
+          - emit:
+              channel: 'send_message'
+              data:
+                {
+                  roomName: 'H',
+                  nickName: '냥냥펀치',
+                  userId: 20,
+                  msg: '부하테스트',
+                }
+          - think: 1
+      - think: 45
