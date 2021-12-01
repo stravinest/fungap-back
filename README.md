@@ -8,7 +8,7 @@
   <br>
   - 기존에 배포 하던 방식<br>
  
-  ![image](https://user-images.githubusercontent.com/88120776/143967762-c984ea66-94dc-42fb-9c2d-c1bae4b8d053.png "image")<br><br>
+  ![image](https://user-images.githubusercontent.com/88120776/144154863-c920298b-26b5-4db0-8f57-9ccbf1f19d4f.png)<br><br>
   ### 기존 서버의 문제점 <br><br>
   아키텍쳐로 볼수 있듯이 기존에는 AWS 단일 서버 단일 노드에 서비스를 배포 하였습니다.  
   이후 아파치 jmeter로 부하테스트를 진행하였습니다. <br>
@@ -30,7 +30,7 @@
   ![image](https://user-images.githubusercontent.com/88120776/143976055-d57cc528-3783-49ba-bd6c-3131e7dbcaae.png)
 
   이런 코드수정작업 들을 마쳤으나 여전히 부하테스트에서는 성능 자체에 문제가 많다고 여겨질만큼의 데이터를 확인 할 수 있었습니다.<br>
-  이것은 근본적인 EC2 프리티어 인스턴스의 스펙에서 오는 것이라 판단하여 scare-up을 생각하게 되었습니다.
+  이것은 근본적인 EC2 프리티어 인스턴스의 스펙에서 오는 것이라 판단하여 scale-up을 생각하게 되었습니다.
   
   ### docker container 방식으로 배포 전환 
   
@@ -159,6 +159,15 @@ services:
   
   
   ![image](https://user-images.githubusercontent.com/88120776/143999928-1df0340e-0c98-44e0-8c44-73f9bd38648e.png) .env 파일 env폴더로 이동 ![image](https://user-images.githubusercontent.com/88120776/144002776-ae26ede3-9823-42a9-b50b-17e399c94d02.png)
+  
+  ### 도커스웜과 오토스케일링
+  도커스웜은 오토스케일링을 지원하지 않습니다. 따라서 모니터링에 신경을 더 써줘야 할 것입니다. <br>
+  그라파나에 CPU가 85퍼센트가 이상일때 슬랙에 알람을 받은후 직접 스케일 아웃을 해줍니다. 
+  docker service scale 명령으로 스케일 수를 지정해주면 도커 스웜이 알아서 스케쥴링 해줍니다.
+  
+  ![image](https://user-images.githubusercontent.com/88120776/144156486-9befc28c-b555-4d73-ab8b-ae9783e09c12.png)
+
+  
 
   ### 그라파나 와 프로메테우스 
   도커스웜에서는 모니터링을 제공해주지 않기 때문에 직접 구축을 해주어야 했습니다. 
