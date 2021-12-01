@@ -1,9 +1,30 @@
 # fungap-back
 
-![아키텍쳐](https://user-images.githubusercontent.com/88120776/143966256-93f678ec-f24b-4e7d-a98a-886225e85df5.png "아키텍쳐")
+![image](https://user-images.githubusercontent.com/88120776/144158286-65ad9dde-0e7d-41c9-a386-daaad75e7bbf.png)
+1. git hub 에 푸쉬가 되면 젠킨스가 docker image를 만들어 docker hub 에 올립니다.<br>
+2. 만들어진 image를 docker hub에서 젠킨스가 받아와 배포 서버의 registy에 저장을 하고 각 노드에 배포시키며 슬랙으로 알람을 줍니다. <br>
+3. GCP 컴퓨터 엔진을 배포서버로 두고 있고 컨테이너 오케스트레이션인 docker 스웜으로 각 노드를 관리하고 있습니다. 
+4. database는 아마존 RDS mysql을 사용하고 있으며 검색 엔진으로 elastic을 활용하고 있습니다. <br>
+5. docker manager node 에서 그라파나와 프로메테우스로 모니터링을 하고 있으며 cpu 사용률이 85%가 넘으면 슬랙으로 알람이 가게 됩니다.<br>
+6. 서버 앞단에는 nginx 프록시 서버를 두고 https 설정과 뒤에있는 서버의 정보를 감추면서 보안을 강화하고 있습니다.
 
 <details>
-<summary> 쿠버네티스?? 도커스웜??</summary>
+<summary>typescript</summary>
+<div markdown="1">
+  <br>
+  기술적 첼린지 : typescript <br>
+  목표 : 모든 javascript 파일을 typescript 파일로 변환 <br>
+  왜? : 
+  
+  ### undifined 
+  ### 우리는 이 값이 확실이 있는것임을 확신한다.
+  ### sequelize 와 typescript
+  
+</div>
+</details>
+
+<details>
+<summary> 도커스웜과 모니터링?</summary>
 <div markdown="1">
   <br>
   - 기존에 배포 하던 방식<br>
@@ -12,14 +33,13 @@
   ### 기존 서버의 문제점 <br><br>
   아키텍쳐로 볼수 있듯이 기존에는 AWS 단일 서버 단일 노드에 서비스를 배포 하였습니다.  
   이후 아파치 jmeter로 부하테스트를 진행하였습니다. <br>
-  쓰레드 (사용자수 ) : 200
-  시간 단위 : 10초
-  루프 카운트 : 5 <br>
-  즉 200명이 10초간 5번의 접속을 하는 테스트를 진행하였으나 평균이 9000ms 최대가 25000ms을 찍게 되었습니다.
-  
-  ![image](https://user-images.githubusercontent.com/88120776/143974511-28c5cc63-3a43-4996-8278-9c56a41bb798.png)
+  쓰레드 (사용자수 ) : 100~400<br>
+  시간 단위 : 10초<br>
+  루프 카운트 : 1 <br>
+  동시접속자수가 500까지는 이상없이 잘되야한다고 생각했으나 테스트한 성능은 400명이 10초간 1번 access할때 <br>
+  평균이 34000ms 최대가 40298ms을 찍게 되었습니다.
     
-  ![image](https://user-images.githubusercontent.com/88120776/143971246-7ee44c31-504a-4d2e-b994-91e45c5cb853.png)
+  ![image](https://user-images.githubusercontent.com/88120776/144164699-19d34c8f-81e7-4a1a-b5a5-001b6a5824fb.png)
 
   이에 성능의 심각성을 느꼈고 코드에서 최대한 성능적으로 변화 가능할 만한 이슈들을 찾기 시작했습니다.<br> 
   그중 독릭접인 비동기적으로 작동하는 코드들을 한꺼번에 병렬적으로 처리하는 방식으로 바꾸는 작업을 하였습니다. <br>
@@ -161,10 +181,11 @@ services:
   ![image](https://user-images.githubusercontent.com/88120776/143999928-1df0340e-0c98-44e0-8c44-73f9bd38648e.png) .env 파일 env폴더로 이동 ![image](https://user-images.githubusercontent.com/88120776/144002776-ae26ede3-9823-42a9-b50b-17e399c94d02.png)
   
   ### 도커스웜과 오토스케일링
-  도커스웜은 오토스케일링을 지원하지 않습니다. 따라서 모니터링에 신경을 더 써줘야 할 것입니다. <br>
-  그라파나에 CPU가 85퍼센트가 이상일때 슬랙에 알람을 받은후 직접 스케일 아웃을 해줍니다. 
-  docker service scale 명령으로 스케일 수를 지정해주면 도커 스웜이 알아서 스케쥴링 해줍니다.
-  
+  도커스웜은 오토스케일링을 지원하지 않습니다. 따라서 모니터링에 신경을 더 써줘야 할 것 같다고 생각했습니다. <br>
+  그라파나에 CPU가 85퍼센트가 이상일때 슬랙에 알람을 주게 설정을 합니다.<br>
+  알람을 받으면 직접 스케일 아웃을 해줍니다. <br>
+  docker service scale 명령으로 스케일 수를 지정해주면 도커 스웜이 알아서 스케쥴링 해줍니다.<br><br>
+  ![image](https://user-images.githubusercontent.com/88120776/144160609-d95c876c-773a-482c-8c2e-33110a04efb0.png)
   ![image](https://user-images.githubusercontent.com/88120776/144156486-9befc28c-b555-4d73-ab8b-ae9783e09c12.png)
 
   
