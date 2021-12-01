@@ -1,6 +1,9 @@
 # fungap-back
 
 ![image](https://user-images.githubusercontent.com/88120776/144158286-65ad9dde-0e7d-41c9-a386-daaad75e7bbf.png)
+
+### back-end 아키텍쳐
+
 1. git hub 에 푸쉬가 되면 젠킨스가 docker image를 만들어 docker hub 에 올립니다.<br>
 2. 만들어진 image를 docker hub에서 젠킨스가 받아와 배포 서버의 registy에 저장을 하고 각 노드에 배포시키며 슬랙으로 알람을 줍니다. <br>
 3. GCP 컴퓨터 엔진을 배포서버로 두고 있고 컨테이너 오케스트레이션인 docker 스웜으로 각 노드를 관리하고 있습니다. 
@@ -14,9 +17,19 @@
   <br>
   기술적 첼린지 : typescript <br>
   목표 : 모든 javascript 파일을 typescript 파일로 변환 <br>
-  왜? : 
+  왜? : 자바스크립트의 특징인 동적 타이핑에 의한 오류를 typescript를 사용 하여 제거 할 수 있다. <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;실제로 변환해보면서 정적타이핑을 몸으로 체감하고 명시적인 타입지정으로 코드짠 사람의 의도를 더욱명확하게 전달할수 있고 코<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;드의 가독성을 높이기 위함<br>
   
-  ### undifined 
+  ### undifined <br>
+  
+  undifinde에 대한 처리를 그동안 엄청 소홀해 왔다는 것을 깨닫는다. typescript는 이러한 타입의 처리를 놓치지 않게 하며 여태 놓쳐왔던 undifined와 null값을 예외적으로 처리 할수 있게 되어서
+  코드의 오류를 줄여줌을 체감했다.
+  아래 코드는 user_mbti 와 count가 있을수 있고 없을수 있다. <br>
+  없게 된다면 undifined가 들어가므로 그에대한 처리를 해줘야 한다. 처리를 안해주었을경우 오류가 뜨게 된다.
+  ![image](https://user-images.githubusercontent.com/88120776/144174811-61092e29-5992-4d1b-b87c-df4a0fdd653a.png)
+
+
   ### 우리는 이 값이 확실이 있는것임을 확신한다.
   ### sequelize 와 typescript
   
@@ -24,7 +37,7 @@
 </details>
 
 <details>
-<summary> 도커스웜과 모니터링?</summary>
+<summary> 도커스웜과 모니터링</summary>
 <div markdown="1">
   <br>
   - 기존에 배포 하던 방식<br>
@@ -89,7 +102,7 @@
   GCE 에는 총 cpu2 메모리 4GIB 스펙의 인스턴스 를 3개월간 3대를 무료로 사용할수 있습니다.<br>
   저희는 배포서버 뿐만아니라 1개의 jenkins 서버 와 1개의 테스트서버가 필요하다고 생각햇습니다.<br>
   (jenkins서버를 따로 구축해놓은이유는 젠킨스의 메모리 사용률이 커서 서버가 같이 다운되었던 적이 많았기 때문입니다.)<br>
-  따라서 배포용 서버의 스펙을 cpu2메모리4로 할당하고 테스트 서버도 마찬가지로 cpu2메모리4 를 두었을때 jenkins서버까지 돌리면 따로 새로운 인스턴스에서 node 를 돌릴<br>
+  따라서 배포용 서버의 스펙을 cpu2메모리4로 할당하고 테스트 서버도 마찬가지로 cpu2메모리4 를 두었을때 jenkins서버까지 돌리면 따로 새로운 인스턴스에서 node 를 돌릴
   여유가 되지 않았습니다.<br>
   그래서 docker in docker로 개별 node를 도커 내 컨테이너로 구현을 해서 도커스웜의 기능을 온전히 사용 하되 서버는 1개를 유지하는 전략을 사용하였습니다.<br>
   
@@ -169,7 +182,7 @@ services:
   (--mount type=volume,src=env,target=/usr/src/app) <br>
   usr/src/app 은 소스코드가 전부 복사되는 루트 폴더 였고 .env파일을 sorce지점의 env폴더에서 직접 생성을 하여 공유 하였습니다.
   그런데 첫 배포(잘 동작함) 이후 update를 이용한 롤링업데이트가 되지 않는 현상이 발생하였습니다. <br>
-  트러블 슈팅은 다음과 같습니다.<br>
+  해결과정은 다음과 같습니다.<br>
   첫번째 이미지파일이 문제 있는지 확인 -> 로컬에서 이미지만 받아서 실행시 문제 없음<br>
   두번째 롤링 업데이트에 이상이 있는지 확인 ->  업데이트시에 로그를 받아서 확인 시에 문제가 없음<br>
   세번째 실질적으로 코드가 수정이 되었는지 확인 -> 컨테이너 안으로 직접들어가 코드를 뜯어보니 수정이 안되어 있었음!!<br>
