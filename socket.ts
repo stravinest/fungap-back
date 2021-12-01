@@ -407,22 +407,23 @@ export default async (httpServer: http.Server) => {
     });
 
     //메세지 보내는 이벤트
-    socket.on('send_message', async (roomName, nickName, userId, msg) => {
+    socket.on('send_message', async (data) => {
       try {
+        let msg;
         //비속어 감지
-        if (checkBadword(badwords, msg)) {
-          msg = '비속어가 감지되었습니다';
+        if (checkBadword(badwords, data.msg)) {
+          data.msg = '비속어가 감지되었습니다';
         } else {
           //메세지 DB에 저장
           await Chatlog.create({
-            room_name: roomName,
-            user_id: userId,
-            message: msg,
+            room_name: data.roomName,
+            user_id: data.userId,
+            message: data.msg,
           });
         }
 
         const query = `SELECT user_image, user_mbti FROM users
-      WHERE user_id = ${userId}`;
+      WHERE user_id = ${data.userId}`;
 
         //유저 이미지 불러오기
         const userImageData: any = await sequelize.query(query, {
@@ -434,13 +435,13 @@ export default async (httpServer: http.Server) => {
 
         //메세지를 방의 모든 소켓들(자신포함)에게 전달
         io.sockets
-          .to(roomName)
+          .to(data.roomName)
           .emit(
             'receive_message',
-            roomName,
-            nickName,
-            userId,
-            msg,
+            data.roomName,
+            data.nickName,
+            data.userId,
+            data.msg,
             userImage,
             userMbti
           );
