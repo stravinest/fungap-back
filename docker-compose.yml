@@ -11,25 +11,4 @@ services:
     ports:
       - '3000:3000'
     command: node app.js
-#   proxy:
-#     restart: unless-stopped
-#     image: 077a0597bdf7
-#     ports:
-#       - 80:80/tcp
-#       - 443:443/tcp
-#     environment:
-#       CERTBOT_EMAIL: stravinest@naver.com
-#       ENVSUBST_VARS: FQDN
-#       FQDN: stravinest.shop
-#     volumes:
-#       - /etc/letsencrypt:/etc/letsencrypt
-#   # server:
-#   # build:
-#   # context: .
-#   # dockerfile: /home/ubuntu/hang/Dockerfile
-#   # working_dir: /usr/src/app
-#   # volumes:
-#   # - /home/ubuntu/hang:/usr/src/app
 
-# volumes:
-#   letsencrypt:

@@ -1,9 +1,0 @@
-#!/bin/sh
-sudo ssh -i ~/.ssh/id_rsa jenkins@34.64.75.136 <<EOF
-    cd ~/fungap-back
-    sudo -s	
-    git pull origin main
-    npm install
-    pm2 restart app.js
-    exit
-EOF
