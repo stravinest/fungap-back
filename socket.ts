@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { Chatlog, sequelize } from './models';
+import { Chatlog, ChatlogBackup, sequelize } from './models';
 import { IChatRoomUserList } from './interface/chat';
 import * as http from 'http';
 import * as Sequelize from 'sequelize';
@@ -411,6 +411,11 @@ export default async (httpServer: http.Server) => {
       try {
         //비속어 감지
         if (checkBadword(badwords, msg)) {
+          await ChatlogBackup.create({
+            room_name: roomName,
+            user_id: userId,
+            message: msg,
+          });
           msg = '비속어가 감지되었습니다';
         } else {
           //메세지 DB에 저장
