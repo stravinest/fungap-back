@@ -4,7 +4,9 @@ import * as http from 'http';
 import * as dotenv from 'dotenv';
 import socketIO from './socket';
 import Logger from './config/logger';
-import * as helmet from 'helmet'
+import * as helmet from 'helmet';
+import * as swaggerUi from 'swagger-ui-express';
+const swaggerFile = require('./swagger-output.json');
 
 dotenv.config({
   path: './env/.env',
@@ -14,19 +16,9 @@ const app = express();
 import morganMiddleware from './config/morganMiddleware';
 app.use(morganMiddleware); // 콘솔창에 통신결과 나오게 해주는 것
 app.use(helmet());
-app.get('/logger', (_, res) => {
-  Logger.error('This is an error log');
-  Logger.warn('This is a warn log');
-  Logger.info('This is a info log');
-  Logger.http('This is a http log');
-  Logger.debug('This is a debug log');
-
-  res.send('Hello world');
-});
 
 import { sequelize } from './models';
 import * as cookieParser from 'cookie-parser';
-
 app.use(cookieParser());
 
 const port = process.env.EXPRESS_PORT;
@@ -47,13 +39,10 @@ let colsOptions = {
   optionsSuccessStatus: 200, // 응답 상태 200으로 설정
 };
 app.use(cors(colsOptions));
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
 app.use(express.static('public'));
 
-// html을 대체하는 ejs 엔진을 설정 test용
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
@@ -67,13 +56,8 @@ sequelize
   });
 
 import Router from './routers';
-
 app.use([Router]);
-// app.use('/', renders); //테스트용 지우기
-Router.get('/', (req: Request, res: Response) => {
-  res.render('index');
-});
-
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 const httpServer = http.createServer(app);
 
 httpServer.listen(port, () => {
