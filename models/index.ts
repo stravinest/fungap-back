@@ -4,6 +4,7 @@ import Celebrity, { associate as associateCelebrity } from './celebrity';
 import Comment, { associate as associateComment } from './comment';
 import Like, { associate as associateLike } from './like';
 import Chatlog from './chatlog';
+import ChatlogBackup from './chatlogBackup';
 import Mbti_relationship, {
   associate as associateMbti_relationship,
 } from './mbti_relationship';
@@ -28,6 +29,7 @@ export { Celebrity };
 export { Like };
 export { Mbti_relationship };
 export { Chatlog };
+export { ChatlogBackup }
 export { Game };
 export { Game_count };
 export { Game_like };
@@ -44,6 +46,7 @@ const db = {
   Celebrity,
   Mbti_relationship,
   Chatlog,
+  ChatlogBackup,
   Game,
   Game_count,
   Game_like,

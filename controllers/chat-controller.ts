@@ -8,11 +8,18 @@ const getChatlog = async (req: Request, res: Response) => {
     const { roomname } = req.query;
     console.log(roomname);
 
+    //오래된 챗(10일 지난)을 백업공간에 넣어주는 쿼리문
+    const movingOldChatlogQuery = `INSERT INTO chatlogBackups SELECT * FROM chatlogs
+    WHERE timestampdiff(second, createdAt, now()) > 864000`;
+
+    //10일 지난 채팅 백업하기
+    await sequelize.query(movingOldChatlogQuery, {
+      type: Sequelize.QueryTypes.INSERT,
+    });
+
     //오래된 챗(10일 지난)을 지우는 쿼리문
-    const deleteOldChatlogQuery = `DELETE c FROM users AS u
-    LEFT OUTER JOIN chatlogs AS c
-    ON (u.user_id = c.user_id)
-    WHERE timestampdiff(second, c.createdAt, now()) > 864000`;
+    const deleteOldChatlogQuery = `DELETE FROM chatlogs
+    WHERE timestampdiff(second, createdAt, now()) > 864000`;
 
     //10일 지난 채팅 삭제
     await sequelize.query(deleteOldChatlogQuery, {
@@ -54,14 +61,23 @@ const getChatlog = async (req: Request, res: Response) => {
     console.log(resultPromiseall);
     let resultPromiseallIndex = 0;
 
-    //채팅방 별로 채팅로그를 조회한 결과가 100개가 넘으면 100개 이외는 다 삭제
+    //채팅방 별로 채팅로그를 조회한 결과가 100개가 넘으면 100개 이외는 백업로그로 이동시킨 후 삭제
     if (resultPromiseall) {
       for await (let value of resultPromiseall) {
         if (value[0].count > 100) {
-          const query = `DELETE FROM database_final_project.chatlogs
-          where room_name = '${roomNames[resultPromiseallIndex]}'
-          limit ${value[0].count - 100}`;
-          await sequelize.query(query, {
+          const insertQuery = `INSERT INTO chatlogBackups SELECT chat_id, room_name, user_id, message, createdAt, updatedAt
+          FROM chatlogs WHERE room_name = '${
+            roomNames[resultPromiseallIndex]
+          }' LIMIT ${value[0].count - 100}`;
+
+          await sequelize.query(insertQuery, {
+            type: Sequelize.QueryTypes.INSERT,
+          });
+
+          const deleteQuery = `DELETE FROM database_final_project.chatlogs
+          WHERE room_name = '${roomNames[resultPromiseallIndex]}'
+          LIMIT ${value[0].count - 100}`;
+          await sequelize.query(deleteQuery, {
             type: Sequelize.QueryTypes.DELETE,
           });
         }
