@@ -1,6 +1,7 @@
-import { User, Chatlog, sequelize } from '../models';
+import { ChatlogBackup, sequelize } from '../models';
 import * as Sequelize from 'sequelize';
 import { Request, Response } from 'express';
+import { IOldChatlogs, IoverCountChatlogs } from '../interface/chat';
 
 //채팅로그 불러오기
 const getChatlog = async (req: Request, res: Response) => {
@@ -9,13 +10,30 @@ const getChatlog = async (req: Request, res: Response) => {
     console.log(roomname);
 
     //오래된 챗(10일 지난)을 백업공간에 넣어주는 쿼리문
-    const movingOldChatlogQuery = `INSERT INTO chatlogBackups SELECT * FROM chatlogs
+    const selectOldChatlogQuery = `SELECT room_name, user_id, message, createdAt, updatedAt FROM chatlogs
     WHERE timestampdiff(second, createdAt, now()) > 864000`;
 
     //10일 지난 채팅 백업하기
-    await sequelize.query(movingOldChatlogQuery, {
-      type: Sequelize.QueryTypes.INSERT,
-    });
+    const oldChatlogs: IOldChatlogs[] = await sequelize.query(
+      selectOldChatlogQuery,
+      {
+        type: Sequelize.QueryTypes.SELECT,
+      }
+    );
+
+    console.log(oldChatlogs);
+
+    if (oldChatlogs.length > 0) {
+      for await (let chatlog of oldChatlogs) {
+        await ChatlogBackup.create({
+          room_name: chatlog.room_name,
+          user_id: chatlog.user_id,
+          message: chatlog.message,
+          createdAt: chatlog.createdAt,
+          updatedAt: chatlog.updatedAt,
+        });
+      }
+    }
 
     //오래된 챗(10일 지난)을 지우는 쿼리문
     const deleteOldChatlogQuery = `DELETE FROM chatlogs
@@ -65,14 +83,29 @@ const getChatlog = async (req: Request, res: Response) => {
     if (resultPromiseall) {
       for await (let value of resultPromiseall) {
         if (value[0].count > 100) {
-          const insertQuery = `INSERT INTO chatlogBackups SELECT chat_id, room_name, user_id, message, createdAt, updatedAt
+          const selectChatlogQuery = `SELECT room_name, user_id, message, createdAt, updatedAt
           FROM chatlogs WHERE room_name = '${
             roomNames[resultPromiseallIndex]
           }' LIMIT ${value[0].count - 100}`;
 
-          await sequelize.query(insertQuery, {
-            type: Sequelize.QueryTypes.INSERT,
-          });
+          const overCountChatlogs: IoverCountChatlogs[] = await sequelize.query(
+            selectChatlogQuery,
+            {
+              type: Sequelize.QueryTypes.SELECT,
+            }
+          );
+
+          if (overCountChatlogs.length > 0) {
+            for await (let overCountChatlog of overCountChatlogs) {
+              await ChatlogBackup.create({
+                room_name: overCountChatlog.room_name,
+                user_id: overCountChatlog.user_id,
+                message: overCountChatlog.message,
+                createdAt: overCountChatlog.createdAt,
+                updatedAt: overCountChatlog.updatedAt,
+              });
+            }
+          }
 
           const deleteQuery = `DELETE FROM database_final_project.chatlogs
           WHERE room_name = '${roomNames[resultPromiseallIndex]}'

@@ -30,10 +30,16 @@ ChatlogBackup.init(
       type: Sequelize.STRING,
       allowNull: false,
     },
+    createdAt: {
+      type: Sequelize.STRING,
+    },
+    updatedAt: {
+      type: Sequelize.STRING,
+    },
   },
   {
     sequelize,
-    timestamps: true,
+    timestamps: false,
     modelName: 'ChatlogBackup',
     tableName: 'chatlogBackups',
     charset: 'utf8',
