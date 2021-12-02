@@ -8,6 +8,8 @@ class ChatlogBackup extends Model {
   public room_name!: string;
   public user_id!: number;
   public message!: string;
+  public createdAt!: string;
+  public updatedAt!: string;
 }
 
 ChatlogBackup.init(
