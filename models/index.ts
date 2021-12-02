@@ -29,7 +29,7 @@ export { Celebrity };
 export { Like };
 export { Mbti_relationship };
 export { Chatlog };
-export { ChatlogBackup }
+export { ChatlogBackup };
 export { Game };
 export { Game_count };
 export { Game_like };

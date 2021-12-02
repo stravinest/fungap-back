@@ -411,6 +411,7 @@ export default async (httpServer: http.Server) => {
       try {
         //비속어 감지
         if (checkBadword(badwords, msg)) {
+          //욕설이 감지되었을 경우 BackupDB에 저장
           await ChatlogBackup.create({
             room_name: roomName,
             user_id: userId,
