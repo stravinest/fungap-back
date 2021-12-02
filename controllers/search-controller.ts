@@ -25,11 +25,22 @@ const homeSearchFunc = async (req: Request, res: Response) => {
       index: 'fungapsearch',
       body: {
         query: {
-          multi_match: {
-            query: `${keywords}`,
-            fields: ['board_title', 'board_desc', 'board_content'],
-          },
-        },
+          bool: {
+            must:
+              {multi_match:{
+                  query:`${keywords}`,
+                  fields: ["board_title.nori_discard","board_desc.nori_discard","board_content.nori_discard"]
+                }},
+            should: [{
+                match:{
+                  "board_title.nori_discard": `${keywords}`
+                }},{
+                match:{
+                  "board_desc.nori_discard": `${keywords}`
+                }}]
+              }
+              
+            }
       },
     });
 
