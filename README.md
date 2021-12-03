@@ -16,8 +16,6 @@
 ![화면 캡처 2021-12-02 201543](https://user-images.githubusercontent.com/89460880/144414643-bb0c1d4a-9aee-4604-bd2b-f6c137d0fe07.png)
 
 
-# fungap-back
-
 ![image](https://user-images.githubusercontent.com/88120776/144158286-65ad9dde-0e7d-41c9-a386-daaad75e7bbf.png)
 
 ### back-end 아키텍쳐
@@ -44,7 +42,25 @@
 |부하테스트|jmeter|
 |개발언어|Javascript,Typescript|
 
-
+### 주요 라이브러리
+  |라이브러리|설명|
+  |:------:|:---:|
+|cors|교차리소스공유|
+|dotenv|시크릿키 암호화|
+|jsonwebtoken|회원가입 작동방식|
+|sequelize|MySQL ORM|
+|cookie-parser|조회수중복방지|
+|Mysql|Mysql|
+|bycrypt|비밀번호 해쉬화|
+|swagger-autogen|스웨거 자동생성|
+|joi|유효성검사|
+|winston|로그관리|
+|morgan|로그관리|
+|nodemailer|메일인증|
+|socket.io|채팅|
+|helmet|보안강화|
+|typescript|typescript|  
+  
 ### appendix<br>
 [도커스웜&모니터링](https://github.com/fungap/Appendix-back/blob/main/docker-swarm%26monitoring.md)<br>
 [채팅](https://github.com/fungap/Appendix-back/blob/main/chatting.md)<br>
