@@ -42,28 +42,28 @@
 
 ### 주요 라이브러리
 
-|                                                   라이브러리                                                   |       설명        |
-| :------------------------------------------------------------------------------------------------------------: | :---------------: |
-|                                                      cors                                                      |  교차리소스공유   |
-|                                                     dotenv                                                     |  시크릿키 암호화  |
-|                                                  jsonwebtoken                                                  | 회원가입 작동방식 |
-|                                                   sequelize                                                    |     MySQL ORM     |
-|                                                 cookie-parser                                                  |  조회수중복방지   |
-|                                                     Mysql                                                      |       Mysql       |
-|                                                    bycrypt                                                     |  비밀번호 해쉬화  |
-|                                                swagger-autogen                                                 |  스웨거 자동생성  |
-|                                                      joi                                                       |    유효성검사     |
-|                                                    winston                                                     |     로그관리      |
-|                                                     morgan                                                     |     로그관리      |
-|                                                   nodemailer                                                   |     메일인증      |
-|  <img src="https://img.shields.io/badge/Socket.io-#010101?style=flat-square&logo=Socket.io&logoColor=white"/>  |       채팅        |
-|        <img src="https://img.shields.io/badge/Helmet-#0F1689?style=flat-square&logo=&logoColor=white"/>        |     보안강화      |
-| <img src="https://img.shields.io/badge/Typescript-#3178C6?style=flat-square&logo=Typescript&logoColor=white"/> |    typescript     |
+|   라이브러리    |       설명        |
+| :-------------: | :---------------: |
+|      cors       |  교차리소스공유   |
+|     dotenv      |  시크릿키 암호화  |
+|  jsonwebtoken   | 회원가입 작동방식 |
+|    sequelize    |     MySQL ORM     |
+|  cookie-parser  |  조회수중복방지   |
+|      Mysql      |       Mysql       |
+|     bycrypt     |  비밀번호 해쉬화  |
+| swagger-autogen |  스웨거 자동생성  |
+|       joi       |    유효성검사     |
+|     winston     |     로그관리      |
+|     morgan      |     로그관리      |
+|   nodemailer    |     메일인증      |
+|    socket.io    |       채팅        |
+|     helmet      |     보안강화      |
+|   typescript    |    typescript     |
 
 ### appendix<br>
 
 [도커스웜&모니터링](https://github.com/fungap/Appendix-back/blob/main/docker-swarm%26monitoring.md)<br>
 [채팅](https://github.com/fungap/Appendix-back/blob/main/chatting.md)<br>
-[검색엔진](https://github.com/fungap/Appendix-back/blob/main/search_engin%26Analysis_tool.md)<br>
+[검색엔진](https://github.com/fungap/Appendix-back/blob/main/search_engin.md)<br>
 [소셜로그인](https://github.com/fungap/Appendix-back/blob/main/social-login.md)<br>
 [타입스크립트](https://github.com/fungap/Appendix-back/blob/main/typescript.md)<br>
