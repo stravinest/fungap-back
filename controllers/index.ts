@@ -9,6 +9,7 @@ import * as gameController from './game-controller';
 import * as gameCommController from './game-comment-controller';
 import * as adminController from './admin-controller';
 import * as allContentController from './allContent-controller';
+import * as SearchFunc from './search-controller';
 // const univBoardController = require('./univ-board-controller');
 // const utilController = require('./util-controller');
 
@@ -23,7 +24,8 @@ export {
   gameController,
   gameCommController,
   adminController,
-  allContentController
+  allContentController,
+  SearchFunc
   // freeBoardController,
   // univBoardController,
   // utilController,
