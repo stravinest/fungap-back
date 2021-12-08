@@ -13,6 +13,10 @@
 - Backend : 전은규(ENFP), 신성웅(INTP), 오정민(ISTP)
 - Designer : 김민경(ESTJ), 김은우(ESFJ)
 
+## 📃개발프로세스 & ERD
+- [git HUb issue&Project](https://github.com/fungap/Appendix-back/blob/main/develop_process.md)
+- [ERD](https://github.com/fungap/Appendix-back/blob/main/erd.md)
+
 ## 🎨 아키텍쳐
 ![image](https://user-images.githubusercontent.com/88120776/144158286-65ad9dde-0e7d-41c9-a386-daaad75e7bbf.png)
 
@@ -55,12 +59,18 @@
 |typescript|typescript|  
 
 ## 👓 주요 APi 기능 | Main API
+[상세보기](https://github.com/fungap/Appendix-back/blob/main/API.md)
 1. 회원가입,소셜로그인(카카오,구글,네이버),이메일 인증(비밀번호 찾기)
 2. 채팅,유형별 채팅방(E,i,F,T) 
 3. 컨텐츠 검색 (Elastic search)
 4. 상황별 MBTI 반응 컨텐츠(좋아요, 조회수, 댓글, 공유)
 5. 밸런스게임 MBTI별 투표 컨텐츠(투표, 조회수, 댓글, 좋아요, 공유)
 6. MBTi궁합테스트 컨텐츠(공유)
+
+## 🗝트러블 슈팅
+[상세보기](https://github.com/fungap/Appendix-back/edit/main/trouble.md)
+1. cookie 를 이용한 조회수 중복 방지
+2. table 에 없는 like state 값 계산
 
 ## ✨기술적 챌린지 
 [도커스웜&모니터링](https://github.com/fungap/Appendix-back/blob/main/docker-swarm%26monitoring.md)<br>
