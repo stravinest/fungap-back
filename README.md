@@ -7,7 +7,7 @@
 > 여러 MBTI 콘텐츠를 제공하여 서로의 차이에 대한 재미를 느낄 수 있는 서비스
 
 * 사이트 링크: <https://fungap.shop>
-* 소개 영상 : <https://hanghae99.spartacodingclub.kr/exhibitions/main/3>
+* 소개 영상 : <https://www.youtube.com/watch?v=EUYZv5PJMtI>
 
 ## 🧑🏻‍💻 팀 구성
 - Frontend : 조성민(ENFJ), 임동건(INFJ), 김세연(INFP)
@@ -19,9 +19,9 @@
 - [ERD](https://github.com/fungap/Appendix-back/blob/main/erd.md)
 
 ## 🎨 아키텍쳐
-![image](https://user-images.githubusercontent.com/88120776/144158286-65ad9dde-0e7d-41c9-a386-daaad75e7bbf.png)
+![image](https://user-images.githubusercontent.com/88120776/144158286-65ad9dde-0e7d-41c9-a386-daaad75e7bbf.png)<br><br>
 
-[아키텍쳐 설명](https://github.com/fungap/Appendix-back/blob/main/architecture.md)<br>
+[아키텍쳐 설명](https://github.com/fungap/Appendix-back/blob/main/architecture.md)<br><br>
 
 ## 🛠 기술 스텍 및 라이브러리
 
@@ -72,6 +72,7 @@
 [상세보기](https://github.com/fungap/Appendix-back/edit/main/trouble.md)
 1. cookie 를 이용한 조회수 중복 방지
 2. table 에 없는 like state 값 계산
+3. 젠킨스 EC2 에서는 연결이 잘되엇지만 GCP에서는 안되던 
 
 ## ✨기술적 챌린지 
 [도커스웜&모니터링](https://github.com/fungap/Appendix-back/blob/main/docker-swarm%26monitoring.md)<br>
