@@ -7,6 +7,7 @@
 > 여러 MBTI 콘텐츠를 제공하여 서로의 차이에 대한 재미를 느낄 수 있는 서비스
 
 * 사이트 링크: <https://fungap.shop>
+* 소개 영상 : <https://hanghae99.spartacodingclub.kr/exhibitions/main/3>
 
 ## 🧑🏻‍💻 팀 구성
 - Frontend : 조성민(ENFJ), 임동건(INFJ), 김세연(INFP)
