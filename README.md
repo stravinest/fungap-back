@@ -73,6 +73,7 @@
 1. cookie 를 이용한 조회수 중복 방지
 2. table 에 없는 like state 값 계산
 3. 젠킨스 EC2 에서는 연결이 잘되엇지만 GCP에서는 안되던 문제
+4. 쿠버네티스 클러스터 셋팅
 
 ## ✨기술적 챌린지 
 [도커스웜&모니터링](https://github.com/fungap/Appendix-back/blob/main/docker-swarm%26monitoring.md)<br>
