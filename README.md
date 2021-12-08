@@ -69,7 +69,7 @@
 6. MBTi궁합테스트 컨텐츠(공유)
 
 ## 🗝트러블 슈팅
-[상세보기](https://github.com/fungap/Appendix-back/edit/main/trouble.md)
+[상세보기](https://github.com/fungap/Appendix-back/blob/main/trouble.md)
 1. cookie 를 이용한 조회수 중복 방지
 2. table 에 없는 like state 값 계산
 3. 젠킨스 EC2 에서는 연결이 잘되엇지만 GCP에서는 안되던 
