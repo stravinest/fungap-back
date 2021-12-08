@@ -19,5 +19,5 @@ expose 3000
 RUN npx tsc
 
 CMD node app.js
-# CMD [ "pm2-runtime", "server.js", "-i", "max" ]
+
 
