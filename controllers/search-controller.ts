@@ -5,7 +5,7 @@ import { errors } from '@elastic/elasticsearch';
 import { Request, Response } from 'express';
 
 const client = new Client({
-  node: 'http://34.64.168.183:9200',
+  node: 'http://35.216.32.72:9200',
   auth: {
     username: process.env.elastic_username!,
     password: process.env.elastic_password!,
