@@ -72,7 +72,7 @@
 [상세보기](https://github.com/fungap/Appendix-back/blob/main/trouble.md)
 1. cookie 를 이용한 조회수 중복 방지
 2. table 에 없는 like state 값 계산
-3. 젠킨스 EC2 에서는 연결이 잘되엇지만 GCP에서는 안되던 문제
+3. 젠킨스 EC2 에서는 연결이 잘되었지만 GCP에서는 안되던 문제
 4. 쿠버네티스 클러스터 셋팅
 
 ## ✨기술적 챌린지 
@@ -81,3 +81,5 @@
 [검색엔진&분석엔진](https://github.com/fungap/Appendix-back/blob/main/search_engin%26Analysis_tool.md)<br>
 [소셜로그인](https://github.com/fungap/Appendix-back/blob/main/social-login.md)<br>
 [타입스크립트](https://github.com/fungap/Appendix-back/blob/main/typescript.md)<br>
+
+## 아쉬웠던 점 && 
