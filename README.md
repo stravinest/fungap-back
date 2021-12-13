@@ -10,7 +10,7 @@
 * 소개 영상 : <https://www.youtube.com/watch?v=EUYZv5PJMtI>
 
 ## 🧑🏻‍💻 팀 구성
-- Frontend : 조성민(ENFJ), 임동건(INFJ), 김세연(INFP)
+- Frontend : 조성민(ENFJ), 임동건(INFJ), 김세연(INFP) [프론트앤드 Git-Hub](https://github.com/fungap/fungap-front)
 - Backend : 전은규(ENFP), 신성웅(INTP), 오정민(ISTP)
 - Designer : 김민경(ESTJ), 김은우(ESFJ)
 
