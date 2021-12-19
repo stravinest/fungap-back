@@ -50,7 +50,7 @@
 |cookie-parser|조회수중복방지|
 |Mysql|Mysql|
 |bycrypt|비밀번호 해쉬화|
-|swagger-autogen|스웨거 자동생성|
+|swagger-autogen|API 문서화|
 |joi|유효성검사|
 |winston|로그관리|
 |morgan|로그관리|
